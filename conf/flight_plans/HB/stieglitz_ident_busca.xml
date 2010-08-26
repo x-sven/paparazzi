@@ -1,0 +1,36 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="60" ground_alt="9" lat0="52.959360" lon0="8.778601" max_dist_from_home="275" name="Stieglitz" qfu="270" security_height="10">
+  <waypoints>
+    <waypoint name="HOME" x="-14.8" y="-13.2"/>
+    <waypoint name="WP1" x="-80.4" y="-49.6"/>
+    <waypoint name="WP2" x="14.4" y="81.9"/>
+    <waypoint name="WP1_H" x="-109.1" y="-22.9"/>
+    <waypoint name="WP2_H" x="-13.0" y="107.7"/>
+    <waypoint name="TARGET" x="-25.8" y="26.1"/>
+    <waypoint name="TARGET_R" x="-33.2" y="60.1"/>
+  </waypoints>
+  <blocks>
+    <block name="Circle test">
+      <circle radius="-50" wp="TARGET"/>
+    </block>
+    <block name="WP1_to_WP2 (route test)">
+      <while cond="TRUE">
+        <go approaching_time="3" wp="WP1_H"/>
+        <go approaching_time="0" from="WP1" hmode="route" wp="WP2"/>
+        <go approaching_time="3" wp="WP2_H"/>
+        <go approaching_time="0" from="WP2" hmode="route" wp="WP1"/>
+        <while cond="10 > block_time"/>
+      </while>
+    </block>
+    <block name="Identify">
+      <eight center="TARGET" radius="40" turn_around="TARGET_R"/>
+    </block>
+    <block name="Course test">
+      <heading alt="ground_alt+50" course="60" until="block_time > 10"/>
+    </block>
+    <block name="circle_home">
+      <circle radius="55" wp="HOME"/>
+    </block>
+  </blocks>
+</flight_plan>

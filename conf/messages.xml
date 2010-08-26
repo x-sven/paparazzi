@@ -16,7 +16,7 @@
    </message>
 
    <message name="TAKEOFF" id="4">
-     <field name="cpu_time" type="uint16" unit="s"></field>
+     <field name="cpu_time" type="uint16" unit="s"/>
    </message>
 
 <!-- add the following msg for debugging Haiyang 20080521-->
@@ -51,7 +51,7 @@
      <field name="alt"        type="int32"  unit="cm" alt_unit="m" alt_unit_coef="0.01"/>
      <field name="speed"      type="uint16" unit="cm/s" alt_unit="m/s" alt_unit_coef="0.01"/>
      <field name="climb"      type="int16"  unit="cm/s" alt_unit="m/s" alt_unit_coef="0.01"/>
-     <field name="week"       type="uint16" unit="weeks"></field>
+     <field name="week"       type="uint16" unit="weeks"/>
      <field name="itow"       type="uint32" unit="ms"/>
      <field name="utm_zone"   type="uint8"/>
      <field name="gps_nb_err" type="uint8"/>
@@ -1493,9 +1493,33 @@
     <field name="mz" type="int32" unit="adc"/>
   </message>
 
-  <!--206 is free --> 
-  <!--207 is free --> 
-  <!--208 is free --> 
+
+  <message name="IMU_GYRO_RAW_AVG" id="206">
+    <field name="gp" type="uint16" unit="adc"/>
+    <field name="gq" type="uint16" unit="adc"/>
+    <field name="gr" type="uint16" unit="adc"/>
+    <field name="vgp" type="float" unit="adc" format="%.0f"/>
+    <field name="vgq" type="float" unit="adc" format="%.0f"/>
+    <field name="vgr" type="float" unit="adc" format="%.0f"/>
+  </message>
+
+  <message name="IMU_ACCEL_RAW_AVG" id="207">
+    <field name="ax" type="uint16" unit="adc"/>
+    <field name="ay" type="uint16" unit="adc"/>
+    <field name="az" type="uint16" unit="adc"/>
+    <field name="vax" type="float" unit="adc"/>
+    <field name="vay" type="float" unit="adc"/>
+    <field name="vaz" type="float" unit="adc"/>
+  </message>
+
+  <message name="IMU_MAG_RAW_AVG" id="208">
+    <field name="mx" type="int16" unit="adc"/>
+    <field name="my" type="int16" unit="adc"/>
+    <field name="mz" type="int16" unit="adc"/>
+    <field name="vmx" type="float" unit="adc"/>
+    <field name="vmy" type="float" unit="adc"/>
+    <field name="vmz" type="float" unit="adc"/>
+  </message>
 
   <message name="IMU_GYRO_LP" id="209">
     <field name="gp" type="float" unit="rad/s"/>
@@ -1547,9 +1571,42 @@
     <field name="t" type="uint32"/>
   </message>
 
- <!--228 is free --> 
- <!--229 is free --> 
- <!--230 is free --> 
+
+  <message name="HB_FILTER" id="228">
+    <field name="time" type="float" unit="msecs"/>
+    <field name="ACC_X" type="float" unit="m/s-2"/>
+    <field name="ACC_Y" type="float" unit="m/s-2"/>
+    <field name="ACC_Z" type="float" unit="m/s-2"/>
+    <field name="GYRO_ROLL" type="float" unit="rad/s" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="GYRO_PITCH" type="float" unit="rad/s" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="GYRO_YAW" type="float" unit="rad/s" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="heading" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="MAG_X" type="int16" unit="adc"/>
+    <field name="MAG_Y" type="int16" unit="adc"/>
+    <field name="MAG_Z" type="int16" unit="adc"/>
+    <field name="ACC_ANGLE_ROLL" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ACC_ANGLE_PITCH" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ACC_ANGLE_YAW" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ESTIMATOR_IR_PHI" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ESTIMATOR_IR_THETA" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+  </message>
+
+  <message name="HB_KALMAN_QUAT" id="229">
+    <field name="time" type="float" unit="msecs"/>
+    <field name="gyrobias_roll" type="float" unit="rad/s" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="gyrobias_pitch" type="float" unit="rad/s" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="gyrobias_yaw" type="float" unit="adc" alt_unit="deg/s" alt_unit_coef="57.29578"/>
+    <field name="q0" type="float" unit="quaternion"/>
+    <field name="q1" type="float" unit="quaternion"/>
+    <field name="q2" type="float" unit="quaternion"/>
+    <field name="q3" type="float" unit="quaternion"/>
+  </message>
+
+  <message name="IMU_ACCEL_ANGLE" id="230">
+    <field name="ANGLE_ROLL" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ANGLE_PITCH" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+    <field name="ANGLE_YAW" type="float" unit="rad" alt_unit="deg" alt_unit_coef="57.29578" />
+  </message>
 
   <message name="BOOZ_STATUS" id="231">
     <field name="link_imu_nb_err" type="uint32"/>

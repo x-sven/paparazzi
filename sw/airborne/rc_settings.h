@@ -36,6 +36,7 @@
  */
 
 #ifndef RC_SETTINGS_H
+#define RC_SETTINGS_H
 
 #include "std.h"
 #include "radio.h"

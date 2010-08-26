@@ -1,0 +1,55 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="50" ground_alt="9" lat0="52.959360" lon0="8.778601" max_dist_from_home="275" name="Stieglitz" qfu="270" security_height="10">
+  <header>
+#include "bomb.h"
+</header>
+  <waypoints>
+    <waypoint name="HOME" x="-25.9" y="-8.8"/>
+    <waypoint alt="60.0" name="WP1" x="-80.6" y="-48.6"/>
+    <waypoint name="WP2" x="25.4" y="94.4"/>
+    <waypoint name="ID_TARGET" x="-25.8" y="26.1"/>
+    <waypoint name="TARGET_R" x="-25.8" y="62.4"/>
+    <waypoint name="BASELEG" x="309.9" y="138.1"/>
+    <waypoint name="RELEASE" x="126.9" y="181.6"/>
+    <waypoint name="CLIMB" x="19.2" y="212.5"/>
+    <waypoint alt="20.0" name="START" x="-68.7" y="-32.9"/>
+    <waypoint alt="0.0" name="TARGET" x="-1.5" y="59.9"/>
+    <waypoint name="STDBY" x="-82.4" y="33.8"/>
+  </waypoints>
+  <blocks>
+    <block name="Identify">
+      <circle radius="-50" wp="ID_TARGET"/>
+    </block>
+    <block name="Take off">
+      <heading course="QFU" pitch="15" throttle="0.8" until="(estimator_z > ground_alt+30)" vmode="throttle"/>
+    </block>
+    <block name="bomb" strip_button="Bomb">
+      <set value="BombComputeApproach(WP_TARGET, WP_START, nav_radius)" var="unit"/>
+      <circle radius="BOMB_RADIUS" until="NavQdrCloseTo(DegOfRad(bomb_start_qdr)-10)" wp="BASELEG"/>
+    </block>
+    <block name="align">
+      <exception cond="BombUpdateRelease(WP_TARGET)" deroute="standby"/>
+      <go approaching_time="bomb_trigger_delay" from="START" hmode="route" wp="RELEASE"/>
+    </block>
+    <block name="shoot">
+      <set value="BombShoot()" var="unit"/>
+      <go approaching_time="0" from="RELEASE" hmode="route" wp="CLIMB"/>
+      <set value="BombCloseHatch()" var="unit"/>
+      <deroute block="standby"/>
+    </block>
+    <block name="standby" strip_button="STDBY">
+      <circle radius="nav_radius" wp="STDBY"/>
+    </block>
+    <block name="WP1_to_WP2">
+      <while cond="TRUE">
+        <go approaching_time="0." wp="WP1"/>
+        <go approaching_time="0." wp="WP2"/>
+        <while cond="10 > block_time"/>
+      </while>
+    </block>
+    <block name="circle_home">
+      <circle radius="55" wp="HOME"/>
+    </block>
+  </blocks>
+</flight_plan>

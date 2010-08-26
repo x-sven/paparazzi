@@ -12,7 +12,7 @@
 #include "led.h"
 #include "uart.h"
 #include "downlink.h"
-
+#include "ap_downlink.h"
 
 #define NB_ADC 8
 #define ADC_NB_SAMPLES 16
@@ -60,7 +60,7 @@ int main (int argc, char** argv) {
 	values[i] = buf_adc[i].sum / ADC_NB_SAMPLES;
 
       uint8_t id = 42;
-      DOWNLINK_SEND_ADC(&id, NB_ADC, values);
+      DOWNLINK_SEND_ADC( DefaultChannel, &id, NB_ADC, values);
     }
   }
   return 0;

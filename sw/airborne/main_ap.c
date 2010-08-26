@@ -48,6 +48,7 @@
 #include "autopilot.h"
 #include "estimator.h"
 #include "settings.h"
+#include "rc_settings.h"
 #include "cam.h"
 #include "link_mcu.h"
 #include "sys_time.h"
@@ -59,6 +60,7 @@
 #else
 #include "gpio.h"
 #endif
+#include "light.h"
 
 #if defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1
 #include "rc_settings.h"
@@ -117,6 +119,10 @@
 #include "max11040.h"
 #endif
 
+#ifdef USE_BARO_MP3H6115
+#include "baro_MP3H6115.h"
+#endif
+
 #ifdef TRAFFIC_INFO
 #include "traffic_info.h"
 #endif
@@ -131,6 +137,10 @@
 
 #ifdef USE_MICROMAG_FW
 #include "micromag_fw.h"
+#endif
+
+#ifdef USE_MAG_HMC5843
+#include "hmc5843_i2c.h"
 #endif
 
 #ifdef USE_AIRSPEED_ETS
@@ -150,7 +160,19 @@
 #include "osam_imu_ugear.h"
 #endif 
 
+#ifdef XSENS 
+#include "xsens_ins.h"
+#endif
 /*code added by Haiyang Chao ends*/
+
+#ifdef RAZOR_IMU
+#include "razor_imu.h"
+//#include "kalman_hb.h"
+#endif
+
+#ifdef USE_DAC
+#include "dac.h"
+#endif
 
 #if ! defined CATASTROPHIC_BAT_LEVEL && defined LOW_BATTERY
 #warning "LOW_BATTERY deprecated. Renammed into CATASTROPHIC_BAT_LEVEL (in aiframe file)"
@@ -159,10 +181,17 @@
 
 #define LOW_BATTERY_DECIVOLT (CATASTROPHIC_BAT_LEVEL*10)
 
+#ifdef USE_MODULES
 #include "modules.h"
+#endif
+
+#ifndef MILLIAMP_PER_PERCENT
+#define MILLIAMP_PER_PERCENT 0
+#endif
+
 
 /** FIXME: should be in rc_settings but required by telemetry (ap_downlink.h)*/
-uint8_t rc_settings_mode = 0;
+uint8_t rc_settings_mode = RC_SETTINGS_MODE_NONE;
 
 /** Define minimal speed for takeoff in m/s */
 #define MIN_SPEED_FOR_TAKEOFF 5.
@@ -270,6 +299,15 @@ static inline void reporting_task( void ) {
 #ifndef RC_LOST_MODE
 #define RC_LOST_MODE PPRZ_MODE_HOME
 #endif
+
+/*
+ * baro_delay(): used vin MP3H6115
+ */
+static void baro_delay( void ) {
+  volatile int i,j;
+  for (i=0;i<1000;i++)
+    for (j=0;j<1000;j++);
+}
 
 /** \brief Function to be called when a message from FBW is available */
 inline void telecommand_task( void ) {
@@ -495,6 +533,12 @@ void periodic_task_ap( void ) {
     break;
   }
 
+  }
+
+#ifdef USE_LIGHT
+  LightPeriodicTask(_1Hz);
+#endif
+
   switch(_4Hz) {
   case 0:
     estimator_propagate_state();
@@ -604,10 +648,14 @@ void periodic_task_ap( void ) {
 #endif
 
     /*  default: */
-  }
+  } // switch(_4Hz)
 
 #ifdef USE_MICROMAG_FW
     micromag_periodic();
+#endif
+
+#ifdef USE_MAG_HMC5843
+    hmc5843_periodic();
 #endif
 
 #ifndef CONTROL_RATE
@@ -628,6 +676,7 @@ void periodic_task_ap( void ) {
   // I2C0 scheduler
   switch (_20Hz) {
     case 0:
+
 #ifdef USE_AIRSPEED_ETS
       airspeed_ets_periodic(); // process airspeed
 #endif // USE_AIRSPEED_ETS
@@ -648,6 +697,30 @@ void periodic_task_ap( void ) {
   }
 #endif // USE_I2C0
 
+#if defined USE_BARO_MP3H6115 && ! defined GYRO
+  if (!_20Hz) {
+	estimator_update_state_infrared();    
+       /* sorry we use GYRO message for debug
+          DOWNLINK_SEND_IMU_GYRO( DefaultChannel,
+			    &baro_MP3H6115_volt,
+			    &baro_MP3H6115_off_volt,
+			    &baro_MP3H6115_rel_height);*/
+  }
+#endif
+
+#ifdef RAZOR_IMU 
+  if (!_20Hz) {
+      // razor_imu
+      estimator_update_state_razor_imu();
+#ifdef USE_MAG_HMC5843
+      // estimate heading from mag
+      hmc5843_heading( estimator_phi, estimator_theta );
+#endif
+      // downlink hb_filter
+      razor_imu_downlink();
+  }
+#endif // RAZOR_IMU
+
 #if CONTROL_RATE == 20
   if (!_20Hz)
 #endif
@@ -664,6 +737,13 @@ void periodic_task_ap( void ) {
       ir_update();
       estimator_update_state_infrared();
 #endif /* INFRARED */
+
+#ifdef USE_DAC
+      static uint32_t dacr;
+      // demo only at the moment
+      dac_update(dacr++);
+#endif // USE DAC
+
       h_ctl_attitude_loop(); /* Set  h_ctl_aileron_setpoint & h_ctl_elevator_setpoint */
       v_ctl_throttle_slew();
       ap_state->commands[COMMAND_THROTTLE] = v_ctl_throttle_slewed;
@@ -682,7 +762,9 @@ void periodic_task_ap( void ) {
 #endif
     }
 
+#ifdef USE_MODULES
   modules_periodic_task();
+#endif
 }
 
 
@@ -698,7 +780,7 @@ void init_ap( void ) {
 #ifdef ADC
   adc_init();
 #endif
-#endif /* SINGLE_MCU */
+#endif /* ! SINGLE_MCU */
 
   /************* Sensors initialization ***************/
 #ifdef INFRARED
@@ -749,6 +831,21 @@ void init_ap( void ) {
 
 #ifdef USE_ADC_GENERIC
   adc_generic_init();
+#endif
+
+#ifdef RAZOR_IMU
+  razor_imu_init();
+#warning flight with RAZOR_IMU
+#endif
+
+#ifdef USE_DAC
+  dac_init();
+#warning DAC activated
+#endif
+
+#ifdef USE_MAG_HMC5843
+  hmc5843_init();
+#warning HMC5843 activated
 #endif
 
 #ifdef DIGITAL_CAM
@@ -802,7 +899,10 @@ void init_ap( void ) {
   max11040_init();
 #endif
 
+#ifdef USE_MODULES
   modules_init();
+#endif
+
 
   /** - start interrupt task */
   int_enable();
@@ -836,6 +936,59 @@ void init_ap( void ) {
   baro_MS5534A_init();
 #endif
 
+#ifdef USE_BARO_MP3H6115
+#error warning using USE_BARO_MP3H6115
+  baro_MP3H6115_init();
+  // setup time:
+  // IMU_GYRO gp ist OP Ausgangswert, wird zum Abgleich auf 2.5 Volt eingestellt 
+  // IMU_GYRO gq ist OP- Eingangswert
+  // IMU_GYRO_gr ist umgerechneter Meterwert.
+  uint16_t i;
+#ifdef GYRO
+  for( i=0; i<50; i++ ) // 50 = 15 sec
+#else
+  for( i=0; i<10; i++ ) // 10 = 3 sec, don't remove, average building in ADC
+#endif
+  {
+    baro_delay();
+    LED_TOGGLE(2);
+    // call calibrate
+    baro_MP3H6115_calibrate();
+    // Send
+    /*DOWNLINK_SEND_IMU_GYRO( DefaultChannel,
+			    &baro_MP3H6115_volt,
+			    &baro_MP3H6115_off_volt,
+			    &baro_MP3H6115_rel_height);*/
+  }
+
+#ifdef USE_BARO_SCP
+  baro_scp_init();
+#endif
+
+// olri 2010-07-18
+// funktioniert noch nicht richtig, hängt am nicht
+// kommenden baro_scp_available, RACE condition
+// Fehler nicht zu finden, siehe workaround in
+// 
+#ifdef USE_BARO_SCP_WEG
+  // call calibrate
+  sys_time_usleep(5000000);
+  while (!baro_scp_available) {
+      // trigger einer messung
+      baro_scp_periodic();
+      LED_TOGGLE(2);
+      baro_delay();
+  }
+  baro_scp_calibrate( 0 );
+#endif
+// olri 2010-07-18
+
+#ifdef RAZOR_IMU
+  //wait 10secs for init
+  // sys_time_usleep(10000000);
+  razor_imu_offset_set();
+#endif
+
   power_switch = FALSE;
 
 #ifdef TRIGGER_EXT
@@ -851,6 +1004,7 @@ void init_ap( void ) {
 #ifdef TCAS
   tcas_init();
 #endif
+
 
 }
 
@@ -980,8 +1134,33 @@ void event_task_ap( void ) {
     baro_ets_updated = FALSE;
     if (baro_ets_valid) {
       EstimatorSetAlt(baro_ets_altitude);
+#elif defined(USE_BARO_MP3H6115)
+  baro_MP3H6115_event_task();
+  if (baro_MP3H6115_available) {
+    baro_MP3H6115_available = FALSE;
+    //      baro_MP3H6115_z = ground_alt +(baro_MP3H6115_ground_press - baro_MP3H6115_press)*0.084;
+    baro_MP3H6115_z = 0.; // NEED TO BE FIXED
+    if (alt_baro_enabled) {
+      EstimatorSetAlt( baro_MP3H6115_rel_height );
     }
   }
+// olri 20100718
+#elif defined(USE_BARO_SCP)
+  if (baro_scp_available) {
+      if (alt_baro_enabled) {
+	  baro_scp_available = FALSE;
+	  baro_scp_z = ground_alt +((float)baro_scp_ground_pressure - baro_scp_pressure)*0.0005;
+	  EstimatorSetAlt(baro_scp_z);
+      } else {
+          // workaround:
+	  // speichere pressure als ground_pressure, weil baro_scp_calibrate() funktioniert noch nicht.
+          // alt_baro_enable daher nur am boden, einmalig zur kalibierung benutzen !!!! 
+	  // höhe steigt dann langsam auf 10m, keine Ahnung warum (Mindesthöhe aus Flightplan?).
+          // Starten würde ich damit allerdings nicht ... !
+	  baro_scp_ground_pressure = baro_scp_pressure;
+      }
+  }
+// olri 20100718
 #endif
 
 #ifdef USE_MICROMAG_FW
@@ -992,6 +1171,13 @@ void event_task_ap( void ) {
                 &micromag_values[2] );
     micromag_status = MM_IDLE;
   }
+#elif defined USE_MAG_HMC5843
+  if (hmc5843_available) {
+    DOWNLINK_SEND_IMU_MAG_RAW(DefaultChannel,
+			      &hmc5843_mag_x,
+			      &hmc5843_mag_y,
+			      &hmc5843_mag_z );
+    hmc5843_available = FALSE;
 #endif
 
 #ifdef TRIGGER_EXT
@@ -1017,6 +1203,8 @@ void event_task_ap( void ) {
     telecommand_task();
   }
 
+#ifdef USE_MODULES
   modules_event_task();
+#endif
 
 } /* event_task_ap() */

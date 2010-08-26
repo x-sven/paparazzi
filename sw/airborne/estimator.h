@@ -50,6 +50,10 @@ extern float estimator_z;
 extern float estimator_phi; /* + = right */
 extern float estimator_psi; /* CW, 0 = N */
 extern float estimator_theta; /* + = up */
+//  hwarm
+extern float estimator_ir_phi; /* + = right */
+extern float estimator_ir_theta; /* + = up */
+
 
 /* speed in meters per second */
 extern float estimator_z_dot;
@@ -66,7 +70,7 @@ extern float estimator_t;
 extern float estimator_hspeed_mod;
 extern float estimator_hspeed_dir;
 
-/* Wind and airspeed estimation sent by the GCS */
+/* Wind and airspeed estimatation sent by the GPS */
 extern float wind_east, wind_north; /* m/s */
 extern float estimator_airspeed; /* m/s */
 
@@ -92,7 +96,7 @@ extern void alt_kalman( float );
 #ifdef ALT_KALMAN
 #define EstimatorSetPosXY(x, y) { estimator_x = x; estimator_y = y; }
 
-#if defined(USE_BARO_MS5534A) || defined(USE_BARO_ETS)
+#if defined(USE_BARO_MS5534A) || defined(USE_BARO_ETS) || defined USE_BARO_MP3H6115 || defined USE_BARO_SCP
 /* Kalman filter cannot be disabled in this mode (no z_dot) */
 #define EstimatorSetAlt(z) alt_kalman(z)
 #else /* USE_BARO_MS5534A */
@@ -104,7 +108,7 @@ extern void alt_kalman( float );
   } \
 }
 #endif /* ! USE_BARO_MS5534A */
-  
+
 #define EstimatorSetSpeedPol(vhmod, vhdir, vz) { \
   estimator_hspeed_mod = vhmod; \
   estimator_hspeed_dir = vhdir; \

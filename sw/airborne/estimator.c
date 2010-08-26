@@ -35,6 +35,13 @@
 #include "gps.h"
 #include "nav.h"
 
+#ifdef USE_BARO_MP3H6115
+#include "baro_MP3H6115.h"
+#endif
+
+#ifdef USE_BARO_SCP
+#include "baro_scp.h"
+#endif
 
 /* position in meters */
 float estimator_x;
@@ -47,6 +54,9 @@ float estimator_z_dot;
 float estimator_phi;
 float estimator_psi;
 float estimator_theta;
+//  hwarm
+float estimator_ir_phi; /* + = right */
+float estimator_ir_theta; /* + = up */
 
 /* rates in radians per second */
 float estimator_p;
@@ -156,6 +166,18 @@ void alt_kalman(float gps_z) {
     R = baro_ets_r;
     SIGMA2 = baro_ets_sigma2;
   } else
+#elif defined USE_BARO_MP3H6115
+  if (alt_baro_enabled) {
+    DT = BARO_DT;
+    R = baro_MP3H6115_r;
+    SIGMA2 = baro_MP3H6115_sigma2;
+  } else
+#elif defined USE_BARO_SCP
+  if (alt_baro_enabled) {
+    DT = BARO_DT;
+    R = baro_scp_r;
+    SIGMA2 = baro_scp_sigma2;
+  } else
 #endif
   {
     DT = GPS_DT;
@@ -211,10 +233,39 @@ void estimator_update_state_gps( void ) {
   gps_north -= nav_utm_north0;
 
   EstimatorSetPosXY(gps_east, gps_north);
-#ifndef USE_BARO_ETS
+
+#if !(defined USE_BARO_ETS || defined USE_BARO_MP3H6115 || defined USE_BARO_SCP)
   float falt = gps_alt / 100.;
   EstimatorSetAlt(falt);
 #endif
+  
+#ifdef USE_BARO_MP3H6115
+  // get gps height
+  float falt = gps_alt / 100.;
+  // < 100m over ground overwrite gps altitude with baro value 
+  if ( alt_baro_enabled ) {
+    if ( falt < baro_MP3H6115_ground_height+100. ) {
+      falt = baro_MP3H6115_ground_height + baro_MP3H6115_rel_height;
+    }
+  }
+  EstimatorSetAlt(falt);
+#endif
+
+// olri 2010-06-14
+#ifdef USE_BARO_SCP_WEG_FALSCHE_STELLE_HIER
+#error olri falsche stelle
+  // get gps height in [m]
+  float falt = gps_alt / 100.;
+  // < 100m over ground overwrite gps altitude with baro value 
+  if ( alt_baro_enabled ) {
+      if ( falt < baro_scp_ground_height+100. ) {
+	  falt = baro_scp_height( baro_scp_pressure, baro_scp_temperature );
+      }
+  }
+  EstimatorSetAlt(falt);
+#endif
+// olri 2010-06-14
+
   float fspeed = gps_gspeed / 100.;
   float fclimb = gps_climb / 100.;
   float fcourse = RadOfDeg(gps_course / 10.);

@@ -1,0 +1,45 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="80" ground_alt="80" lat0="52.524013" lon0="10.464399" max_dist_from_home="275" name="Gifhorn/Wilsche" qfu="270" security_height="10">
+  <waypoints>
+    <waypoint alt="20.0" name="HOME" x="-69.0" y="112.1"/>
+    <waypoint alt="30.0" name="WP1" x="-223.4" y="178.8"/>
+    <waypoint alt="30.0" name="WP2" x="-79.8" y="276.9"/>
+    <waypoint alt="60.0" name="A" x="-638.6" y="127.4"/>
+    <waypoint alt="60.0" name="B" x="-577.2" y="-133.3"/>
+    <waypoint alt="60.0" name="C" x="366.1" y="100.9"/>
+    <waypoint alt="60.0" name="D" x="407.9" y="-109.3"/>
+    <waypoint alt="2.0" name="Arch1" x="-32.4" y="9.4"/>
+    <waypoint alt="2.0" name="Arch2" x="17.6" y="10.4"/>
+    <waypoint alt="2.0" name="Arch3" x="19.7" y="59.4"/>
+    <waypoint alt="20.0" name="Target" x="-149.8" y="228.8"/>
+    <waypoint alt="2.0" name="Drop" x="-42.8" y="-15.0"/>
+    <waypoint alt="0.0" name="L5" x="-67.7" y="-7.3"/>
+    <waypoint alt="0.0" name="L1" x="-147.4" y="-8.9"/>
+    <waypoint alt="0.0" name="L2" x="-127.5" y="-8.5"/>
+    <waypoint alt="0.0" name="L0" x="-166.9" y="-9.8"/>
+    <waypoint alt="0.0" name="L3" x="-107.5" y="-8.1"/>
+    <waypoint alt="0.0" name="L4" x="-87.6" y="-7.7"/>
+  </waypoints>
+  <blocks>
+    <block name="WP1_to_WP2">
+      <while cond="TRUE">
+        <go approaching_time="0." wp="WP1"/>
+        <go approaching_time="0." wp="WP2"/>
+        <while cond="10 > block_time"/>
+      </while>
+    </block>
+    <block name="circle_target">
+      <while cond="TRUE">
+        <circle radius="15" wp="Target"/>
+        <while cond="10 > block_time"/>
+      </while>
+    </block>
+    <block name="circle_home">
+      <circle radius="55" wp="HOME"/>
+    </block>
+    <block name="eight">
+      <eight center="WP1" radius="50" turn_around="WP2"/>
+    </block>
+  </blocks>
+</flight_plan>

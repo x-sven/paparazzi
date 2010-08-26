@@ -1,0 +1,21 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="50" ground_alt="9" lat0="53.071519" lon0="8.793271" max_dist_from_home="200" name="Bremen" qfu="270" security_height="10">
+  <waypoints>
+    <waypoint name="HOME" x="-1.6" y="-58.7"/>
+    <waypoint name="WP1" x="60.9" y="-139.0"/>
+    <waypoint name="WP2" x="-65.1" y="2.6"/>
+  </waypoints>
+  <blocks>
+    <block name="WP1_to_WP2">
+      <while cond="TRUE">
+        <go approaching_time="0." wp="WP1"/>
+        <go approaching_time="0." wp="WP2"/>
+        <while cond="10 > block_time"/>
+      </while>
+    </block>
+    <block name="circle_home">
+      <circle radius="55" wp="HOME"/>
+    </block>
+  </blocks>
+</flight_plan>
