@@ -8,7 +8,7 @@
     <servo name="THROTTLE"      no="1" min="1000" neutral="1000" max="2000"/>
     <servo name="AILERON"       no="2" max="1000" neutral="1500" min="2000"/>
     <servo name="ELEVATOR"      no="3" max="2000" neutral="1500" min="1000"/>
-    <servo name="KLAPPE"        no="0" max="1000" neutral="1500" min="2000"/>
+    <servo name="HATCH"        no="0" max="1000" neutral="1500" min="2000"/>
   </servos>
 
 
@@ -16,21 +16,21 @@
     <axis name="THROTTLE" failsafe_value="0"/>
     <axis name="ROLL"     failsafe_value="0"/>
     <axis name="PITCH"    failsafe_value="0"/>
-    <axis name="KLAPPE"    failsafe_value="0"/>
+    <axis name="HATCH"    failsafe_value="0"/>
   </commands>
 
   <rc_commands>
     <set command="THROTTLE" value="@THROTTLE"/>
     <set command="ROLL"     value="@ROLL"/>
     <set command="PITCH"    value="@PITCH"/>
-    <set command="KLAPPE"    value="@KLAPPE"/>    
+    <set command="HATCH"    value="@HATCH"/>    
   </rc_commands>
 
   <command_laws>  
     <set servo="THROTTLE"      value="@THROTTLE"/>
     <set servo="AILERON"       value="@ROLL"/>
     <set servo="ELEVATOR"      value="@PITCH"/>
-    <set servo="KLAPPE"         value="@KLAPPE"/>
+    <set servo="HATCH"         value="@HATCH"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">

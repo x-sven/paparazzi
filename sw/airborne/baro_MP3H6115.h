@@ -60,6 +60,7 @@ void baro_MP3H6115_init( void );
 void baro_MP3H6115_calibrate( void );
 void baro_MP3H6115_event_task( void );
 
+void baro_delay( void );
 #endif // USE_BARO_MP3H6115
 
 #endif // BARO_MP3H6115_H

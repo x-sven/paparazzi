@@ -152,11 +152,11 @@ void razor_imu_downlink( void ) {
   mz = hmc5843_mag_z;
   DOWNLINK_SEND_HB_FILTER( DefaultChannel,&time, &accel[ACC_X],&accel[ACC_Y],&accel[ACC_Z],&gyro[G_ROLL],&gyro[G_PITCH],&gyro[G_YAW],&hmc5843_mag_h,&mx,&my,&mz,&angle[ANG_ROLL],&angle[ANG_PITCH],&angle[ANG_YAW], &estimator_ir_phi, &estimator_ir_theta );
 #else
-  float heading = 0.0;
-  DOWNLINK_SEND_HB_FILTER( DefaultChannel,&time, &accel[ACC_X],&accel[ACC_Y],&accel[ACC_Z],&gyro[G_ROLL],&gyro[G_PITCH],&gyro[G_YAW],&heading,&mx,&my,&mz,&angle[ANG_ROLL],&angle[ANG_PITCH],&angle[ANG_YAW], &estimator_ir_phi, &estimator_ir_theta );
+  float _heading = 0.0;
+  DOWNLINK_SEND_HB_FILTER( DefaultChannel,&time, &accel[ACC_X],&accel[ACC_Y],&accel[ACC_Z],&gyro[G_ROLL],&gyro[G_PITCH],&gyro[G_YAW],&_heading,&mx,&my,&mz,&angle[ANG_ROLL],&angle[ANG_PITCH],&angle[ANG_YAW], &estimator_ir_phi, &estimator_ir_theta );
 #endif
   //chni: DOWNLINK_SEND_HB_KALMAN_QUAT( DefaultChannel, &time, &X_k[0],&X_k[1],&X_k[2],&X_k[3],&X_k[4],&X_k[5],&X_k[6]);
-  LED_TOGGLE(1);
+//  LED_TOGGLE(1);
 }
 
 
@@ -263,7 +263,7 @@ void estimator_update_state_razor_imu( void ) {
   razor_imu_update();
   
   // run kalman_hb 20Hz = 50ms
-  unsigned int dt_kalman=50;
+  //chni: unsigned int dt_kalman=50;
   //chni: kalman_hb_run(dt_kalman);
 
   Matrix_update();

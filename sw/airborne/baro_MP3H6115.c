@@ -1,7 +1,7 @@
 /*
  * $Id: baro_MS5534A.c,v 1.2 2007/09/13 12:05:33 hecto Exp $
  *  
- * Copyright (C) 2008  Hochschule Bremen
+ * Copyright (C) 2008  Hochschule Bremen, Oliver Riesener
  *
  * This file is part of paparazzi.
  *
@@ -136,6 +136,14 @@ void baro_MP3H6115_event_task( void ) {
 
   // set available
   baro_MP3H6115_available = TRUE;
+}
+/*
+ * baro_delay(): used vin MP3H6115
+ */
+void baro_delay( void ) {
+  volatile int i,j;
+  for (i=0;i<1000;i++)
+    for (j=0;j<1000;j++);
 }
 
 // NOTE:

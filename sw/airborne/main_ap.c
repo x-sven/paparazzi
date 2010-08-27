@@ -100,6 +100,7 @@
 
 #ifdef USE_BARO_SCP
 #include "baro_scp.h"
+#error olri
 #endif
 
 #ifdef USE_SPI
@@ -929,6 +930,7 @@ void init_ap( void ) {
   for( i=0; i<10; i++ ) // 10 = 3 sec, don't remove, average building in ADC
 #endif
   {
+    // baro_delay
     baro_delay();
     LED_TOGGLE(2);
     // call calibrate

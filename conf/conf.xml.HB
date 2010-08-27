@@ -96,7 +96,7 @@
    radio="radios/T9cap.xml"
    telemetry="telemetry/default.xml"
    flight_plan="flight_plans/dummy.xml"
-   settings="settings/HB/demo5_settings.xml"
+   settings="settings/demo5_settings.xml"
    gui_color="white"
   />
   <aircraft
@@ -130,33 +130,13 @@
    gui_color="white"
   />
   <aircraft
-   name="TJ1"
-   ac_id="6"
-   airframe="airframes/twinjet1.xml"
-   radio="radios/cockpitMM.xml"
-   telemetry="telemetry/default.xml"
-   flight_plan="flight_plans/versatile.xml"
-   settings="settings/tuning.xml settings/gyro.xml"
-   gui_color="#ba6293"
-  />
-  <aircraft
    name="TWOG_CHNI"
    ac_id="84"
    airframe="airframes/HB/fixed-wing/CHNI_Twog.xml"
    radio="radios/HB/cockpitCHNI.xml"
    telemetry="telemetry/default.xml"
-   flight_plan="flight_plans/HB/strom_chni.xml"
+   flight_plan="flight_plans/HB/stieglitz_chni.xml"
    settings="settings/tuning.xml"
    gui_color="#ffffffffffff"
-  />
-  <aircraft
-   name="Twin1"
-   ac_id="1"
-   airframe="airframes/twinstar1.xml"
-   radio="radios/mc3030.xml"
-   telemetry="telemetry/default.xml"
-   flight_plan="flight_plans/mav05_cw.xml"
-   settings="settings/basic.xml"
-   gui_color="blue"
   />
 </conf>

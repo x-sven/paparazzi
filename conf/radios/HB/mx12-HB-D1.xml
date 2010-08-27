@@ -46,7 +46,7 @@
 
 <!-- Warmers Fernsteuerung neu-->
 <!DOCTYPE radio SYSTEM "../radio.dtd">
-<radio name="Warmers_neu" data_min="900" data_max="2100" sync_min ="8000" sync_max ="13000">
+<radio name="HB/mx12-HB-D1.xml" data_min="900" data_max="2100" sync_min ="8000" sync_max ="13000">
 <channel ctl="D" function="THROTTLE"  min="1070" neutral="1070" max="1880" average="0"/>
  <channel ctl="C" function="ROLL"     min="1100" neutral="1500" max="1900" average="0"/>
  <channel ctl="B" function="PITCH"    min="1900" neutral="1500" max="1100" average="0"/>

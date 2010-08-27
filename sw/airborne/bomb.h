@@ -1,7 +1,7 @@
 #ifndef BOMB_H
 #define BOMB_H
 
-#define MY_BOMB_RADIUS DEFAULT_CIRCLE_RADIUS
+#define BOMB_RADIUS DEFAULT_CIRCLE_RADIUS
 
 extern unit_t bomb_compute_approach( uint8_t wp_target, uint8_t wp_start, float radius );
 extern unit_t bomb_update_release( uint8_t wp_target );

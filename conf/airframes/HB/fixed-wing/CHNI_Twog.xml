@@ -219,7 +219,7 @@ ap.CFLAGS += -DRAZOR_ZERO_AVERAGE
 
 ap.srcs += $(SRC_ARCH)/adc_hw.c
 
-ap.srcs += razor_imu.c razor_util.c
+ap.srcs += razor_imu.c
 #ap.srcs += kalman_hb.c 
 
 
