@@ -1,4 +1,3 @@
-
 /*
   wiring.h - Partial implementation of the Wiring API for the ATmega8.
   Part of Arduino - http://www.arduino.cc/
@@ -126,7 +125,7 @@ void attachInterrupt(uint8_t, void (*)(void), int mode);
 void detachInterrupt(uint8_t);
 
 void setup(void);
-void loop(void);
+// void loop(void);
 
 #ifdef __cplusplus
 } // extern "C"

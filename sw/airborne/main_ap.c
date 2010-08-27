@@ -60,7 +60,6 @@
 #else
 #include "gpio.h"
 #endif
-#include "light.h"
 
 #if defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1
 #include "rc_settings.h"
@@ -160,9 +159,6 @@
 #include "osam_imu_ugear.h"
 #endif 
 
-#ifdef XSENS 
-#include "xsens_ins.h"
-#endif
 /*code added by Haiyang Chao ends*/
 
 #ifdef RAZOR_IMU
@@ -184,11 +180,6 @@
 #ifdef USE_MODULES
 #include "modules.h"
 #endif
-
-#ifndef MILLIAMP_PER_PERCENT
-#define MILLIAMP_PER_PERCENT 0
-#endif
-
 
 /** FIXME: should be in rc_settings but required by telemetry (ap_downlink.h)*/
 uint8_t rc_settings_mode = RC_SETTINGS_MODE_NONE;
@@ -299,15 +290,6 @@ static inline void reporting_task( void ) {
 #ifndef RC_LOST_MODE
 #define RC_LOST_MODE PPRZ_MODE_HOME
 #endif
-
-/*
- * baro_delay(): used vin MP3H6115
- */
-static void baro_delay( void ) {
-  volatile int i,j;
-  for (i=0;i<1000;i++)
-    for (j=0;j<1000;j++);
-}
 
 /** \brief Function to be called when a message from FBW is available */
 inline void telecommand_task( void ) {
@@ -533,8 +515,6 @@ void periodic_task_ap( void ) {
     break;
   }
 
-  }
-
 #ifdef USE_LIGHT
   LightPeriodicTask(_1Hz);
 #endif
@@ -676,7 +656,6 @@ void periodic_task_ap( void ) {
   // I2C0 scheduler
   switch (_20Hz) {
     case 0:
-
 #ifdef USE_AIRSPEED_ETS
       airspeed_ets_periodic(); // process airspeed
 #endif // USE_AIRSPEED_ETS
@@ -960,6 +939,7 @@ void init_ap( void ) {
 			    &baro_MP3H6115_off_volt,
 			    &baro_MP3H6115_rel_height);*/
   }
+#endif
 
 #ifdef USE_BARO_SCP
   baro_scp_init();
@@ -1004,7 +984,6 @@ void init_ap( void ) {
 #ifdef TCAS
   tcas_init();
 #endif
-
 
 }
 
@@ -1178,6 +1157,7 @@ void event_task_ap( void ) {
 			      &hmc5843_mag_y,
 			      &hmc5843_mag_z );
     hmc5843_available = FALSE;
+  }
 #endif
 
 #ifdef TRIGGER_EXT

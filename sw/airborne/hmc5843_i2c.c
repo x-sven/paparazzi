@@ -119,7 +119,7 @@ void hmc5843_periodic( void ) {
       hmc5843_mag_z++;
       // reinvoke
       // LED_ON(2);
-      hmc5843_status == HMC5843_UNINIT;
+      hmc5843_status = HMC5843_UNINIT;
     }
   }
 }

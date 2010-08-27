@@ -1,5 +1,5 @@
 #include <diydrones/wiring.h>
-/* This file was automatically generated.  Do not edit! */
+/* This file was automatically generated.  Do not edit! */
 void debug_print(char string[]);
 void startup_air(void);
 void debug_handler(byte message);

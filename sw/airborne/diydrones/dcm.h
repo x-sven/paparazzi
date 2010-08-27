@@ -1,4 +1,4 @@
-/* This file was automatically generated.  Do not edit! */
+/* This file was automatically generated.  Do not edit! */
 void Euler_angles(void);
 void Matrix_update(void);
 void Accel_adjust(void);

@@ -249,6 +249,7 @@ void estimator_update_state_infrared( void ) {
   		estimator_theta  = (float)ugear_theta/10000 - ir_pitch_neutral;
 	#endif
 #endif
+
 #if (defined SITL || defined HITL || !defined RAZOR_IMU)
 	estimator_phi = estimator_ir_phi;
 	estimator_theta = estimator_ir_theta;
