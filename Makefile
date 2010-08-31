@@ -20,7 +20,7 @@
 
 # The default is to produce a quiet echo of compilation commands
 # Launch with "make Q=''" to get full echo
-Q=@
+Q="" #@
 
 ifeq ($(Q),@)
 MAKEFLAGS += --no-print-directory

@@ -16,7 +16,7 @@
    radio="radios/HB/mc22-HB-D1.xml"
    telemetry="telemetry/default.xml"
    flight_plan="flight_plans/HB/stieglitz.xml"
-   settings="settings/HB/tuning_hsb.xml"
+   settings="settings/HB/tuning_hsb_2.xml"
    gui_color="blue"
   />
   <aircraft
@@ -76,7 +76,7 @@
    radio="radios/HB/mc22-HB-D1.xml"
    telemetry="telemetry/default.xml"
    flight_plan="flight_plans/HB/stieglitz_chni.xml"
-   settings="settings/HB/tuning_hsb.xml"
+   settings="settings/HB/tuning_hsb_2.xml"
    gui_color="white"
   />
   <aircraft
@@ -86,7 +86,7 @@
    radio="radios/HB/mc22-HB-D1.xml"
    telemetry="telemetry/default.xml"
    flight_plan="flight_plans/HB/stieglitz_chni.xml"
-   settings="settings/HB/tuning_hsb.xml"
+   settings="settings/HB/tuning_hsb_2.xml"
    gui_color="white"
   />
   <aircraft
@@ -126,7 +126,7 @@
    radio="radios/HB/mc22-HB-D1.xml"
    telemetry="telemetry/default.xml"
    flight_plan="flight_plans/HB/hochschule.xml"
-   settings="settings/HB/tuning_hsb.xml"
+   settings="settings/HB/tuning_hsb_2.xml"
    gui_color="white"
   />
   <aircraft

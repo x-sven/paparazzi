@@ -23,7 +23,7 @@
     <set command="THROTTLE" value="@THROTTLE"/>
     <set command="ROLL"     value="@ROLL"/>
     <set command="PITCH"    value="@PITCH"/>
-    <set command="HATCH"    value="@GAIN1"/>
+    <set command="HATCH"    value="@HATCH"/>
   </rc_commands>
 
   <section name="MIXER">

@@ -100,7 +100,6 @@
 
 #ifdef USE_BARO_SCP
 #include "baro_scp.h"
-#error olri
 #endif
 
 #ifdef USE_SPI
@@ -917,7 +916,7 @@ void init_ap( void ) {
 #endif
 
 #ifdef USE_BARO_MP3H6115
-#error warning using USE_BARO_MP3H6115
+#warning using USE_BARO_MP3H6115
   baro_MP3H6115_init();
   // setup time:
   // IMU_GYRO gp ist OP Ausgangswert, wird zum Abgleich auf 2.5 Volt eingestellt 

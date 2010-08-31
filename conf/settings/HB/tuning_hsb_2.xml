@@ -1,6 +1,6 @@
 <!DOCTYPE settings SYSTEM "../settings.dtd">
 
-<!-- A conf to use to tune a new A/C -->
+<!-- A conf to use to tune a new A/C with SCP1000 -->
 
 <settings>
   <dl_settings>
@@ -14,11 +14,9 @@
     <dl_settings NAME="mode">
       <dl_setting MAX="2" MIN="0" STEP="1" VAR="pprz_mode" module="autopilot"/>
 <!--olri 20100717
-olri 20100717 -->
       <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_baro_enabled" module="baro_MP3H6115" /> 
-<!--olri 20100830
-      <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_baro_enabled" module="baro_scp" />
--->
+olri 20100717 -->
+      <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_baro_enabled" module="baro_scp" /> 
       <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_kalman_enabled" shortname="alt_kalman" module="estimator"/>
       <dl_setting MAX="0" MIN="0" STEP="1" VAR="estimator_flight_time" shortname="flight time"/>
       <dl_setting MAX="1000" MIN="0" STEP="1" VAR="stage_time"/>

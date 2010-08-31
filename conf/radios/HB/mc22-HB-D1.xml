@@ -46,12 +46,13 @@
 
 <!-- Warmers Fernsteuerung neu-->
 <!DOCTYPE radio SYSTEM "../radio.dtd">
+
 <!--<radio name="Warmers_neu" data_min="900" data_max="2100" sync_min ="8000" sync_max ="13000" pulse_type="NEGATIVE">
-<channel ctl="D" function="THROTTLE"  min="1070" neutral="1070" max="1880" average="0"/>
+ <channel ctl="D" function="THROTTLE"  min="1070" neutral="1070" max="1880" average="0"/>
  <channel ctl="C" function="ROLL"     min="1100" neutral="1500" max="1900" average="0"/>
  <channel ctl="B" function="PITCH"    min="1900" neutral="1500" max="1100" average="0"/>
  <channel ctl="H" function="CALIB"    min="1100" neutral="1500" max="1900" average="0"/> 
-<channel ctl="A" function="YAW"    min="1320" neutral="1320" max="1520" average="0"/>
+ <channel ctl="A" function="YAW"    min="1320" neutral="1320" max="1520" average="0"/>
  <channel ctl="E" function="GAIN1"    min="1100" neutral="1100" max="1900" average="1"/>
  <channel ctl="G" function="GAIN2"    min="1100" neutral="1500" max="1900" average="1"/>
  <channel ctl="F" function="MODE"     min="1100" neutral="1500" max="1900" average="0"/> 
