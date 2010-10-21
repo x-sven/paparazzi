@@ -3,7 +3,7 @@
 # $Id$
 #
 # SAS Busca_Razor_40cm Busca_Razor_80cm TWOG_CHNI Lerche MJ5 Busca2
-for i in SAS Busca_Razor_40cm Busca_Razor_80cm TWOG_CHNI Lerche MJ5 Busca2
+for i in SAS Busca_Razor_40cm Busca_Razor_80cm TWOG_CHNI Lerche MJ5 Busca2 HB_MINI
 do
 	echo "###################### $i #######################"
 	(
@@ -11,7 +11,7 @@ do
 	) 2>&1 | egrep Total\|Error\|Fehler
 done
 
-for i in 1 2 # defect 3 4 5
+for i in 1 2 3 4 # defect 5
 do
 	echo "###################### demo$i #######################"
 	(

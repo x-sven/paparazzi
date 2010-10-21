@@ -28,13 +28,13 @@ static inline void main_init( void ) {
   hw_init();
   sys_time_init();
   led_init();
-  uart0_init_tx();
+  uart0_init();
   int_enable();
 }
 
 static inline void main_periodic_task( void ) {
   //  LED_TOGGLE(1);
-  DOWNLINK_SEND_TAKEOFF(&cpu_time_sec);
+  DOWNLINK_SEND_TAKEOFF(DefaultChannel, &cpu_time_sec);
 }
 
 static inline void main_event_task( void ) {
@@ -69,6 +69,6 @@ static inline void main_dl_parse_msg(void) {
     uint8_t i = DL_SETTING_index(dl_buffer);
     float var = DL_SETTING_value(dl_buffer);
     DlSetting(i, var);
-    DOWNLINK_SEND_DL_VALUE(&i, &var);
+    DOWNLINK_SEND_DL_VALUE(DefaultChannel, &i, &var);
   }  
 }

@@ -52,6 +52,16 @@
       <program name="GCS"/>
       <program name="Real-time Plotter"/>
     </session>
+    <session name="38k4 Hardware RS232 & ttyS1">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyS1"/>
+        <arg flag="-s" constant="38400"/>
+      </program>
+      <program name="Messages"/>
+      <program name="Server"/>
+      <program name="GCS"/>
+      <program name="Real-time Plotter"/>
+    </session>
     <session name="Booz simulation : AHRS">
       <program name="Messages">
         <arg flag="-c" constant="telemetry"/>

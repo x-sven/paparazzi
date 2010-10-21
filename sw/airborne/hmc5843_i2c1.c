@@ -1,6 +1,6 @@
 /** \file hmc5843_i2c.c
  *
- *  \brief Read the Honywell hmc5843 magnetometer on I2C(0) sensor interface
+ *  \brief Read the Honywell hmc5843 magnetometer on I2C(1) sensor interface
  *
  *  This reads the values for X Y Z magnitude from the HMC5843 through I2C.
  *
@@ -80,10 +80,10 @@ void hmc5843_init( void ) {
 void hmc5843_periodic( void ) {
   if (hmc5843_status == HMC5843_UNINIT && cpu_time_sec > 1) {
     /* initialise device, write 0x00 to 0x01 */
-    i2c0_buf[0] = 0x02; // mode register
-    i2c0_buf[1] = 0x00; // cont. measurement mode
+    i2c1_buf[0] = 0x02; // mode register
+    i2c1_buf[1] = 0x00; // cont. measurement mode
     hmc5843_i2c_done = FALSE;
-    i2c0_transmit(HMC5843_SLAVE_ADDR, 2, &hmc5843_i2c_done);
+    i2c1_transmit(HMC5843_SLAVE_ADDR, 2, &hmc5843_i2c_done);
     hmc5843_status = HMC5843_IDLE;
   } else {
     if (hmc5843_i2c_done) {
@@ -91,12 +91,12 @@ void hmc5843_periodic( void ) {
 	// start 6+1 bytes read sequence 6 data + 1 status mode rr
 	hmc5843_status = HMC5843_READ_XYZ;
 	hmc5843_i2c_done = FALSE;
-	i2c0_transceive(HMC5843_SLAVE_ADDR, 0, 6+1, &hmc5843_i2c_done);
+	i2c1_transceive(HMC5843_SLAVE_ADDR, 0, 6+1, &hmc5843_i2c_done);
       } else if ( hmc5843_status == HMC5843_READ_XYZ ) {
 	// calculate the 3 answer values, switch axis and sign
-	hmc5843_mag_y = -((i2c0_buf[0] << 8) | i2c0_buf[1]); // xh + xl
-	hmc5843_mag_x = -((i2c0_buf[2] << 8) | i2c0_buf[3]); // yh + yl
-	hmc5843_mag_z = -((i2c0_buf[4] << 8) | i2c0_buf[5]); // zh + zl
+	hmc5843_mag_y = -((i2c1_buf[0] << 8) | i2c1_buf[1]); // xh + xl
+	hmc5843_mag_x = -((i2c1_buf[2] << 8) | i2c1_buf[3]); // yh + yl
+	hmc5843_mag_z = -((i2c1_buf[4] << 8) | i2c1_buf[5]); // zh + zl
 	// offset correction
 	hmc5843_mag_x -= hmc5843_param.offset[0];
 	hmc5843_mag_y -= hmc5843_param.offset[1];

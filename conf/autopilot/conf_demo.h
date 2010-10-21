@@ -14,7 +14,12 @@
 #define PCLK (CCLK / PBSD_VAL) 
 
 #define LED_1_BANK 1
-#define LED_1_PIN 24
+// olri #define LED_1_PIN 24
+#define LED_1_PIN 18
+
+#define LED_2_BANK 1
+// olri #define LED_1_PIN 24
+#define LED_2_PIN 19
 
 
 #endif /* CONFIG_DEMO_H */

@@ -2,5 +2,7 @@
 #
 # $Id:$ olri
 #
+
 make
+
 ./paparazzi &

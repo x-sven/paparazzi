@@ -151,6 +151,10 @@ void i2c0_ISR(void)
 #define I2C1_DATA_REG   I2C1DAT
 #define I2C1_STATUS_REG I2C1STAT
 
+#ifndef I2C1_VIC_SLOT
+#define I2C1_VIC_SLOT 9
+#endif
+
 void i2c1_ISR(void) __attribute__((naked));
 
 /* SDA1 on P0.14 */

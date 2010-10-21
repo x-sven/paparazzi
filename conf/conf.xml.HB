@@ -139,4 +139,14 @@
    settings="settings/tuning.xml"
    gui_color="#ffffffffffff"
   />
+  <aircraft
+   name="HB_MINI"
+   ac_id="46"
+   airframe="airframes/HB/extra/hb_mini.xml"
+   radio="radios/HB/mx12-HB_MINI.xml"
+   telemetry="telemetry/default.xml"
+   flight_plan="flight_plans/HB/hochschule.xml"
+   settings="settings/HB/tuning_hsb_2.xml"
+   gui_color="white"
+  />
 </conf>

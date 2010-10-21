@@ -24,11 +24,11 @@ static inline void main_init( void ) {
   hw_init();
   sys_time_init();
   led_init();
-  uart0_init_tx();
+  uart0_init();
   int_enable();
 }
 
 static inline void main_periodic_task( void ) {
   LED_TOGGLE(1);
-  DOWNLINK_SEND_TAKEOFF(&cpu_time_sec);
+  DOWNLINK_SEND_TAKEOFF(DefaultChannel, &cpu_time_sec);
 }
