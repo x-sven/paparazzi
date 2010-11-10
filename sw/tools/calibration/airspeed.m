@@ -10,7 +10,7 @@ close all
 % speed = AIR(:,8)./100;
 % alt = AIR(:,9)./100;
 % course = AIR(:,10)./10;
-% 
+%
 % airspeed_bias = 64.5;
 % airspeed_scale = 3.5;
 
@@ -72,4 +72,3 @@ legend('air','gps');
 %% Total Energy
 
 %Ekin = airsp .*
-
