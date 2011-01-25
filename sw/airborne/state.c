@@ -26,4 +26,4 @@
 #include "state.h"
 
 struct State state;
-struct StateFloat state_float;
+
