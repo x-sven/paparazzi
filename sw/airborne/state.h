@@ -60,7 +60,7 @@ struct State {
   /* horizontal windspeed x = north, y = east */
   struct Int32Vect2 h_windspeed;
 
-  struct int32_t airspeed_norm;
+  struct int32_t airspeed;
 
 
   /****** float representations ******/
@@ -81,13 +81,17 @@ struct State {
   float h_speed_dir;
 
   struct FloatVect2 h_windspeed; /* m/s ; x = north, y = east */
-  float airspeed_norm; /* m/s */
+  float airspeed; /* m/s */
 
   /* vehicle attitude */
   struct FloatQuat   ned_to_body_quat;
   struct FloatEulers ned_to_body_euler;
   struct FloatRMat   ned_to_body_rmat;
   struct FloatRates  body_rate;
+
+
+  /********** one time computation bookkeeping ********/
+  
 }
 
 extern struct State state;
@@ -106,8 +110,8 @@ inline void StateSetNedToBodyRMat_i(Int32RMat ned_to_body_rmat);
 inline void StateSetNedToBodyEulers_i(Int32Eulers ned_to_body_eulers);
 inline void StateSetBodyRates_i(Int32Rates body_rate);
 
-inline void StateSetHorizontalWindspeed(Int32Vect2 h_windspeed);
-inline void StateSetAirspeedNorm(int32_t airspeed_norm);
+inline void StateSetHorizontalWindspeed_i(Int32Vect2 h_windspeed);
+inline void StateSetAirspeed_i(int32_t airspeed);
 
 /*** functions to get state (int versions) ***/
 inline EcefCoor_i StateGetPositionEcef_i(void);
@@ -122,8 +126,8 @@ inline Int32RMat   StateGetNedToBodyRMat_i(void);
 inline Int32Eulers StateGetNedToBodyEulers_i(void);
 inline Int32Rates  StateGetBodyRates_i(void);
 
-inline Int32Vect2 StateGetHorizontalWindspeed(void);
-inline int32_t StateGetAirspeedNorm(void);
+inline Int32Vect2 StateGetHorizontalWindspeed_i(void);
+inline int32_t StateGetAirspeed_i(void);
 
 
 /*** functions to set state (float versions) ***/
@@ -140,6 +144,11 @@ inline void StateSetNedToBodyRMat_f(FloatRMat ned_to_body_rmat);
 inline void StateSetNedToBodyEulers_f(FloatEulers ned_to_body_eulers);
 inline void StateSetBodyRates_f(FloatRates body_rate);
 
+inline void StateSetHorizontalGroundSpeedNorm(float h_speed_norm); //a bit long, isn't it? returns h_speed_norm
+inline void StateSetHorizontalGroundSpeedDirection(float h_speed_dir); //a bit long, isn't it? returns h_speed_dir
+inline void StateSetHorizontalWindspeed(FloatVect2 h_windspeed);
+inline void StateSetAirspeed(float airspeed);
+
 /*** functions to get state (float versions) ***/
 inline FloatVect3 StateSetPositionUtm_f(void);
 //inline EcefCoor_f StateGetPositionEcef_f(void);
@@ -154,10 +163,10 @@ inline FloatRMat   StateGetNedToBodyRMat_f(void);
 inline FloatEulers StateGetNedToBodyEulers_f(void);
 inline FloatRates  StateGetBodyRates_f(void);
 
-inline float StateGetHorizontalGroundSpeedNorm(void); //a bit long, isn't it? returns h_speed_norm
-inline float StateGetHorizontalGroundSpeedDirection(void); //a bit long, isn't it? returns h_speed_dir
-inline FloatVect2 StateGetHorizontalWindspeed(void);
-inline float StateGetAirspeedNorm(void);
+inline float StateGetHorizontalGroundSpeedNorm_f(void); //a bit long, isn't it? returns h_speed_norm
+inline float StateGetHorizontalGroundSpeedDirection_f(void); //a bit long, isn't it? returns h_speed_dir
+inline FloatVect2 StateGetHorizontalWindspeed_f(void);
+inline float StateGetAirspeed_f(void);
 
 
 #endif /* STATE_H */
