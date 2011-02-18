@@ -175,6 +175,8 @@ endif
 
 ap.srcs += $(SRC_FIRMWARE)/autopilot.c
 
+ap.srcs += state.c
+
 ap.srcs += math/pprz_trig_int.c
 ap.srcs += $(SRC_FIRMWARE)/stabilization.c
 ap.srcs += $(SRC_FIRMWARE)/stabilization/stabilization_rate.c

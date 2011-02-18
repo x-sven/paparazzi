@@ -103,6 +103,8 @@ sim.srcs += $(SRC_BOOZ)/booz2_analog.c $(SRC_BOOZ_SIM)/booz2_analog_hw.c
 
 sim.srcs += $(SRC_FIRMWARE)/autopilot.c
 
+sim.srcs += state.c
+
 #
 # in makefile section of airframe xml
 # include $(CFG_BOOZ)/subsystems/booz2_ahrs_lkf.makefile

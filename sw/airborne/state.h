@@ -27,8 +27,29 @@
 #define STATE_H
 
 #include "math/pprz_algebra_int.h"
-#include "math/pprz_geodetic_int.h"
 #include "math/pprz_algebra_float.h"
+#include "math/pprz_geodetic_int.h"
+#include "math/pprz_geodetic_float.h"
+
+#include "std.h"
+#include <string.h>
+
+#define POS_ECEF_I 1<<0
+#define POS_NED_I  1<<1
+#define POS_LLA_I  1<<2
+#define POS_UTM_I  1<<3
+#define POS_ECEF_F 1<<4
+#define POS_NED_F  1<<5
+#define POS_LLA_F  1<<6
+#define POS_UTM_F  1<<7
+
+#define ATT_QUAT_I  1<<0
+#define ATT_EULER_I 1<<1
+#define ATT_RMAT_I  1<<2
+#define ATT_QUAT_F  1<<3
+#define ATT_EULER_F 1<<4
+#define ATT_RMAT_F  1<<5
+
 
 /* abstract state interface */
 struct State {
@@ -36,137 +57,263 @@ struct State {
   /****** Int representations ******/
 
   /* Earth Centered Earth Fixed in centimeters */
-  struct EcefCoor_i ecef_pos;
+  struct EcefCoor_i ecef_pos_i;
 
   /* lon, lat in radians*1e7  */
   /* alt in centimeters above MSL  */
-  struct LlaCoor_i lla_pos;
+  struct LlaCoor_i lla_pos_i;
 
   /* definition of the local (flat earth) coordinate system */
-  struct LtpDef_i ned_origin;
-  bool_t ned_initialised;
+  struct LtpDef_i ned_origin_i;
+  bool_t ned_initialised_i;
 
   /* North East Down local tangent plane */
-  struct NedCoor_i ned_pos;
-  struct NedCoor_i ned_speed;
-  struct NedCoor_i ned_accel;
+  struct NedCoor_i ned_pos_i;
+  struct NedCoor_i ned_speed_i;
+  struct NedCoor_i ned_accel_i;
 
   /* vehicle attitude */
-  struct Int32Quat   ned_to_body_quat;
-  struct Int32Eulers ned_to_body_euler;
-  struct Int32RMat   ned_to_body_rmat;
-  struct Int32Rates  body_rate;
+  struct Int32Quat   ned_to_body_quat_i;
+  struct Int32Eulers ned_to_body_eulers_i;
+  struct Int32RMat   ned_to_body_rmat_i;
+  struct Int32Rates  body_rate_i;
 
   /* horizontal windspeed x = north, y = east */
-  struct Int32Vect2 h_windspeed;
+  struct Int32Vect2 h_windspeed_i;
 
-  struct int32_t airspeed;
+  int32_t airspeed_i;
 
 
   /****** float representations ******/
 
   /* Position within UTM zone in meters, z in meters above MSL */
-  struct FloatVect3 utm_pos;
-  uint8_t utm_zone;
+  struct FloatVect3 utm_pos_f;
+  uint8_t utm_zone_f;
   /* altitude above ground level in meters */
-  float alt_agl;
+  float alt_agl_f;
 
   /* accelerations in North East Down local tangent plane */
-  struct FloatVect3 ned_accel;
+  struct FloatVect3 ned_accel_f;
 
   /* speed in North East Down local tangent plane */
-  struct FloatVect3 ned_speed;
+  struct FloatVect3 ned_speed_f;
   /* horizontal ground speed in norm and dir (m/s, rad (CW/North)) */
-  float h_speed_norm;
-  float h_speed_dir;
+  float h_speed_norm_f;
+  float h_speed_dir_f;
 
-  struct FloatVect2 h_windspeed; /* m/s ; x = north, y = east */
-  float airspeed; /* m/s */
+  struct FloatVect2 h_windspeed_f; /* m/s ; x = north, y = east */
+  float airspeed_f; /* m/s */
 
   /* vehicle attitude */
-  struct FloatQuat   ned_to_body_quat;
-  struct FloatEulers ned_to_body_euler;
-  struct FloatRMat   ned_to_body_rmat;
-  struct FloatRates  body_rate;
+  struct FloatQuat   ned_to_body_quat_f;
+  struct FloatEulers ned_to_body_eulers_f;
+  struct FloatRMat   ned_to_body_rmat_f;
+  struct FloatRates  body_rate_f;
 
 
   /********** one time computation bookkeeping ********/
-  
-}
+  uint8_t pos_status;
+  uint8_t att_status;
+
+};
 
 extern struct State state;
 
 
 /*** functions to set state (int versions) ***/
-inline void StateSetPositionEcef_i(EcefCoor_i ecef_pos);
-inline void StateSetPositionNed_i(NedCoor_i ned_pos);
-inline void StateSetPositionLla_i(LlaCoor_i lla_pos);
+inline void StateSetPositionEcef_i(struct EcefCoor_i* ecef_pos);
+inline void StateSetPositionNed_i(struct NedCoor_i* ned_pos);
+inline void StateSetPositionLla_i(struct LlaCoor_i* lla_pos);
 
-inline void StateSetSpeedNed_i(NedCoor_i ned_speed);
-inline void StateSetAccelNed_i(NedCoor_i ned_accel);
+inline void StateSetSpeedNed_i(struct NedCoor_i* ned_speed);
+inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel);
 
-inline void StateSetNedToBodyQuat_i(Int32Quat ned_to_body_quat);
-inline void StateSetNedToBodyRMat_i(Int32RMat ned_to_body_rmat);
-inline void StateSetNedToBodyEulers_i(Int32Eulers ned_to_body_eulers);
-inline void StateSetBodyRates_i(Int32Rates body_rate);
+inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat);
+inline void StateSetNedToBodyRMat_i(struct Int32RMat* ned_to_body_rmat);
+inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers);
+inline void StateSetBodyRates_i(struct Int32Rates* body_rate);
 
-inline void StateSetHorizontalWindspeed_i(Int32Vect2 h_windspeed);
-inline void StateSetAirspeed_i(int32_t airspeed);
+inline void StateSetHorizontalWindspeed_i(struct Int32Vect2* h_windspeed);
+inline void StateSetAirspeed_i(int32_t* airspeed);
 
 /*** functions to get state (int versions) ***/
-inline EcefCoor_i StateGetPositionEcef_i(void);
-inline NedCoor_i  StateGetPositionNed_i(void);
-inline LlaCoor_i  StateGetPositionLla_i(void);
+inline struct EcefCoor_i* StateGetPositionEcef_i(void);
+inline struct NedCoor_i*  StateGetPositionNed_i(void);
+inline struct LlaCoor_i*  StateGetPositionLla_i(void);
 
-inline NedCoor_i StateGetSpeedNed_i(void);
-inline NedCoor_i StateGetAccelNed_i(void);
+inline struct NedCoor_i* StateGetSpeedNed_i(void);
+inline struct NedCoor_i* StateGetAccelNed_i(void);
 
-inline Int32Quat   StateGetNedToBodyQuat_i(void);
-inline Int32RMat   StateGetNedToBodyRMat_i(void);
-inline Int32Eulers StateGetNedToBodyEulers_i(void);
-inline Int32Rates  StateGetBodyRates_i(void);
+inline struct Int32Quat*   StateGetNedToBodyQuat_i(void);
+inline struct Int32RMat*   StateGetNedToBodyRMat_i(void);
+inline struct Int32Eulers* StateGetNedToBodyEulers_i(void);
+inline struct Int32Rates*  StateGetBodyRates_i(void);
 
-inline Int32Vect2 StateGetHorizontalWindspeed_i(void);
-inline int32_t StateGetAirspeed_i(void);
+inline struct Int32Vect2* StateGetHorizontalWindspeed_i(void);
+inline int32_t* StateGetAirspeed_i(void);
 
 
 /*** functions to set state (float versions) ***/
-inline void StateSetPositionUtm_f(FloatVect3 utm_pos);
-//inline void StateSetPositionEcef_f(EcefCoor_f ecef_pos);
-//inline void StateSetPositionNed_f(NedCoor_f ned_pos);
-//inline void StateSetPositionLla_f(LlaCoor_f lla_pos);
+inline void StateSetPositionUtm_f(struct FloatVect3* utm_pos);
+//inline void StateSetPositionEcef_f(struct EcefCoor_f* ecef_pos);
+//inline void StateSetPositionNed_f(struct NedCoor_f* ned_pos);
+//inline void StateSetPositionLla_f(struct LlaCoor_f* lla_pos);
 
-inline void StateSetSpeedNed_f(NedCoor_f ned_speed);
-inline void StateSetAccelNed_f(NedCoor_f ned_accel);
+inline void StateSetSpeedNed_f(struct NedCoor_f* ned_speed);
+inline void StateSetAccelNed_f(struct NedCoor_f* ned_accel);
 
-inline void StateSetNedToBodyQuat_f(FloatQuat ned_to_body_quat);
-inline void StateSetNedToBodyRMat_f(FloatRMat ned_to_body_rmat);
-inline void StateSetNedToBodyEulers_f(FloatEulers ned_to_body_eulers);
-inline void StateSetBodyRates_f(FloatRates body_rate);
+inline void StateSetNedToBodyQuat_f(struct FloatQuat* ned_to_body_quat);
+inline void StateSetNedToBodyRMat_f(struct FloatRMat* ned_to_body_rmat);
+inline void StateSetNedToBodyEulers_f(struct FloatEulers* ned_to_body_eulers);
+inline void StateSetBodyRates_f(struct FloatRates* body_rate);
 
-inline void StateSetHorizontalGroundSpeedNorm(float h_speed_norm); //a bit long, isn't it? returns h_speed_norm
-inline void StateSetHorizontalGroundSpeedDirection(float h_speed_dir); //a bit long, isn't it? returns h_speed_dir
-inline void StateSetHorizontalWindspeed(FloatVect2 h_windspeed);
-inline void StateSetAirspeed(float airspeed);
+inline void StateSetHorizontalGroundSpeedNorm(float* h_speed_norm); //a bit long, isn't it? returns h_speed_norm
+inline void StateSetHorizontalGroundSpeedDirection(float* h_speed_dir); //a bit long, isn't it? returns h_speed_dir
+inline void StateSetHorizontalWindspeed(struct FloatVect2* h_windspeed);
+inline void StateSetAirspeed(float* airspeed);
 
 /*** functions to get state (float versions) ***/
-inline FloatVect3 StateSetPositionUtm_f(void);
-//inline EcefCoor_f StateGetPositionEcef_f(void);
-//inline NedCoor_f  StateGetPositionNed_f(void);
-//inline LlaCoor_f  StateGetPositionLla_f(void);
+inline struct FloatVect3* StateGetPositionUtm_f(void);
+//inline struct EcefCoor_f* StateGetPositionEcef_f(void);
+//inline struct NedCoor_f*  StateGetPositionNed_f(void);
+//inline struct LlaCoor_f*  StateGetPositionLla_f(void);
 
-inline NedCoor_f StateGetSpeedNed_f(void);
-inline NedCoor_f StateGetAccelNed_f(void);
+inline struct NedCoor_f* StateGetSpeedNed_f(void);
+inline struct NedCoor_f* StateGetAccelNed_f(void);
 
-inline FloatQuat   StateGetNedToBodyQuat_f(void);
-inline FloatRMat   StateGetNedToBodyRMat_f(void);
-inline FloatEulers StateGetNedToBodyEulers_f(void);
-inline FloatRates  StateGetBodyRates_f(void);
+inline struct FloatQuat*   StateGetNedToBodyQuat_f(void);
+inline struct FloatRMat*   StateGetNedToBodyRMat_f(void);
+inline struct FloatEulers* StateGetNedToBodyEulers_f(void);
+inline struct FloatRates*  StateGetBodyRates_f(void);
 
-inline float StateGetHorizontalGroundSpeedNorm_f(void); //a bit long, isn't it? returns h_speed_norm
-inline float StateGetHorizontalGroundSpeedDirection_f(void); //a bit long, isn't it? returns h_speed_dir
-inline FloatVect2 StateGetHorizontalWindspeed_f(void);
-inline float StateGetAirspeed_f(void);
+inline float* StateGetHorizontalGroundSpeedNorm_f(void); //a bit long, isn't it? returns h_speed_norm
+inline float* StateGetHorizontalGroundSpeedDirection_f(void); //a bit long, isn't it? returns h_speed_dir
+inline struct FloatVect2* StateGetHorizontalWindspeed_f(void);
+inline float* StateGetAirspeed_f(void);
 
 
+/*
+ * Set State functions (int versions)
+ */
+inline void StateSetPositionEcef_i(struct EcefCoor_i* ecef_pos) {
+  INT32_VECT3_COPY(state.ecef_pos_i, (*ecef_pos));
+  /* clear bits for all position representations and only set the new one */
+  state.pos_status = (1 << POS_ECEF_I);
+}
+
+inline void StateSetPositionNed_i(struct NedCoor_i* ned_pos) {
+  INT32_VECT3_COPY(state.ned_pos_i, (*ned_pos));
+  /* clear bits for all position representations and only set the new one */
+  state.pos_status = (1 << POS_NED_I);
+}
+
+inline void StateSetPositionLla_i(struct LlaCoor_i* lla_pos) {
+  LLA_COPY(state.lla_pos_i, (*lla_pos));
+  /* clear bits for all position representations and only set the new one */
+  state.pos_status = (1 << POS_LLA_I);
+}
+
+inline void StateSetSpeedNed_i(struct NedCoor_i* ned_speed) {
+
+}
+
+inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel) {
+
+}
+
+inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat) {
+  QUAT_COPY(state.ned_to_body_quat_i, (*ned_to_body_quat));
+  /* clear bits for all attitude representations and only set the new one */
+  state.att_status = (1 << ATT_QUAT_I);
+}
+
+inline void StateSetNedToBodyRMat_i(struct Int32RMat* ned_to_body_rmat) {
+  RMAT_COPY(state.ned_to_body_rmat_i, (*ned_to_body_rmat));
+  /* clear bits for all attitude representations and only set the new one */
+  state.att_status = (1 << ATT_RMAT_I);
+}
+
+inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers){
+  EULERS_COPY(state.ned_to_body_eulers_i, (*ned_to_body_eulers));
+  /* clear bits for all attitude representations and only set the new one */
+  state.att_status = (1 << ATT_EULER_I);
+}
+
+inline void StateSetBodyRates_i(struct Int32Rates* body_rate){
+
+}
+
+
+/*
+ * Get State functions (int versions)
+ */
+inline struct EcefCoor_i* StateGetPositionEcef_i(void) {
+  if (!bit_is_set(state.pos_status, POS_ECEF_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.pos_status, POS_ECEF_I);
+  }
+  return &state.ecef_pos_i;
+}
+
+inline struct NedCoor_i* StateGetPositionNed_i(void) {
+  if (!bit_is_set(state.pos_status, POS_NED_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.pos_status, POS_NED_I);
+  }
+  return &state.ned_pos_i;
+}
+
+inline struct LlaCoor_i* StateGetPositionLla_i(void) {
+  if (!bit_is_set(state.pos_status, POS_LLA_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.pos_status, POS_LLA_I);
+  }
+  return &state.lla_pos_i;
+}
+
+/*
+inline struct NedCoor_i* StateGetSpeedNed_i(void) {
+
+}
+
+inline struct NedCoor_i* StateGetAccelNed_i(void) {
+
+}
+*/
+
+inline struct Int32Quat* StateGetNedToBodyQuat_i(void) {
+  if (!bit_is_set(state.att_status, ATT_QUAT_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.att_status, ATT_QUAT_I);
+  }
+  return &state.ned_to_body_quat_i;
+}
+
+inline struct Int32RMat* StateGetNedToBodyRMat_i(void) {
+  if (!bit_is_set(state.att_status, POS_LLA_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.att_status, POS_LLA_I);
+  }
+  return &state.ned_to_body_rmat_i;
+}
+
+inline struct Int32Eulers* StateGetNedToBodyEulers_i(void) {
+  if (!bit_is_set(state.att_status, ATT_EULER_I)) {
+    //transform_pos(xx,xx);
+    /* set bit to indicate this representation is computed */
+    SetBit(state.att_status, ATT_EULER_I);
+  }
+  return &state.ned_to_body_eulers_i;
+}
+
+/*
+inline struct Int32Rates StateGetBodyRates_i(void) {
+
+}
+*/
 #endif /* STATE_H */
