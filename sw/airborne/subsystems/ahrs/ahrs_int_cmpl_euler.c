@@ -28,6 +28,8 @@
 #include "math/pprz_trig_int.h"
 #include "math/pprz_algebra_int.h"
 
+#include "state.h"
+
 #include "generated/airframe.h"
 
 struct AhrsIntCmplEuler ahrs_impl;
@@ -36,6 +38,7 @@ static inline void get_phi_theta_measurement_fom_accel(int32_t* phi_meas, int32_
 static inline void get_psi_measurement_from_mag(int32_t* psi_meas, int32_t phi_est, int32_t theta_est, struct Int32Vect3 mag);
 static inline void compute_imu_quat_and_rmat_from_euler(void);
 static inline void compute_body_orientation(void);
+static inline void set_state_attitude(void);
 
 #define F_UPDATE 512
 
@@ -216,4 +219,10 @@ __attribute__ ((always_inline)) static inline void compute_body_orientation(void
   /* compute body rates */
   INT32_RMAT_TRANSP_RATEMULT(ahrs.body_rate, imu.body_to_imu_rmat, ahrs.imu_rate);
 
+}
+
+/* copy attitude to state interface */
+__attribute__ ((always_inline)) static inline void set_state_attitude(void) {
+  StateSetNedToBodyQuat_i(&ahrs.ltp_to_body_quat);
+  //StateSetBodyRates_i(&ahrs.body_rate);
 }
