@@ -137,20 +137,20 @@ inline void StateSetHorizontalWindspeed_i(struct Int32Vect2* h_windspeed);
 inline void StateSetAirspeed_i(int32_t* airspeed);
 
 /*** functions to get state (int versions) ***/
-inline struct EcefCoor_i* StateGetPositionEcef_i(void);
-inline struct NedCoor_i*  StateGetPositionNed_i(void);
-inline struct LlaCoor_i*  StateGetPositionLla_i(void);
+inline struct EcefCoor_i StateGetPositionEcef_i(void);
+inline struct NedCoor_i  StateGetPositionNed_i(void);
+inline struct LlaCoor_i  StateGetPositionLla_i(void);
 
-inline struct NedCoor_i* StateGetSpeedNed_i(void);
-inline struct NedCoor_i* StateGetAccelNed_i(void);
+inline struct NedCoor_i StateGetSpeedNed_i(void);
+inline struct NedCoor_i StateGetAccelNed_i(void);
 
-inline struct Int32Quat*   StateGetNedToBodyQuat_i(void);
-inline struct Int32RMat*   StateGetNedToBodyRMat_i(void);
-inline struct Int32Eulers* StateGetNedToBodyEulers_i(void);
-inline struct Int32Rates*  StateGetBodyRates_i(void);
+inline struct Int32Quat   StateGetNedToBodyQuat_i(void);
+inline struct Int32RMat   StateGetNedToBodyRMat_i(void);
+inline struct Int32Eulers StateGetNedToBodyEulers_i(void);
+inline struct Int32Rates  StateGetBodyRates_i(void);
 
-inline struct Int32Vect2* StateGetHorizontalWindspeed_i(void);
-inline int32_t* StateGetAirspeed_i(void);
+inline struct Int32Vect2 StateGetHorizontalWindspeed_i(void);
+inline int32_t StateGetAirspeed_i(void);
 
 
 /*** functions to set state (float versions) ***/
@@ -173,23 +173,23 @@ inline void StateSetHorizontalWindspeed(struct FloatVect2* h_windspeed);
 inline void StateSetAirspeed(float* airspeed);
 
 /*** functions to get state (float versions) ***/
-inline struct FloatVect3* StateGetPositionUtm_f(void);
-//inline struct EcefCoor_f* StateGetPositionEcef_f(void);
-//inline struct NedCoor_f*  StateGetPositionNed_f(void);
-//inline struct LlaCoor_f*  StateGetPositionLla_f(void);
+inline struct FloatVect3 StateGetPositionUtm_f(void);
+//inline struct EcefCoor_f StateGetPositionEcef_f(void);
+//inline struct NedCoor_f  StateGetPositionNed_f(void);
+//inline struct LlaCoor_f  StateGetPositionLla_f(void);
 
-inline struct NedCoor_f* StateGetSpeedNed_f(void);
-inline struct NedCoor_f* StateGetAccelNed_f(void);
+inline struct NedCoor_f StateGetSpeedNed_f(void);
+inline struct NedCoor_f StateGetAccelNed_f(void);
 
-inline struct FloatQuat*   StateGetNedToBodyQuat_f(void);
-inline struct FloatRMat*   StateGetNedToBodyRMat_f(void);
-inline struct FloatEulers* StateGetNedToBodyEulers_f(void);
-inline struct FloatRates*  StateGetBodyRates_f(void);
+inline struct FloatQuat   StateGetNedToBodyQuat_f(void);
+inline struct FloatRMat   StateGetNedToBodyRMat_f(void);
+inline struct FloatEulers StateGetNedToBodyEulers_f(void);
+inline struct FloatRates  StateGetBodyRates_f(void);
 
-inline float* StateGetHorizontalGroundSpeedNorm_f(void); //a bit long, isn't it? returns h_speed_norm
-inline float* StateGetHorizontalGroundSpeedDirection_f(void); //a bit long, isn't it? returns h_speed_dir
+inline float StateGetHorizontalGroundSpeedNorm_f(void); //a bit long, isn't it? returns h_speed_norm
+inline float StateGetHorizontalGroundSpeedDirection_f(void); //a bit long, isn't it? returns h_speed_dir
 inline struct FloatVect2* StateGetHorizontalWindspeed_f(void);
-inline float* StateGetAirspeed_f(void);
+inline float StateGetAirspeed_f(void);
 
 
 #endif /* STATE_H */

@@ -82,68 +82,68 @@ inline void StateSetBodyRates_i(struct Int32Rates* body_rate){
 /*
  * Get State functions (int versions)
  */
-inline struct EcefCoor_i* StateGetPositionEcef_i(void) {
+inline struct EcefCoor_i StateGetPositionEcef_i(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_ECEF_I);
   }
-  return &state.ecef_pos_i;
+  return state.ecef_pos_i;
 }
 
-inline struct NedCoor_i* StateGetPositionNed_i(void) {
+inline struct NedCoor_i StateGetPositionNed_i(void) {
   if (!bit_is_set(state.pos_status, POS_NED_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_NED_I);
   }
-  return &state.ned_pos_i;
+  return state.ned_pos_i;
 }
 
-inline struct LlaCoor_i* StateGetPositionLla_i(void) {
+inline struct LlaCoor_i StateGetPositionLla_i(void) {
   if (!bit_is_set(state.pos_status, POS_LLA_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_LLA_I);
   }
-  return &state.lla_pos_i;
+  return state.lla_pos_i;
 }
 
 /*
-  inline struct NedCoor_i* StateGetSpeedNed_i(void) {
+  inline struct NedCoor_i StateGetSpeedNed_i(void) {
 
   }
 
-  inline struct NedCoor_i* StateGetAccelNed_i(void) {
+  inline struct NedCoor_i StateGetAccelNed_i(void) {
 
   }
 */
 
-inline struct Int32Quat* StateGetNedToBodyQuat_i(void) {
+inline struct Int32Quat StateGetNedToBodyQuat_i(void) {
   if (!bit_is_set(state.att_status, ATT_QUAT_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.att_status, ATT_QUAT_I);
   }
-  return &state.ned_to_body_quat_i;
+  return state.ned_to_body_quat_i;
 }
 
-inline struct Int32RMat* StateGetNedToBodyRMat_i(void) {
+inline struct Int32RMat StateGetNedToBodyRMat_i(void) {
   if (!bit_is_set(state.att_status, POS_LLA_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.att_status, POS_LLA_I);
   }
-  return &state.ned_to_body_rmat_i;
+  return state.ned_to_body_rmat_i;
 }
 
-inline struct Int32Eulers* StateGetNedToBodyEulers_i(void) {
+inline struct Int32Eulers StateGetNedToBodyEulers_i(void) {
   if (!bit_is_set(state.att_status, ATT_EULER_I)) {
     //transform_pos(xx,xx);
     /* set bit to indicate this representation is computed */
     SetBit(state.att_status, ATT_EULER_I);
   }
-  return &state.ned_to_body_eulers_i;
+  return state.ned_to_body_eulers_i;
 }
 
 /*
