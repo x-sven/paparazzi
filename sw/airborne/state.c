@@ -31,19 +31,19 @@ struct State state;
  * Set State functions (int versions)
  */
 inline void StateSetPositionEcef_i(struct EcefCoor_i* ecef_pos) {
-  INT32_VECT3_COPY(state.ecef_pos_i, (*ecef_pos));
+  INT32_VECT3_COPY(state.ecef_pos_i, *ecef_pos);
   /* clear bits for all position representations and only set the new one */
   state.pos_status = (1 << POS_ECEF_I);
 }
 
 inline void StateSetPositionNed_i(struct NedCoor_i* ned_pos) {
-  INT32_VECT3_COPY(state.ned_pos_i, (*ned_pos));
+  INT32_VECT3_COPY(state.ned_pos_i, *ned_pos);
   /* clear bits for all position representations and only set the new one */
   state.pos_status = (1 << POS_NED_I);
 }
 
 inline void StateSetPositionLla_i(struct LlaCoor_i* lla_pos) {
-  LLA_COPY(state.lla_pos_i, (*lla_pos));
+  LLA_COPY(state.lla_pos_i, *lla_pos);
   /* clear bits for all position representations and only set the new one */
   state.pos_status = (1 << POS_LLA_I);
 }
@@ -57,19 +57,19 @@ inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel) {
 }
 
 inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat) {
-  QUAT_COPY(state.ned_to_body_quat_i, (*ned_to_body_quat));
+  QUAT_COPY(state.ned_to_body_quat_i, *ned_to_body_quat);
   /* clear bits for all attitude representations and only set the new one */
   state.att_status = (1 << ATT_QUAT_I);
 }
 
 inline void StateSetNedToBodyRMat_i(struct Int32RMat* ned_to_body_rmat) {
-  RMAT_COPY(state.ned_to_body_rmat_i, (*ned_to_body_rmat));
+  RMAT_COPY(state.ned_to_body_rmat_i, *ned_to_body_rmat);
   /* clear bits for all attitude representations and only set the new one */
   state.att_status = (1 << ATT_RMAT_I);
 }
 
 inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers){
-  EULERS_COPY(state.ned_to_body_eulers_i, (*ned_to_body_eulers));
+  EULERS_COPY(state.ned_to_body_eulers_i, *ned_to_body_eulers);
   /* clear bits for all attitude representations and only set the new one */
   state.att_status = (1 << ATT_EULER_I);
 }
