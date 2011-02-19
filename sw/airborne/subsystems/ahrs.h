@@ -89,6 +89,12 @@ extern float ahrs_mag_offset;
     RATES_BFP_OF_REAL(ahrs.body_rate, ahrs_float.body_rate);                   \
   }
 
+/* copy attitude to state interface */
+#define AHRS_BODY_TO_STATE() {                          \
+    StateSetNedToBodyQuat_i(&ahrs.ltp_to_body_quat);    \
+    StateSetBodyRates_i(&ahrs.body_rate);               \
+  }
+
 extern void ahrs_init(void);
 extern void ahrs_align(void);
 extern void ahrs_propagate(void);

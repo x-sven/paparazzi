@@ -43,12 +43,34 @@
 #define POS_LLA_F  1<<6
 #define POS_UTM_F  1<<7
 
+#define SPEED_ECEF_I  1<<0
+#define SPEED_NED_I   1<<1
+#define SPEED_HNORM_I 1<<2
+#define SPEED_HDIR_I  1<<3
+#define SPEED_ECEF_F  1<<4
+#define SPEED_NED_F   1<<5
+#define SPEED_HNORM_F 1<<6
+#define SPEED_HDIR_F  1<<7
+
+#define ACCEL_ECEF_I 1<<0
+#define ACCEL_NED_I  1<<1
+#define ACCEL_ECEF_F 1<<3
+#define ACCEL_NED_F  1<<4
+
 #define ATT_QUAT_I  1<<0
 #define ATT_EULER_I 1<<1
 #define ATT_RMAT_I  1<<2
 #define ATT_QUAT_F  1<<3
 #define ATT_EULER_F 1<<4
 #define ATT_RMAT_F  1<<5
+
+#define RATE_I 1<<0
+#define RATE_F 1<<1
+
+#define WINDSPEED_I 1<<0
+#define AIRSPEED_I  1<<1
+#define WINDSPEED_F 1<<2
+#define AIRSPEED_F  1<<3
 
 
 /* abstract state interface */
@@ -58,6 +80,8 @@ struct State {
 
   /* Earth Centered Earth Fixed in centimeters */
   struct EcefCoor_i ecef_pos_i;
+  struct EcefCoor_i ecef_speed_i;
+  struct EcefCoor_i ecef_accel_i;
 
   /* lon, lat in radians*1e7  */
   /* alt in centimeters above MSL  */
@@ -72,17 +96,23 @@ struct State {
   struct NedCoor_i ned_speed_i;
   struct NedCoor_i ned_accel_i;
 
-  /* vehicle attitude */
-  struct Int32Quat   ned_to_body_quat_i;
-  struct Int32Eulers ned_to_body_eulers_i;
-  struct Int32RMat   ned_to_body_rmat_i;
-  struct Int32Rates  body_rate_i;
+  /* horizontal ground speed in norm and dir (m/s, rad (CW/North))
+   * with SPEED_FRAC and ANGLE_FRAC
+   */
+  int32_t h_speed_norm_i;
+  int32_t h_speed_dir_i;
 
   /* horizontal windspeed x = north, y = east */
   struct Int32Vect2 h_windspeed_i;
 
+  /* airspeed norm in m/s with SPEED_FRAC */
   int32_t airspeed_i;
 
+  /* vehicle attitude */
+  struct Int32Quat   ned_to_body_quat_i;
+  struct Int32Eulers ned_to_body_eulers_i;
+  struct Int32RMat   ned_to_body_rmat_i;
+  struct Int32Rates  body_rates_i;
 
   /****** float representations ******/
 
@@ -108,12 +138,16 @@ struct State {
   struct FloatQuat   ned_to_body_quat_f;
   struct FloatEulers ned_to_body_eulers_f;
   struct FloatRMat   ned_to_body_rmat_f;
-  struct FloatRates  body_rate_f;
+  struct FloatRates  body_rates_f;
 
 
   /********** one time computation bookkeeping ********/
   uint8_t pos_status;
+  uint8_t speed_status;
+  uint8_t accel_status;
   uint8_t att_status;
+  uint8_t rate_status;
+  uint8_t wind_air_status;
 
 };
 

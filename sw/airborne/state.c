@@ -49,11 +49,15 @@ inline void StateSetPositionLla_i(struct LlaCoor_i* lla_pos) {
 }
 
 inline void StateSetSpeedNed_i(struct NedCoor_i* ned_speed) {
-
+  INT32_VECT3_COPY(state.ned_speed_i, *ned_speed);
+  /* clear bits for all speed representations and only set the new one */
+  state.speed_status = (1 << SPEED_NED_I);
 }
 
 inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel) {
-
+  INT32_VECT3_COPY(state.ned_accel_i, *ned_accel);
+  /* clear bits for all speed representations and only set the new one */
+  state.accel_status = (1 << ACCEL_NED_I);
 }
 
 inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat) {
@@ -75,7 +79,9 @@ inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers){
 }
 
 inline void StateSetBodyRates_i(struct Int32Rates* body_rate){
-
+  RATES_COPY(state.body_rates_i, *body_rate);
+  /* clear bits for all attitude representations and only set the new one */
+  state.rate_status = (1 << RATE_I);
 }
 
 
@@ -135,15 +141,35 @@ inline struct LlaCoor_i StateGetPositionLla_i(void) {
   return state.lla_pos_i;
 }
 
-/*
-  inline struct NedCoor_i StateGetSpeedNed_i(void) {
-
+inline struct NedCoor_i StateGetSpeedNed_i(void) {
+  if (!bit_is_set(state.speed_status, SPEED_NED_I)) {
+    if (bit_is_set(state.speed_status, SPEED_ECEF_I)) {
+      if (state.ned_initialised_i) {
+        ned_of_ecef_vect_i(&state.ned_speed_i, &state.ned_origin_i, &state.ecef_speed_i);
+      }
+    } else {
+      //try floats....
+    }
+    /* set bit to indicate this representation is computed */
+    SetBit(state.speed_status, SPEED_NED_I);
   }
+  return state.ned_speed_i;
+}
 
-  inline struct NedCoor_i StateGetAccelNed_i(void) {
-
+inline struct NedCoor_i StateGetAccelNed_i(void) {
+  if (!bit_is_set(state.accel_status, ACCEL_NED_I)) {
+    if (bit_is_set(state.accel_status, ACCEL_ECEF_I)) {
+      if (state.ned_initialised_i) {
+        ned_of_ecef_vect_i(&state.ned_accel_i, &state.ned_origin_i, &state.ecef_accel_i);
+      }
+    } else {
+      //try floats....
+    }
+    /* set bit to indicate this representation is computed */
+    SetBit(state.accel_status, ACCEL_NED_I);
   }
-*/
+  return state.ned_accel_i;
+}
 
 inline struct Int32Quat StateGetNedToBodyQuat_i(void) {
   if (!bit_is_set(state.att_status, ATT_QUAT_I)) {
@@ -190,8 +216,15 @@ inline struct Int32Eulers StateGetNedToBodyEulers_i(void) {
   return state.ned_to_body_eulers_i;
 }
 
-/*
-  inline struct Int32Rates StateGetBodyRates_i(void) {
 
+inline struct Int32Rates StateGetBodyRates_i(void) {
+  if (!bit_is_set(state.rate_status, RATE_I)) {
+    if (bit_is_set(state.rate_status, RATE_F)) {
+      RATES_FLOAT_OF_BFP(state.body_rates_i, state.body_rates_f);
+    }
+    /* set bit to indicate this representation is computed */
+    SetBit(state.rate_status, RATE_I);
   }
-*/
+  return state.body_rates_i;
+}
+
