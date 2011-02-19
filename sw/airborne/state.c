@@ -117,14 +117,23 @@ inline void StateSetAirspeed_i(int32_t* airspeed) {
  */
 inline struct EcefCoor_i StateGetPositionEcef_i(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_I)) {
-    if (bit_is_set(state.pos_status, POS_NED_I)) {
-      if (state.ned_initialised_i) {
-        //ecef_of_ned_point_i(&state.ecef_pos_i, &state.ned_origin_i, &state.ned_pos_i);
-      }
+    if (bit_is_set(state.pos_status, POS_ECEF_F)) {
+      ECEF_BFP_OF_REAL(state.ecef_pos_i, state.ecef_pos_f);
+    } else if (bit_is_set(state.pos_status, POS_NED_I)) {
+        ecef_of_ned_point_i(&state.ecef_pos_i, &state.ned_origin_i, &state.ned_pos_i);
+    } else if (bit_is_set(state.pos_status, POS_NED_F)) {
+      ecef_of_ned_point_i(&state.ecef_pos_i, &state.ned_origin_i, &state.ned_pos_i);
+    } else if (bit_is_set(state.pos_status, POS_LLA_F)) {
+      struct EcefCoor_f ecef_f;
+      ecef_of_lla_f(&ecef_f, &state.lla_pos_f);
+      ECEF_BFP_OF_REAL(state.ecef_pos_i, ecef_f);
     } else if (bit_is_set(state.pos_status, POS_LLA_I)) {
       ecef_of_lla_i(&state.ecef_pos_i, &state.lla_pos_i);
     } else {
-      //try floats....
+      /* could not get this representation,  set errno */
+      struct EcefCoor_i ecef_i;
+      INT32_VECT3_ZERO(ecef_i);
+      return ecef_i;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_ECEF_I);
@@ -134,16 +143,28 @@ inline struct EcefCoor_i StateGetPositionEcef_i(void) {
 
 inline struct NedCoor_i StateGetPositionNed_i(void) {
   if (!bit_is_set(state.pos_status, POS_NED_I)) {
-    if (bit_is_set(state.pos_status, POS_ECEF_I)) {
-      if (state.ned_initialised_i) {
+    if (state.ned_initialised_i) {
+      if (bit_is_set(state.pos_status, POS_NED_F)) {
+        NED_BFP_OF_REAL(state.ned_pos_i, state.ned_pos_f);
+      } else if (bit_is_set(state.pos_status, POS_ECEF_I)) {
         ned_of_ecef_point_i(&state.ned_pos_i, &state.ned_origin_i, &state.ecef_pos_i);
-      }
-    } else if (bit_is_set(state.pos_status, POS_LLA_I)) {
-      if (state.ned_initialised_i) {
-        ned_of_lla_point_i(&state.ned_pos_i,  &state.ned_origin_i, &state.lla_pos_i);
+      } else if (bit_is_set(state.pos_status, POS_LLA_F)) {
+        struct NedCoor_f ned_f;
+        ned_of_lla_point_f(&ned_f, &state.ned_origin_f, &state.lla_pos_f);
+        NED_BFP_OF_REAL(state.ned_pos_i, ned_f);
+      } else if (bit_is_set(state.pos_status, POS_LLA_I)) {
+        ned_of_lla_point_i(&state.ned_pos_i, &state.ned_origin_i, &state.lla_pos_i);
+      } else {
+        /* could not get this representation,  set errno */
+        struct NedCoor_i ned_i;
+        INT32_VECT3_ZERO(ned_i);
+        return ned_i;
       }
     } else {
-      //try floats....
+      /* ned coordinate system not initialized,  set errno */
+      struct NedCoor_i ned;
+      INT32_VECT3_ZERO(ned);
+      return ned;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_NED_I);
@@ -153,14 +174,21 @@ inline struct NedCoor_i StateGetPositionNed_i(void) {
 
 inline struct LlaCoor_i StateGetPositionLla_i(void) {
   if (!bit_is_set(state.pos_status, POS_LLA_I)) {
-    if (bit_is_set(state.pos_status, POS_ECEF_I)) {
+    if (bit_is_set(state.pos_status, POS_LLA_F)) {
+      LLA_BFP_OF_REAL(state.lla_pos_i, state.lla_pos_f);
+    } else if (bit_is_set(state.pos_status, POS_ECEF_I)) {
       lla_of_ecef_i(&state.lla_pos_i, &state.ecef_pos_i);
+    } else if (bit_is_set(state.pos_status, POS_ECEF_F)) {
+      struct LlaCoor_f lla_f;
+      lla_of_ecef_f(&lla_f, &state.ecef_pos_f);
+      LLA_BFP_OF_REAL(state.lla_pos_i, lla_f);
     } else if (bit_is_set(state.pos_status, POS_NED_I)) {
-      if (state.ned_initialised_i) {
-        //lla_of_ned_point_i(&state.lla_pos_i, &state.ned_origin, &state.ned_pos_i);
-      }
+      //lla_of_ned_point_i(&state.lla_pos_i, &state.ned_origin, &state.ned_pos_i);
     } else {
-      //try floats....
+      /* could not get this representation,  set errno */
+      struct LlaCoor_i lla_i;
+      LLA_ASSIGN(lla_i, 0, 0, 0);
+      return lla_i;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.pos_status, POS_LLA_I);
@@ -449,7 +477,7 @@ inline struct NedCoor_f StateGetPositionNed_f(void) {
       }
     } else if (bit_is_set(state.pos_status, POS_LLA_F)) {
       if (state.ned_initialised_f) {
-        //ned_of_lla_point_f(&state.ned_pos_f, &state.ned_origin_f, &state.lla_pos_f);
+        ned_of_lla_point_f(&state.ned_pos_f, &state.ned_origin_f, &state.lla_pos_f);
       }
     } else {
       //try int....
