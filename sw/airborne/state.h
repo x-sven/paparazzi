@@ -250,7 +250,7 @@ inline struct FloatQuat   StateGetNedToBodyQuat_f(void);
 inline struct FloatRMat   StateGetNedToBodyRMat_f(void);
 inline struct FloatEulers StateGetNedToBodyEulers_f(void);
 inline struct FloatRates  StateGetBodyRates_f(void);
-;
+
 inline struct FloatVect2 StateGetHorizontalWindspeed_f(void);
 inline float StateGetAirspeed_f(void);
 
