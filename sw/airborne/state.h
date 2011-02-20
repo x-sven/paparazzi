@@ -113,24 +113,18 @@
  */
 struct State {
 
-  /*************************************
-   * Int representations
-   ************************************/
+  /** @addtogroup PosGroup
+   *  @{ */
+  /**
+   * @brief holds the status bits for all position representations
+   * @details When the corresponding bit is one the representation
+   * is already computed. */
+  uint8_t pos_status;
 
   /**
    * @brief position in EarthCenteredEarthFixed coordinates
    * @details Units: centimeters */
   struct EcefCoor_i ecef_pos_i;
-
-  /**
-   * @brief speed in EarthCenteredEarthFixed coordinates
-   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
-  struct EcefCoor_i ecef_speed_i;
-
-  /**
-   * @brief acceleration in EarthCenteredEarthFixed coordinates
-   * @details Units: m/s^2 in BFP with INT32_ACCEL_FRAC */
-  struct EcefCoor_i ecef_accel_i;
 
   /**
    * @brief position in Latitude, Longitude and Altitude
@@ -155,70 +149,6 @@ struct State {
    * @details @details with respect to ned_origin_i (flat earth)
    * Units: m in BFP with INT32_POS_FRAC */
   struct NedCoor_i ned_pos_i;
-
-  /**
-   * @brief speed in North East Down coordinates
-   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
-  struct NedCoor_i ned_speed_i;
-
-  /**
-   * @brief acceleration in North East Down coordinates
-   * @details @details Units: m/s^2 in BFP with INT32_ACCEL_FRAC */
-  struct NedCoor_i ned_accel_i;
-
-  /**
-   * @brief norm of horizontal ground speed
-   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
-  int32_t h_speed_norm_i;
-
-  /**
-   * @brief dir of horizontal ground speed
-   * @details Units: rad in BFP with INT32_ANGLE_FRAC */
-  int32_t h_speed_dir_i;
-
-  /**
-   * @brief horizontal windspeed in north/east
-   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
-  struct Int32Vect2 h_windspeed_i;
-
-  /**
-   * @brief norm of horizontal ground speed
-   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
-  int32_t airspeed_i;
-
-  /**
-   * @brief attitude as quaternion
-   * @details Specifies rotation from local NED frame to body frame.
-   * Units: INT32_QUAT_FRAC
-   *
-   * @code
-   * struct Int32Vect3 body_accel;
-   * INT32_QUAT_VMULT(body_accel, StateGetNedToBodyQuat_i(), StateGetAccelNed_i());
-   * @endcode
-   */
-  struct Int32Quat ned_to_body_quat_i;
-
-  /**
-   * @brief attitude in zyx euler angles
-   * @details Specifies rotation from local NED frame to body frame.
-   * Units: rad in BFP with INT32_ANGLE_FRAC */
-  struct Int32Eulers ned_to_body_eulers_i;
-
-  /**
-   * @brief attitude rotation matrix
-   * @details Specifies rotation from local NED frame to body frame.
-   * Units: rad in BFP with INT32_TRIG_FRAC */
-  struct Int32RMat   ned_to_body_rmat_i;
-
-  /**
-   * @brief angular rates in body frame
-   * @details Units: rad/s^2 in BFP with INT32_RATE_FRAC */
-  struct Int32Rates  body_rates_i;
-
-
-  /*************************************
-   * float representations
-   ************************************/
 
   /**
    * @brief position in UTM coordinates
@@ -248,16 +178,6 @@ struct State {
   struct EcefCoor_f ecef_pos_f;
 
   /**
-   * @brief speed in EarthCenteredEarthFixed coordinates
-   * @details Units: m/s */
-  struct EcefCoor_f ecef_speed_f;
-
-  /**
-   * @brief acceleration in EarthCenteredEarthFixed coordinates
-   * @details Units: m/s^2 */
-  struct EcefCoor_f ecef_accel_f;
-
-  /**
    * @brief definition of the local (flat earth) coordinate system
    * @details Defines the origin of the local coordinate system
    * in ECEF and LLA coordinates and the roation matrix from
@@ -273,16 +193,46 @@ struct State {
    * @details @details with respect to ned_origin_i (flat earth)
    * Units: meters */
   struct NedCoor_f ned_pos_f;
+  /** @}*/
+
+
+  /** @addtogroup SpeedGroup
+   *  @{ */
+  /**
+   * @brief holds the status bits for all ground speed representations
+   * @details When the corresponding bit is one the representation
+   * is already computed. */
+  uint8_t speed_status;
+
+  /**
+   * @brief speed in EarthCenteredEarthFixed coordinates
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  struct EcefCoor_i ecef_speed_i;
+
+  /**
+   * @brief speed in North East Down coordinates
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  struct NedCoor_i ned_speed_i;
+
+  /**
+   * @brief norm of horizontal ground speed
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  int32_t h_speed_norm_i;
+
+  /**
+   * @brief dir of horizontal ground speed
+   * @details Units: rad in BFP with INT32_ANGLE_FRAC */
+  int32_t h_speed_dir_i;
+
+  /**
+   * @brief speed in EarthCenteredEarthFixed coordinates
+   * @details Units: m/s */
+  struct EcefCoor_f ecef_speed_f;
 
   /**
    * @brief speed in North East Down coordinates
    * @details Units: m/s */
   struct NedCoor_f ned_speed_f;
-
-  /**
-   * @brief acceleration in North East Down coordinates
-   * @details Units: m/s^2 */
-  struct NedCoor_f ned_accel_f;
 
   /**
    * @brief norm of horizontal ground speed
@@ -293,18 +243,72 @@ struct State {
    * @brief dir of horizontal ground speed
    * @details Units: rad (clockwise, zero=north)*/
   float h_speed_dir_f;
+  /** @}*/
+
+
+  /** @addtogroup AccelGroup
+   *  @{ */
+  /**
+   * @brief holds the status bits for all acceleration representations
+   * @details When the corresponding bit is one the representation
+   * is already computed. */
+  uint8_t accel_status;
 
   /**
-   * @brief horizontal windspeed
-   * @details Units: m/s with x=north, y=east */
-  struct FloatVect2 h_windspeed_f;
+   * @brief acceleration in North East Down coordinates
+   * @details @details Units: m/s^2 in BFP with INT32_ACCEL_FRAC */
+  struct NedCoor_i ned_accel_i;
 
   /**
-   * @brief norm of horizontal ground speed
-   * @details Units: m/s */
-  float airspeed_f;
+   * @brief acceleration in EarthCenteredEarthFixed coordinates
+   * @details Units: m/s^2 in BFP with INT32_ACCEL_FRAC */
+  struct EcefCoor_i ecef_accel_i;
 
   /**
+   * @brief acceleration in North East Down coordinates
+   * @details Units: m/s^2 */
+  struct NedCoor_f ned_accel_f;
+
+  /**
+   * @brief acceleration in EarthCenteredEarthFixed coordinates
+   * @details Units: m/s^2 */
+  struct EcefCoor_f ecef_accel_f;
+  /** @}*/
+
+
+  /** @addtogroup AttGroup
+   *  @{ */
+  /**
+   * @brief holds the status bits for all attitude representations
+   * @details When the corresponding bit is one the representation
+   * is already computed. */
+  uint8_t att_status;
+
+  /**
+   * @brief attitude as quaternion
+   * @details Specifies rotation from local NED frame to body frame.
+   * Units: INT32_QUAT_FRAC
+   *
+   * @code
+   * struct Int32Vect3 body_accel;
+   * INT32_QUAT_VMULT(body_accel, StateGetNedToBodyQuat_i(), StateGetAccelNed_i());
+   * @endcode
+   */
+  struct Int32Quat ned_to_body_quat_i;
+
+  /**
+   * @brief attitude in zyx euler angles
+   * @details Specifies rotation from local NED frame to body frame.
+   * Units: rad in BFP with INT32_ANGLE_FRAC */
+  struct Int32Eulers ned_to_body_eulers_i;
+
+  /**
+   * @brief attitude rotation matrix
+   * @details Specifies rotation from local NED frame to body frame.
+   * Units: rad in BFP with INT32_TRIG_FRAC */
+  struct Int32RMat   ned_to_body_rmat_i;
+
+   /**
    * @brief attitude as quaternion
    * @details Specifies rotation from local NED frame to body frame.
    * Units: unit length
@@ -327,39 +331,11 @@ struct State {
    * @details Specifies rotation from local NED frame to body frame.
    * Units: rad */
   struct FloatRMat   ned_to_body_rmat_f;
-
-  /**
-   * @brief angular rates in body frame
-   * @details Units: rad/s^2 */
-  struct FloatRates  body_rates_f;
+  /** @}*/
 
 
-  /********** one time computation bookkeeping ********/
-
-  /**
-   * @brief holds the status bits for all position representations
-   * @details When the corresponding bit is one the representation
-   * is already computed. */
-  uint8_t pos_status;
-
-  /**
-   * @brief holds the status bits for all ground speed representations
-   * @details When the corresponding bit is one the representation
-   * is already computed. */
-  uint8_t speed_status;
-
-  /**
-   * @brief holds the status bits for all acceleration representations
-   * @details When the corresponding bit is one the representation
-   * is already computed. */
-  uint8_t accel_status;
-
-  /**
-   * @brief holds the status bits for all attitude representations
-   * @details When the corresponding bit is one the representation
-   * is already computed. */
-  uint8_t att_status;
-
+  /** @addtogroup RateGroup
+   *  @{ */
   /**
    * @brief holds the status bits for all angular rate representations
    * @details When the corresponding bit is one the representation
@@ -367,19 +343,58 @@ struct State {
   uint8_t rate_status;
 
   /**
+   * @brief angular rates in body frame
+   * @details Units: rad/s^2 in BFP with INT32_RATE_FRAC */
+  struct Int32Rates  body_rates_i;
+
+  /**
+   * @brief angular rates in body frame
+   * @details Units: rad/s^2 */
+  struct FloatRates  body_rates_f;
+  /** @}*/
+
+
+  /** @addtogroup WindAirGroup
+   *  @{ */
+  /**
    * @brief holds the status bits for all wind- and airspeed representations
    * @details When the corresponding bit is one the representation
    * is already computed. */
   uint8_t wind_air_status;
 
+  /**
+   * @brief horizontal windspeed in north/east
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  struct Int32Vect2 h_windspeed_i;
+
+  /**
+   * @brief norm of horizontal ground speed
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  int32_t airspeed_i;
+
+  /**
+   * @brief horizontal windspeed
+   * @details Units: m/s with x=north, y=east */
+  struct FloatVect2 h_windspeed_f;
+
+  /**
+   * @brief norm of horizontal ground speed
+   * @details Units: m/s */
+  float airspeed_f;
+  /** @}*/
+
 };
 
 extern struct State state;
 
-/*******************************************************************
- * Set State functions (int versions)
- *******************************************************************/
 
+
+/*******************************************************************
+ * Set and Get functions for the POSITION representations
+ *******************************************************************/
+/** @addtogroup PosGroup
+ *  @{ */
+/************************ Set functions ****************************/
 /** @brief Set position from ECEF coordinates (int). */
 inline void StateSetPositionEcef_i(struct EcefCoor_i* ecef_pos);
 
@@ -388,90 +403,6 @@ inline void StateSetPositionNed_i(struct NedCoor_i* ned_pos);
 
 /** @brief Set position from LLA coordinates (int). */
 inline void StateSetPositionLla_i(struct LlaCoor_i* lla_pos);
-
-/** @brief Set ground speed in local NED coordinates (int). */
-inline void StateSetSpeedNed_i(struct NedCoor_i* ned_speed);
-
-/** @brief Set ground speed in ECEF coordinates (int). */
-inline void StateSetSpeedEcef_i(struct EcefCoor_i* ecef_speed);
-
-/** @brief Set acceleration in NED coordinates (int). */
-inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel);
-
-/** @brief Set acceleration in ECEF coordinates (int). */
-inline void StateSetAccelEcef_i(struct EcefCoor_i* ecef_accel);
-
-/** @brief Set vehicle body attitude from quaternion (int). */
-inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat);
-
-/** @brief Set vehicle body attitude from rotation matrix (int). */
-inline void StateSetNedToBodyRMat_i(struct Int32RMat* ned_to_body_rmat);
-
-/** @brief Set vehicle body attitude from euler angles (int). */
-inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers);
-
-/** @brief Set vehicle body angular rate (int). */
-inline void StateSetBodyRates_i(struct Int32Rates* body_rate);
-
-/** @brief Set horizontal windspeed (int). */
-inline void StateSetHorizontalWindspeed_i(struct Int32Vect2* h_windspeed);
-
-/** @brief Set airspeed (int). */
-inline void StateSetAirspeed_i(int32_t* airspeed);
-
-
-/*******************************************************************
- * Get State functions (int versions)
- *******************************************************************/
-
-/** @brief Get position in ECEF coordinates (int). */
-inline struct EcefCoor_i StateGetPositionEcef_i(void);
-
-/** @brief Get position in local NED coordinates (int). */
-inline struct NedCoor_i StateGetPositionNed_i(void);
-
-/** @brief Get position in LLA coordinates (int). */
-inline struct LlaCoor_i StateGetPositionLla_i(void);
-
-/** @brief Get ground speed in local NED coordinates (int). */
-inline struct NedCoor_i StateGetSpeedNed_i(void);
-
-/** @brief Get ground speed in ECEF coordinates (int). */
-inline struct EcefCoor_i StateGetSpeedEcef_i(void);
-
-/** @brief Get norm of horizontal ground speed (int). */
-inline int32_t StateGetHorizontalSpeedNorm_i(void);
-
-/** @brief Get dir of horizontal ground speed (int). */
-inline int32_t StateGetHorizontalSpeedDir_i(void);
-
-/** @brief Get acceleration in NED coordinates (int). */
-inline struct NedCoor_i StateGetAccelNed_i(void);
-
-/** @brief Get acceleration in ECEF coordinates (int). */
-inline struct EcefCoor_i StateGetAccelEcef_i(void);
-
-/** @brief Get vehicle body attitude quaternion (int). */
-inline struct Int32Quat StateGetNedToBodyQuat_i(void);
-
-/** @brief Get vehicle body attitude rotation matrix (int). */
-inline struct Int32RMat StateGetNedToBodyRMat_i(void);
-
-/** @brief Get vehicle body attitude euler angles (int). */
-inline struct Int32Eulers StateGetNedToBodyEulers_i(void);
-
-/** @brief Get vehicle body angular rate (int). */
-inline struct Int32Rates StateGetBodyRates_i(void);
-
-/** @brief Get horizontal windspeed (int). */
-inline struct Int32Vect2 StateGetHorizontalWindspeed_i(void);
-
-/** @brief Get airspeed (int). */
-inline int32_t StateGetAirspeed_i(void);
-
-/*******************************************************************
- * Set State functions (float versions)
- *******************************************************************/
 
 /** @brief Set position from UTM coordinates (float). */
 inline void StateSetPositionUtm_f(struct FloatVect3* utm_pos);
@@ -485,40 +416,15 @@ inline void StateSetPositionNed_f(struct NedCoor_f* ned_pos);
 /** @brief Set position from LLA coordinates (float). */
 inline void StateSetPositionLla_f(struct LlaCoor_f* lla_pos);
 
-/** @brief Set ground speed in local NED coordinates (float). */
-inline void StateSetSpeedNed_f(struct NedCoor_f* ned_speed);
+/************************ Get functions ****************************/
+/** @brief Get position in ECEF coordinates (int). */
+inline struct EcefCoor_i StateGetPositionEcef_i(void);
 
-/** @brief Set ground speed in ECEF coordinates (float). */
-inline void StateSetSpeedEcef_f(struct EcefCoor_f* ecef_speed);
+/** @brief Get position in local NED coordinates (int). */
+inline struct NedCoor_i StateGetPositionNed_i(void);
 
-/** @brief Set acceleration in NED coordinates (float). */
-inline void StateSetAccelNed_f(struct NedCoor_f* ned_accel);
-
-/** @brief Set acceleration in ECEF coordinates (float). */
-inline void StateSetAccelEcef_f(struct EcefCoor_f* ecef_accel);
-
-/** @brief Set vehicle body attitude from quaternion (float). */
-inline void StateSetNedToBodyQuat_f(struct FloatQuat* ned_to_body_quat);
-
-/** @brief Set vehicle body attitude from rotation matrix (float). */
-inline void StateSetNedToBodyRMat_f(struct FloatRMat* ned_to_body_rmat);
-
-/** @brief Set vehicle body attitude from euler angles (float). */
-inline void StateSetNedToBodyEulers_f(struct FloatEulers* ned_to_body_eulers);
-
-/** @brief Set vehicle body angular rate (float). */
-inline void StateSetBodyRates_f(struct FloatRates* body_rate);
-
-/** @brief Set horizontal windspeed (float). */
-inline void StateSetHorizontalWindspeed_f(struct FloatVect2* h_windspeed);
-
-/** @brief Set airspeed (float). */
-inline void StateSetAirspeed_f(float* airspeed);
-
-
-/*******************************************************************
- * Get State functions (float versions)
- *******************************************************************/
+/** @brief Get position in LLA coordinates (int). */
+inline struct LlaCoor_i StateGetPositionLla_i(void);
 
 /** @brief Get position in UTM coordinates (float). */
 inline struct FloatVect3 StateGetPositionUtm_f(void);
@@ -531,6 +437,40 @@ inline struct NedCoor_f  StateGetPositionNed_f(void);
 
 /** @brief Get position in LLA coordinates (float). */
 inline struct LlaCoor_f  StateGetPositionLla_f(void);
+/** @}*/
+
+
+
+/*******************************************************************
+ * Set and Get functions for the SPEED representations
+ *******************************************************************/
+/** @addtogroup SpeedGroup
+ *  @{ */
+/************************ Set functions ****************************/
+/** @brief Set ground speed in local NED coordinates (int). */
+inline void StateSetSpeedNed_i(struct NedCoor_i* ned_speed);
+
+/** @brief Set ground speed in ECEF coordinates (int). */
+inline void StateSetSpeedEcef_i(struct EcefCoor_i* ecef_speed);
+
+/** @brief Set ground speed in local NED coordinates (float). */
+inline void StateSetSpeedNed_f(struct NedCoor_f* ned_speed);
+
+/** @brief Set ground speed in ECEF coordinates (float). */
+inline void StateSetSpeedEcef_f(struct EcefCoor_f* ecef_speed);
+
+/************************ Get functions ****************************/
+/** @brief Get ground speed in local NED coordinates (int). */
+inline struct NedCoor_i StateGetSpeedNed_i(void);
+
+/** @brief Get ground speed in ECEF coordinates (int). */
+inline struct EcefCoor_i StateGetSpeedEcef_i(void);
+
+/** @brief Get norm of horizontal ground speed (int). */
+inline int32_t StateGetHorizontalSpeedNorm_i(void);
+
+/** @brief Get dir of horizontal ground speed (int). */
+inline int32_t StateGetHorizontalSpeedDir_i(void);
 
 /** @brief Get ground speed in local NED coordinates (float). */
 inline struct NedCoor_f StateGetSpeedNed_f(void);
@@ -543,12 +483,77 @@ inline float StateGetHorizontalSpeedNorm_f(void);
 
 /** @brief Get dir of horizontal ground speed (float). */
 inline float StateGetHorizontalSpeedDir_f(void);
+/** @}*/
+
+
+
+/*******************************************************************
+ * Set and Get functions for the ACCELERATION representations
+ *******************************************************************/
+/** @addtogroup AccelGroup
+ *  @{ */
+/************************ Set functions ****************************/
+/** @brief Set acceleration in NED coordinates (int). */
+inline void StateSetAccelNed_i(struct NedCoor_i* ned_accel);
+
+/** @brief Set acceleration in ECEF coordinates (int). */
+inline void StateSetAccelEcef_i(struct EcefCoor_i* ecef_accel);
+
+/** @brief Set acceleration in NED coordinates (float). */
+inline void StateSetAccelNed_f(struct NedCoor_f* ned_accel);
+
+/** @brief Set acceleration in ECEF coordinates (float). */
+inline void StateSetAccelEcef_f(struct EcefCoor_f* ecef_accel);
+
+/************************ Get functions ****************************/
+/** @brief Get acceleration in NED coordinates (int). */
+inline struct NedCoor_i StateGetAccelNed_i(void);
+
+/** @brief Get acceleration in ECEF coordinates (int). */
+inline struct EcefCoor_i StateGetAccelEcef_i(void);
 
 /** @brief Get acceleration in NED coordinates (float). */
 inline struct NedCoor_f StateGetAccelNed_f(void);
 
 /** @brief Get acceleration in ECEF coordinates (float). */
 inline struct EcefCoor_f StateGetAccelEcef_f(void);
+/** @}*/
+
+
+
+/*******************************************************************
+ * Set and Get functions for the ATTITUDE representations
+ *******************************************************************/
+/** @addtogroup AttGroup
+ *  @{ */
+/************************ Set functions ****************************/
+/** @brief Set vehicle body attitude from quaternion (int). */
+inline void StateSetNedToBodyQuat_i(struct Int32Quat* ned_to_body_quat);
+
+/** @brief Set vehicle body attitude from rotation matrix (int). */
+inline void StateSetNedToBodyRMat_i(struct Int32RMat* ned_to_body_rmat);
+
+/** @brief Set vehicle body attitude from euler angles (int). */
+inline void StateSetNedToBodyEulers_i(struct Int32Eulers* ned_to_body_eulers);
+
+/** @brief Set vehicle body attitude from quaternion (float). */
+inline void StateSetNedToBodyQuat_f(struct FloatQuat* ned_to_body_quat);
+
+/** @brief Set vehicle body attitude from rotation matrix (float). */
+inline void StateSetNedToBodyRMat_f(struct FloatRMat* ned_to_body_rmat);
+
+/** @brief Set vehicle body attitude from euler angles (float). */
+inline void StateSetNedToBodyEulers_f(struct FloatEulers* ned_to_body_eulers);
+
+/************************ Get functions ****************************/
+/** @brief Get vehicle body attitude quaternion (int). */
+inline struct Int32Quat StateGetNedToBodyQuat_i(void);
+
+/** @brief Get vehicle body attitude rotation matrix (int). */
+inline struct Int32RMat StateGetNedToBodyRMat_i(void);
+
+/** @brief Get vehicle body attitude euler angles (int). */
+inline struct Int32Eulers StateGetNedToBodyEulers_i(void);
 
 /** @brief Get vehicle body attitude quaternion (float). */
 inline struct FloatQuat StateGetNedToBodyQuat_f(void);
@@ -558,15 +563,63 @@ inline struct FloatRMat StateGetNedToBodyRMat_f(void);
 
 /** @brief Get vehicle body attitude euler angles (float). */
 inline struct FloatEulers StateGetNedToBodyEulers_f(void);
+/** @}*/
+
+
+
+/*******************************************************************
+ * Set and Get functions for the ANGULAR RATE representations
+ *******************************************************************/
+/** @addtogroup RateGroup
+ *  @{ */
+/************************ Set functions ****************************/
+/** @brief Set vehicle body angular rate (int). */
+inline void StateSetBodyRates_i(struct Int32Rates* body_rate);
+
+/** @brief Set vehicle body angular rate (float). */
+inline void StateSetBodyRates_f(struct FloatRates* body_rate);
+
+/************************ Get functions ****************************/
+/** @brief Get vehicle body angular rate (int). */
+inline struct Int32Rates StateGetBodyRates_i(void);
 
 /** @brief Get vehicle body angular rate (float). */
 inline struct FloatRates StateGetBodyRates_f(void);
+/** @}*/
+
+
+
+/*******************************************************************
+ * Set and Get functions for the WIND- AND AIRSPEED representations
+ *******************************************************************/
+/** @addtogroup WindAirGroup
+ *  @{ */
+/************************ Set functions ****************************/
+/** @brief Set horizontal windspeed (int). */
+inline void StateSetHorizontalWindspeed_i(struct Int32Vect2* h_windspeed);
+
+/** @brief Set airspeed (int). */
+inline void StateSetAirspeed_i(int32_t* airspeed);
+
+/** @brief Set horizontal windspeed (float). */
+inline void StateSetHorizontalWindspeed_f(struct FloatVect2* h_windspeed);
+
+/** @brief Set airspeed (float). */
+inline void StateSetAirspeed_f(float* airspeed);
+
+/************************ Get functions ****************************/
+/** @brief Get horizontal windspeed (int). */
+inline struct Int32Vect2 StateGetHorizontalWindspeed_i(void);
+
+/** @brief Get airspeed (int). */
+inline int32_t StateGetAirspeed_i(void);
 
 /** @brief Get horizontal windspeed (float). */
 inline struct FloatVect2 StateGetHorizontalWindspeed_f(void);
 
 /** @brief Get airspeed (float). */
 inline float StateGetAirspeed_f(void);
+/** @}*/
 
 
 #endif /* STATE_H */
