@@ -342,12 +342,28 @@ inline void StateSetSpeedEcef_f(struct EcefCoor_f* ecef_speed) {
 /************************ Get functions ****************************/
 inline struct NedCoor_i StateGetSpeedNed_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_NED_I)) {
-    if (bit_is_set(state.speed_status, SPEED_ECEF_I)) {
-      if (state.ned_initialised_i) {
+
+    if (state.ned_initialised_i) {
+      if (bit_is_set(state.speed_status, SPEED_NED_F)) {
+        INT32_SPEED_OF_REAL(state.ned_speed_i, state.ecef_ned_f);
+      }
+      else if (bit_is_set(state.speed_status, SPEED_ECEF_I)) {
         ned_of_ecef_vect_i(&state.ned_speed_i, &state.ned_origin_i, &state.ecef_speed_i);
       }
+      else if (bit_is_set(state.speed_status, SPEED_ECEF_F)) {
+        struct NedCoor_f _ned_f;
+        ned_of_ecef_vect_f(&_ned_f, &state.ned_origin_f, &state.ecef_speed_f);
+        INT32_SPEED_OF_REAL(state.ned_speed_i, _ned_f);
+      }
+      else {
+        /* could not get this representation,  set errno */
+        struct NedCoor_i _ned_i = {0};
+        return _ned_i;
+      }
     } else {
-      //try floats....
+      /* ned coordinate system not initialized,  set errno */
+      struct NedCoor_i _ned_zero = {0};
+      return _ned_zero;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.speed_status, SPEED_NED_I);
@@ -357,12 +373,22 @@ inline struct NedCoor_i StateGetSpeedNed_i(void) {
 
 inline struct EcefCoor_i StateGetSpeedEcef_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_ECEF_I)) {
-    if (bit_is_set(state.speed_status, SPEED_NED_I)) {
-      if (state.ned_initialised_i) {
-        //ecef_of_ned_vect_i(&state.ecef_speed_i, &state.ned_origin_i, &state.ned_speed_i);
-      }
-    } else {
-      //try floats....
+
+    if (bit_is_set(state.speed_status, SPEED_ECEF_F)) {
+      INT32_SPEED_OF_REAL(state.ecef_speed_i, state.ned_speed_i);
+    }
+    else if (bit_is_set(state.speed_status, SPEED_NED_I)) {
+      ecef_of_ned_vect_i(&state.ecef_speed_i, &state.ned_origin_i, &state.ned_speed_i);
+    }
+    else if (bit_is_set(state.speed_status, SPEED_NED_F)) {
+      struct EcefCoor_f _ecef_f;
+      ecef_of_ned_vect_f(&_ecef_f, &state.ned_origin_f, &state.ned_speed_f);
+      INT32_SPEED_OF_REAL(state.ecef_speed_i, _ecef_f);
+    }
+    else {
+      /* could not get this representation,  set errno */
+      struct EcefCoor_f _ecef_zero = {0.0f};
+      return _ecef_zero;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.speed_status, SPEED_ECEF_I);
@@ -372,10 +398,33 @@ inline struct EcefCoor_i StateGetSpeedEcef_i(void) {
 
 inline int32_t StateGetHorizontalSpeedNorm_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_HNORM_I)) {
+
     if (bit_is_set(state.speed_status, SPEED_HNORM_F)){
       state.h_speed_norm_i = SPEED_BFP_OF_REAL(state.h_speed_norm_f);
-    } else if (bit_is_set(state.speed_status, SPEED_NED_I)) {
-      //INT32_VECT2_NORM(state.h_speed_norm_i, state.ned_speed_i); //consider INT32_SPEED_FRAC
+    }
+    else if (bit_is_set(state.speed_status, SPEED_NED_I)) {
+      //TODO consider INT32_SPEED_FRAC
+      //INT32_VECT2_NORM(state.h_speed_norm_i, state.ned_speed_i);
+    }
+    else if (bit_is_set(state.speed_status, SPEED_NED_F)) {
+      float _norm_f;
+      FLOAT_VECT2_NORM(_norm_f, state.ned_speed_f);
+      state.h_speed_norm_i = SPEED_BFP_OF_REAL(_norm_f);
+    }
+    else if (bit_is_set(state.speed_status, SPEED_ECEF_I)) {
+      /* transform ecef speed to ned, set status bit, then compute norm */
+      //foo
+      //TODO consider INT32_SPEED_FRAC
+      //INT32_VECT2_NORM(state.h_speed_norm_i, state.ned_speed_i);
+    }
+    else if (bit_is_set(state.speed_status, SPEED_ECEF_F)) {
+      float _norm_f;
+      FLOAT_VECT2_NORM(_norm_f, state.ned_speed_f);
+      state.h_speed_norm_i = SPEED_BFP_OF_REAL(_norm_f);
+    }
+    else {
+      int32_t _norm_zero = 0;
+      return _norm_zero;
     }
     /* set bit to indicate this representation is computed */
     SetBit(state.speed_status, SPEED_HNORM_I);
@@ -385,9 +434,11 @@ inline int32_t StateGetHorizontalSpeedNorm_i(void) {
 
 inline int32_t StateGetHorizontalSpeedDir_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_HDIR_I)) {
+
     if (bit_is_set(state.speed_status, SPEED_HDIR_F)){
       state.h_speed_dir_i = SPEED_BFP_OF_REAL(state.h_speed_dir_f);
-    } else if (bit_is_set(state.speed_status, SPEED_NED_I)) {
+    }
+    else if (bit_is_set(state.speed_status, SPEED_NED_I)) {
       //foo
     }
     /* set bit to indicate this representation is computed */
