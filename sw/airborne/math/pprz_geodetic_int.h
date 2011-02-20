@@ -1,3 +1,32 @@
+/*
+ * Copyright (C) 2008-2011 The Paparazzi Team
+ *
+ * This file is part of paparazzi.
+ *
+ * paparazzi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * paparazzi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with paparazzi; see the file COPYING.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * @file pprz_geodetic_int.h
+ *   @brief Paparazzi fixed point math for geodetic calculations.
+ *
+ *   This is the more detailed description of this file.
+ *
+ */
+
 #ifndef PPRZ_GEODETIC_INT_H
 #define PPRZ_GEODETIC_INT_H
 
@@ -6,43 +35,58 @@
 #include "std.h"
 #include "pprz_algebra_int.h"
 
-/*
-   Earth Centered Earth Fixed in centimeters
-*/
+
+/**
+ * @brief vector in EarthCenteredEarthFixed coordinates
+ * @details Origin at center of mass of the Earth. Z-axis is pointing north,
+ * the x-axis intersects the sphere of the earth at 0° latitude (Equator)
+ * and 0° longitude (Greenwich). Y-axis completes it to right-hand system.
+ * Units: centimeters */
 struct EcefCoor_i {
-  int32_t x;
-  int32_t y;
-  int32_t z;
+  int32_t x; ///< in centimeters
+  int32_t y; ///< in centimeters
+  int32_t z; ///< in centimeters
 };
 
-/* lon, lat in radians*1e7  */
-/* alt in centimeters       */
+/**
+ * @brief vector in Latitude, Longitude and Altitude
+ * @details Units lat,lon: radians*1e7
+ * Unit alt: centimeters above MSL
+ */
 struct LlaCoor_i {
-  int32_t lon;
-  int32_t lat;
-  int32_t alt;
+  int32_t lon; ///< in radians*1e7
+  int32_t lat; ///< in radians*1e7
+  int32_t alt; ///< in centimeters above MSL
 };
 
-/* North East Down local tangeant plane */
+/**
+ * @brief vector in North East Down coordinates
+ */
 struct NedCoor_i {
   int32_t x;
   int32_t y;
   int32_t z;
 };
 
-/* East North Up local tangeant plane */
+/**
+ * @brief vector in East North Up coordinates
+ */
 struct EnuCoor_i {
   int32_t x;
   int32_t y;
   int32_t z;
 };
 
-/* Local tangeant plane definition */
+/**
+ * @brief definition of the local (flat earth) coordinate system
+ * @details Defines the origin of the local coordinate system
+ * in ECEF and LLA coordinates and the roation matrix from
+ * ECEF to local frame */
 struct LtpDef_i {
-  struct EcefCoor_i ecef;        /* Reference point in ecef */
-  struct LlaCoor_i  lla;         /* Reference point in lla  */
-  struct Int32Mat33 ltp_of_ecef; /* Rotation matrix         */
-  int32_t hmsl;                  /* Height above mean sea level */
+  struct EcefCoor_i ecef;        ///< Reference point in ecef
+  struct LlaCoor_i  lla;         ///< Reference point in lla
+  struct Int32Mat33 ltp_of_ecef; ///< Rotation matrix
+  int32_t hmsl;                  ///< Height above mean sea level
 };
 
 extern void ltp_def_from_ecef_i(struct LtpDef_i* def, struct EcefCoor_i* ecef);
