@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Paparazzi Team
+ * Copyright (C) 2011 The Paparazzi Team
  *
  * This file is part of paparazzi.
  *
@@ -14,22 +14,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with paparazzi; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * along with paparazzi; see the file COPYING.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
-/** \file state.c
- * \brief general inteface for the main vehicle states
- */
+/**
+* @file state.c
+*   @brief General inteface for the main vehicle states.
+*
+*   This is the more detailed description of this file.
+*
+*   @author Felix Ruess <felix.ruess@gmail.com>
+*
+*/
 
 #include "state.h"
 
 struct State state;
 
-/*
- * Set State functions (int versions)
- */
+
+/*******************************************************************************
+ *
+ * Set State functions
+ * (int versions)
+ *
+ ******************************************************************************/
 inline void StateSetPositionEcef_i(struct EcefCoor_i* ecef_pos) {
   INT32_VECT3_COPY(state.ecef_pos_i, *ecef_pos);
   /* clear bits for all position representations and only set the new one */
@@ -112,9 +121,12 @@ inline void StateSetAirspeed_i(int32_t* airspeed) {
 
 
 
-/*
- * Get State functions (int versions)
- */
+/*******************************************************************************
+ *
+ * Get State functions
+ * (int versions)
+ *
+ ******************************************************************************/
 inline struct EcefCoor_i StateGetPositionEcef_i(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_I)) {
     if (bit_is_set(state.pos_status, POS_ECEF_F)) {
@@ -363,12 +375,12 @@ inline int32_t StateGetAirspeed_i(void) {
 }
 
 
-/***************************************
+/*******************************************************************************
  *
  * Set State functions
  * (float versions)
  *
- ***************************************/
+ ******************************************************************************/
 inline void StateSetPositionEcef_f(struct EcefCoor_f* ecef_pos) {
   VECT3_COPY(state.ecef_pos_f, *ecef_pos);
   /* clear bits for all position representations and only set the new one */
@@ -451,9 +463,12 @@ inline void StateSetAirspeed_f(float* airspeed) {
 
 
 
-/*
- * Get State functions (float versions)
- */
+/*******************************************************************************
+ *
+ * Get State functions
+ * (float versions)
+ *
+ ******************************************************************************/
 inline struct EcefCoor_f StateGetPositionEcef_f(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_F)) {
     if (bit_is_set(state.pos_status, POS_NED_F)) {
