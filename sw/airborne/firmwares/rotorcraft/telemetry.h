@@ -424,10 +424,10 @@ extern uint8_t telemetry_mode_Main_DefaultChannel;
 				  &ahrs.ltp_to_imu_quat.qx,	\
 				  &ahrs.ltp_to_imu_quat.qy,	\
 				  &ahrs.ltp_to_imu_quat.qz,	\
-				  &StateGetNedToBodyQuat_i().qi,	\
-				  &StateGetNedToBodyQuat_i().qx,	\
-				  &StateGetNedToBodyQuat_i().qy,	\
-				  &StateGetNedToBodyQuat_i().qz);	\
+				  &stateGetNedToBodyQuat_i().qi,	\
+				  &stateGetNedToBodyQuat_i().qx,	\
+				  &stateGetNedToBodyQuat_i().qy,	\
+				  &stateGetNedToBodyQuat_i().qz);	\
   }
 
 #define PERIODIC_SEND_BOOZ2_AHRS_EULER(_chan) {				\

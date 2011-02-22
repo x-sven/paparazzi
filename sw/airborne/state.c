@@ -42,7 +42,7 @@ struct State state;
 /** @addtogroup PosGroup
  *  @{ */
 
-void StateCalcPositionEcef_i(void) {
+void stateCalcPositionEcef_i(void) {
   if (bit_is_set(state.pos_status, POS_ECEF_I))
     return;
 
@@ -79,7 +79,7 @@ void StateCalcPositionEcef_i(void) {
   //return state.ecef_pos_i;
 }
 
-void StateCalcPositionNed_i(void) {
+void stateCalcPositionNed_i(void) {
   if (bit_is_set(state.pos_status, POS_NED_I))
     return;
 
@@ -124,7 +124,7 @@ void StateCalcPositionNed_i(void) {
   //return state.ned_pos_i;
 }
 
-void StateCalcPositionLla_i(void) {
+void stateCalcPositionLla_i(void) {
   if (bit_is_set(state.pos_status, POS_LLA_I))
     return;
 
@@ -166,7 +166,7 @@ void StateCalcPositionLla_i(void) {
   //return state.lla_pos_i;
 }
 
-void StateCalcPositionEcef_f(void) {
+void stateCalcPositionEcef_f(void) {
   if (bit_is_set(state.pos_status, POS_ECEF_F))
     return;
 
@@ -202,7 +202,7 @@ void StateCalcPositionEcef_f(void) {
   //return state.ecef_pos_f;
 }
 
-void StateCalcPositionNed_f(void) {
+void stateCalcPositionNed_f(void) {
   if (bit_is_set(state.pos_status, POS_NED_F))
     return;
 
@@ -247,7 +247,7 @@ void StateCalcPositionNed_f(void) {
   //return state.ned_pos_f;
 }
 
-void StateCalcPositionLla_f(void) {
+void stateCalcPositionLla_f(void) {
   if (bit_is_set(state.pos_status, POS_LLA_F))
     return;
 
@@ -302,7 +302,7 @@ void StateCalcPositionLla_f(void) {
  *  @{ */
 /************************ Set functions ****************************/
 
-void StateCalcSpeedNed_i(void) {
+void stateCalcSpeedNed_i(void) {
   if (bit_is_set(state.speed_status, SPEED_NED_I))
     return;
 
@@ -336,7 +336,7 @@ void StateCalcSpeedNed_i(void) {
   //return state.ned_speed_i;
 }
 
-void StateCalcSpeedEcef_i(void) {
+void stateCalcSpeedEcef_i(void) {
   if (bit_is_set(state.speed_status, SPEED_ECEF_I))
     return;
 
@@ -363,7 +363,7 @@ void StateCalcSpeedEcef_i(void) {
   //return state.ecef_speed_i;
 }
 
-void StateCalcHorizontalSpeedNorm_i(void) { //TODO
+void stateCalcHorizontalSpeedNorm_i(void) { //TODO
   if (bit_is_set(state.speed_status, SPEED_HNORM_I))
     return;
 
@@ -402,7 +402,7 @@ void StateCalcHorizontalSpeedNorm_i(void) { //TODO
   //return state.h_speed_norm_i;
 }
 
-void StateCalcHorizontalSpeedDir_i(void) { //TODO
+void stateCalcHorizontalSpeedDir_i(void) { //TODO
   if (bit_is_set(state.speed_status, SPEED_HDIR_I))
     return;
 
@@ -418,7 +418,7 @@ void StateCalcHorizontalSpeedDir_i(void) { //TODO
   //return state.h_speed_dir_i;
 }
 
-void StateCalcSpeedNed_f(void) {
+void stateCalcSpeedNed_f(void) {
   if (bit_is_set(state.speed_status, SPEED_NED_F))
     return;
 
@@ -452,7 +452,7 @@ void StateCalcSpeedNed_f(void) {
   //return state.ned_speed_f;
 }
 
-void StateCalcSpeedEcef_f(void) {
+void stateCalcSpeedEcef_f(void) {
   if (bit_is_set(state.speed_status, SPEED_ECEF_F))
     return;
 
@@ -479,7 +479,7 @@ void StateCalcSpeedEcef_f(void) {
   //return state.ecef_speed_f;
 }
 
-void StateCalcHorizontalSpeedNorm_f(void) { //TODO
+void stateCalcHorizontalSpeedNorm_f(void) { //TODO
   if (bit_is_set(state.speed_status, SPEED_HNORM_F))
     return;
 
@@ -494,7 +494,7 @@ void StateCalcHorizontalSpeedNorm_f(void) { //TODO
   //return state.h_speed_norm_f;
 }
 
-void StateCalcHorizontalSpeedDir_f(void) { //TODO
+void stateCalcHorizontalSpeedDir_f(void) { //TODO
   if (bit_is_set(state.speed_status, SPEED_HDIR_F))
     return;
 
@@ -520,7 +520,7 @@ void StateCalcHorizontalSpeedDir_f(void) { //TODO
 /** @addtogroup AccelGroup
  *  @{ */
 
-void StateCalcAccelNed_i(void) {
+void stateCalcAccelNed_i(void) {
   if (bit_is_set(state.accel_status, ACCEL_NED_I))
     return;
 
@@ -537,7 +537,7 @@ void StateCalcAccelNed_i(void) {
   //return state.ned_accel_i;
 }
 
-void StateCalcAccelEcef_i(void) {
+void stateCalcAccelEcef_i(void) {
   if (bit_is_set(state.accel_status, ACCEL_ECEF_I))
     return;
 
@@ -554,7 +554,7 @@ void StateCalcAccelEcef_i(void) {
   //return state.ecef_accel_i;
 }
 
-void StateCalcAccelNed_f(void) {
+void stateCalcAccelNed_f(void) {
   if (bit_is_set(state.accel_status, ACCEL_NED_F))
     return;
 
@@ -571,7 +571,7 @@ void StateCalcAccelNed_f(void) {
   //return state.ned_accel_f;
 }
 
-void StateCalcAccelEcef_f(void) {
+void stateCalcAccelEcef_f(void) {
   if (bit_is_set(state.accel_status, ACCEL_ECEF_F))
     return;
 
@@ -597,7 +597,7 @@ void StateCalcAccelEcef_f(void) {
 /** @addtogroup AttGroup
  *  @{ */
 
-void StateCalcNedToBodyQuat_i(void) {
+void stateCalcNedToBodyQuat_i(void) {
   if (bit_is_set(state.att_status, ATT_QUAT_I))
     return;
 
@@ -615,7 +615,7 @@ void StateCalcNedToBodyQuat_i(void) {
   //return state.ned_to_body_quat_i;
 }
 
-void StateCalcNedToBodyRMat_i(void) {
+void stateCalcNedToBodyRMat_i(void) {
   if (bit_is_set(state.att_status, ATT_RMAT_I))
     return;
 
@@ -632,7 +632,7 @@ void StateCalcNedToBodyRMat_i(void) {
   //return state.ned_to_body_rmat_i;
 }
 
-void StateCalcNedToBodyEulers_i(void) {
+void stateCalcNedToBodyEulers_i(void) {
   if (bit_is_set(state.att_status, ATT_EULER_I))
     return;
 
@@ -649,7 +649,7 @@ void StateCalcNedToBodyEulers_i(void) {
   //return state.ned_to_body_eulers_i;
 }
 
-void StateCalcNedToBodyQuat_f(void) {
+void stateCalcNedToBodyQuat_f(void) {
   if (bit_is_set(state.att_status, ATT_QUAT_F))
     return;
 
@@ -666,7 +666,7 @@ void StateCalcNedToBodyQuat_f(void) {
   //return state.ned_to_body_quat_f;
 }
 
-void StateCalcNedToBodyRMat_f(void) {
+void stateCalcNedToBodyRMat_f(void) {
   if (bit_is_set(state.att_status, ATT_RMAT_F))
     return;
 
@@ -683,7 +683,7 @@ void StateCalcNedToBodyRMat_f(void) {
   //return state.ned_to_body_rmat_f;
 }
 
-void StateCalcNedToBodyEulers_f(void) {
+void stateCalcNedToBodyEulers_f(void) {
   if (bit_is_set(state.att_status, ATT_EULER_F))
     return;
 
@@ -710,7 +710,7 @@ void StateCalcNedToBodyEulers_f(void) {
 /** @addtogroup RateGroup
  *  @{ */
 
-void StateCalcBodyRates_i(void) {
+void stateCalcBodyRates_i(void) {
   if (bit_is_set(state.rate_status, RATE_I))
     return;
 
@@ -723,7 +723,7 @@ void StateCalcBodyRates_i(void) {
   //return state.body_rates_i;
 }
 
-void StateCalcBodyRates_f(void) {
+void stateCalcBodyRates_f(void) {
   if (bit_is_set(state.rate_status, RATE_F))
     return;
 
@@ -747,7 +747,7 @@ void StateCalcBodyRates_f(void) {
 /** @addtogroup WindAirGroup
  *  @{ */
 
-void StateCalcHorizontalWindspeed_i(void) {
+void stateCalcHorizontalWindspeed_i(void) {
   if (bit_is_set(state.wind_air_status, WINDSPEED_I))
     return;
 
@@ -761,7 +761,7 @@ void StateCalcHorizontalWindspeed_i(void) {
   //return state.h_windspeed_i;
 }
 
-void StateCalcAirspeed_i(void) {
+void stateCalcAirspeed_i(void) {
   if (bit_is_set(state.wind_air_status, AIRSPEED_I))
     return;
 
@@ -774,7 +774,7 @@ void StateCalcAirspeed_i(void) {
   //return state.airspeed_i;
 }
 
-void StateCalcHorizontalWindspeed_f(void) {
+void stateCalcHorizontalWindspeed_f(void) {
   if (bit_is_set(state.wind_air_status, WINDSPEED_F))
     return;
 
@@ -788,7 +788,7 @@ void StateCalcHorizontalWindspeed_f(void) {
   //return state.h_windspeed_f;
 }
 
-void StateCalcAirspeed_f(void) {
+void stateCalcAirspeed_f(void) {
   if (bit_is_set(state.wind_air_status, AIRSPEED_F))
     return;
 
