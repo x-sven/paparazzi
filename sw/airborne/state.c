@@ -657,17 +657,28 @@ void stateCalcNedToBodyQuat_i(void) {
   if (bit_is_set(state.att_status, ATT_QUAT_I))
     return;
 
-  if (!bit_is_set(state.att_status, ATT_QUAT_I)) {
-    if (bit_is_set(state.att_status, ATT_RMAT_I)) {
-      INT32_QUAT_OF_RMAT(state.ned_to_body_quat_i, state.ned_to_body_rmat_i);
-    } else if (bit_is_set(state.att_status, ATT_EULER_I)) {
-      INT32_QUAT_OF_EULERS(state.ned_to_body_quat_i, state.ned_to_body_eulers_i);
-    } else {
-      //try floats....
-    }
-    /* set bit to indicate this representation is computed */
-    SetBit(state.att_status, ATT_QUAT_I);
+  if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+    QUAT_BFP_OF_REAL(state.ned_to_body_quat_i, state.ned_to_body_quat_f);
   }
+  else if (bit_is_set(state.att_status, ATT_RMAT_I)) {
+    INT32_QUAT_OF_RMAT(state.ned_to_body_quat_i, state.ned_to_body_rmat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_I)) {
+    INT32_QUAT_OF_EULERS(state.ned_to_body_quat_i, state.ned_to_body_eulers_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_F)) {
+    RMAT_BFP_OF_REAL(state.ned_to_body_rmat_i, state.ned_to_body_rmat_f);
+    SetBit(state.att_status, ATT_RMAT_I);
+    INT32_QUAT_OF_RMAT(state.ned_to_body_quat_i, state.ned_to_body_rmat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_F)) {
+    EULERS_BFP_OF_REAL(state.ned_to_body_eulers_i, state.ned_to_body_eulers_f);
+    SetBit(state.att_status, ATT_EULER_I);
+    INT32_QUAT_OF_EULERS(state.ned_to_body_quat_i, state.ned_to_body_eulers_i);
+  }
+  /* set bit to indicate this representation is computed */
+  SetBit(state.att_status, ATT_QUAT_I);
+
   //return state.ned_to_body_quat_i;
 }
 
@@ -675,12 +686,24 @@ void stateCalcNedToBodyRMat_i(void) {
   if (bit_is_set(state.att_status, ATT_RMAT_I))
     return;
 
-  if (bit_is_set(state.att_status, ATT_QUAT_I)) {
+  if (bit_is_set(state.att_status, ATT_RMAT_F)) {
+    RMAT_BFP_OF_REAL(state.ned_to_body_rmat_i, state.ned_to_body_rmat_f);
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_I)) {
     INT32_RMAT_OF_QUAT(state.ned_to_body_rmat_i, state.ned_to_body_quat_i);
-  } else if (bit_is_set(state.att_status, ATT_EULER_I)) {
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_I)) {
     INT32_RMAT_OF_EULERS(state.ned_to_body_rmat_i, state.ned_to_body_eulers_i);
-  } else {
-    //try floats....
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+    QUAT_BFP_OF_REAL(state.ned_to_body_quat_i, state.ned_to_body_quat_f);
+    SetBit(state.att_status, ATT_QUAT_I);
+    INT32_RMAT_OF_QUAT(state.ned_to_body_rmat_i, state.ned_to_body_quat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_F)) {
+    EULERS_BFP_OF_REAL(state.ned_to_body_eulers_i, state.ned_to_body_eulers_f);
+    SetBit(state.att_status, ATT_EULER_I);
+    INT32_RMAT_OF_EULERS(state.ned_to_body_rmat_i, state.ned_to_body_eulers_i);
   }
   /* set bit to indicate this representation is computed */
   SetBit(state.att_status, ATT_RMAT_I);
@@ -692,12 +715,24 @@ void stateCalcNedToBodyEulers_i(void) {
   if (bit_is_set(state.att_status, ATT_EULER_I))
     return;
 
-  if (bit_is_set(state.att_status, ATT_QUAT_I)) {
-    INT32_EULERS_OF_QUAT(state.ned_to_body_eulers_i, state.ned_to_body_quat_i);
-  } else if (bit_is_set(state.att_status, ATT_RMAT_I)) {
+  if (bit_is_set(state.att_status, ATT_EULER_F)) {
+    EULERS_BFP_OF_REAL(state.ned_to_body_eulers_i, state.ned_to_body_eulers_f);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_I)) {
     INT32_EULERS_OF_RMAT(state.ned_to_body_eulers_i, state.ned_to_body_rmat_i);
-  } else {
-    //try floats....
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_I)) {
+    INT32_EULERS_OF_QUAT(state.ned_to_body_eulers_i, state.ned_to_body_quat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_F)) {
+    RMAT_BFP_OF_REAL(state.ned_to_body_rmat_i, state.ned_to_body_rmat_f);
+    SetBit(state.att_status, ATT_RMAT_I);
+    INT32_EULERS_OF_RMAT(state.ned_to_body_eulers_i, state.ned_to_body_rmat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+    QUAT_BFP_OF_REAL(state.ned_to_body_quat_i, state.ned_to_body_quat_f);
+    SetBit(state.att_status, ATT_QUAT_I);
+    INT32_EULERS_OF_QUAT(state.ned_to_body_eulers_i, state.ned_to_body_quat_i);
   }
   /* set bit to indicate this representation is computed */
   SetBit(state.att_status, ATT_EULER_I);
@@ -709,12 +744,24 @@ void stateCalcNedToBodyQuat_f(void) {
   if (bit_is_set(state.att_status, ATT_QUAT_F))
     return;
 
-  if (bit_is_set(state.att_status, ATT_RMAT_F)) {
+  if (bit_is_set(state.att_status, ATT_QUAT_I)) {
+    QUAT_FLOAT_OF_BFP(state.ned_to_body_quat_f, state.ned_to_body_quat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_F)) {
     FLOAT_QUAT_OF_RMAT(state.ned_to_body_quat_f, state.ned_to_body_rmat_f);
-  } else if (bit_is_set(state.att_status, ATT_EULER_F)) {
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_F)) {
     FLOAT_QUAT_OF_EULERS(state.ned_to_body_quat_f, state.ned_to_body_eulers_f);
-  } else {
-    //try ints....
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_I)) {
+    RMAT_FLOAT_OF_BFP(state.ned_to_body_rmat_f, state.ned_to_body_rmat_i);
+    SetBit(state.att_status, ATT_RMAT_F);
+    FLOAT_QUAT_OF_RMAT(state.ned_to_body_quat_f, state.ned_to_body_rmat_f);
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_I)) {
+    EULERS_FLOAT_OF_BFP(state.ned_to_body_eulers_f, state.ned_to_body_eulers_i);
+    SetBit(state.att_status, ATT_EULER_F);
+    FLOAT_QUAT_OF_EULERS(state.ned_to_body_quat_f, state.ned_to_body_eulers_f);
   }
   /* set bit to indicate this representation is computed */
   SetBit(state.att_status, ATT_QUAT_F);
@@ -726,12 +773,24 @@ void stateCalcNedToBodyRMat_f(void) {
   if (bit_is_set(state.att_status, ATT_RMAT_F))
     return;
 
-  if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+  if (bit_is_set(state.att_status, ATT_RMAT_I)) {
+    RMAT_FLOAT_OF_BFP(state.ned_to_body_rmat_f, state.ned_to_body_rmat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+    FLOAT_RMAT_OF_QUAT(state.ned_to_body_rmat_i, state.ned_to_body_quat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_F)) {
+    FLOAT_RMAT_OF_EULERS(state.ned_to_body_rmat_i, state.ned_to_body_eulers_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_I)) {
+    QUAT_FLOAT_OF_BFP(state.ned_to_body_quat_f, state.ned_to_body_quat_i);
+    SetBit(state.att_status, ATT_QUAT_F);
     FLOAT_RMAT_OF_QUAT(state.ned_to_body_rmat_f, state.ned_to_body_quat_f);
-  } else if (bit_is_set(state.att_status, ATT_EULER_F)) {
+  }
+  else if (bit_is_set(state.att_status, ATT_EULER_I)) {
+    EULERS_FLOAT_OF_BFP(state.ned_to_body_eulers_f, state.ned_to_body_eulers_i);
+    SetBit(state.att_status, ATT_EULER_F);
     FLOAT_RMAT_OF_EULERS(state.ned_to_body_rmat_f, state.ned_to_body_eulers_f);
-  } else {
-    //try floats....
   }
   /* set bit to indicate this representation is computed */
   SetBit(state.att_status, ATT_RMAT_F);
@@ -743,12 +802,24 @@ void stateCalcNedToBodyEulers_f(void) {
   if (bit_is_set(state.att_status, ATT_EULER_F))
     return;
 
-  if (bit_is_set(state.att_status, ATT_QUAT_F)) {
-    FLOAT_EULERS_OF_QUAT(state.ned_to_body_eulers_f, state.ned_to_body_quat_f);
-  } else if (bit_is_set(state.att_status, ATT_RMAT_F)) {
+  if (bit_is_set(state.att_status, ATT_EULER_I)) {
+    EULERS_FLOAT_OF_BFP(state.ned_to_body_eulers_f, state.ned_to_body_eulers_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_F)) {
     FLOAT_EULERS_OF_RMAT(state.ned_to_body_eulers_f, state.ned_to_body_rmat_f);
-  } else {
-    //try floats....
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_F)) {
+    FLOAT_EULERS_OF_QUAT(state.ned_to_body_eulers_f, state.ned_to_body_quat_f);
+  }
+  else if (bit_is_set(state.att_status, ATT_RMAT_I)) {
+    RMAT_FLOAT_OF_BFP(state.ned_to_body_rmat_f, state.ned_to_body_rmat_i);
+    SetBit(state.att_status, ATT_RMAT_F);
+    FLOAT_EULERS_OF_RMAT(state.ned_to_body_eulers_i, state.ned_to_body_rmat_i);
+  }
+  else if (bit_is_set(state.att_status, ATT_QUAT_I)) {
+    QUAT_FLOAT_OF_BFP(state.ned_to_body_quat_f, state.ned_to_body_quat_i);
+    SetBit(state.att_status, ATT_QUAT_F);
+    FLOAT_EULERS_OF_QUAT(state.ned_to_body_eulers_f, state.ned_to_body_quat_f);
   }
   /* set bit to indicate this representation is computed */
   SetBit(state.att_status, ATT_EULER_F);
