@@ -679,14 +679,14 @@ static inline struct EcefCoor_i stateGetAccelEcef_i(void) {
 
 /** @brief Get acceleration in NED coordinates (float). */
 static inline struct NedCoor_f stateGetAccelNed_f(void) {
-  if (bit_is_set(state.accel_status, ACCEL_NED_F))
+  if (!bit_is_set(state.accel_status, ACCEL_NED_F))
     stateCalcAccelNed_f();
   return state.ned_accel_f;
 }
 
 /** @brief Get acceleration in ECEF coordinates (float). */
 static inline struct EcefCoor_f stateGetAccelEcef_f(void) {
-  if (bit_is_set(state.accel_status, ACCEL_ECEF_F))
+  if (!bit_is_set(state.accel_status, ACCEL_ECEF_F))
     stateCalcAccelEcef_f();
   return state.ecef_accel_f;
 }
