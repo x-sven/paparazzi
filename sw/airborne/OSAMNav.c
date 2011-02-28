@@ -25,6 +25,13 @@ static float Flowerradius;
 static uint8_t Center;
 static uint8_t Edge;
 
+#ifndef LINE_START_FUNCTION
+#define LINE_START_FUNCTION {}
+#endif
+#ifndef LINE_STOP_FUNCTION
+#define LINE_STOP_FUNCTION {}
+#endif
+
 bool_t InitializeFlower(uint8_t CenterWP, uint8_t EdgeWP)
 {
 	Center = CenterWP;
@@ -133,8 +140,22 @@ height (defined in as Takeoff_Height in airframe file) above the bungee waypoint
   <define name="Height" value="30" unit="m"/>
   <define name="Speed" value="15" unit="m/s"/>
   <define name="Distance" value="10" unit="m"/>
+  <define name="MinSpeed" value="5" unit="m/s"/>
 </section>
  */
+
+#ifndef Takeoff_Distance
+#define Takeoff_Distance 10
+#endif
+#ifndef Takeoff_Height
+#define Takeoff_Height 30
+#endif
+#ifndef Takeoff_Speed
+#define Takeoff_Speed 15
+#endif
+#ifndef Takeoff_MinSpeed
+#define Takeoff_MinSpeed 5
+#endif
 
 enum TakeoffStatus { Launch, Throttle, Finished };
 static enum TakeoffStatus CTakeoffStatus;
@@ -507,6 +528,7 @@ bool_t InitializePolygonSurvey(uint8_t EntryWP, uint8_t Size, float sw, float Or
 
 		//Go into entry circle state
 		CSurveyStatus = Entry;	
+		LINE_STOP_FUNCTION;
 	}
 
 	return FALSE;
@@ -545,6 +567,7 @@ bool_t PolygonSurvey(void)
 		{
 			CSurveyStatus = Sweep;
 			nav_init_stage();
+			LINE_START_FUNCTION;
 		}
 		break;
 	case Sweep:
@@ -670,7 +693,7 @@ bool_t PolygonSurvey(void)
 			//Go into circle state
 			CSurveyStatus = SweepCircle;	
 			nav_init_stage();
-
+      LINE_STOP_FUNCTION;
 			PolySurveySweepNum++;
 		}
 
@@ -689,6 +712,7 @@ bool_t PolygonSurvey(void)
 		{
 			CSurveyStatus = Sweep;
 			nav_init_stage();
+			LINE_START_FUNCTION;
 		}
 		break;
 	case Init:
@@ -819,8 +843,26 @@ bool_t VerticalRaster(uint8_t l1, uint8_t l2, float radius, float AltSweep) {
 /************** SkidLanding **********************************************/
 /*
 Landing Routine
+
+
+  <section name="Landing" prefix="Landing_">
+    <define name="AFHeight" value="50" unit="m"/>
+    <define name="FinalHeight" value="5" unit="m"/>
+    <define name="FinalStageTime" value="5" unit="s"/>
+  </section>
+
  */
- 
+
+#ifndef Landing_AFHeight
+#define Landing_AFHeight 50
+#endif
+#ifndef Landing_FinalHeight
+#define Landing_FinalHeight 5
+#endif
+#ifndef Landing_FinalStageTime
+#define Landing_FinalStageTime 5
+#endif
+
 enum LandingStatus { CircleDown, LandingWait, Final, Approach };
 static enum LandingStatus CLandingStatus;
 static uint8_t AFWaypoint;
@@ -1014,11 +1056,12 @@ bool_t FlightLine(uint8_t From_WP, uint8_t To_WP, float radius, float Space_Befo
 		NavVerticalAutoThrottleMode(0); /* No pitch */
 		NavVerticalAltitudeMode(waypoints[From_WP].a, 0);
 		
-		nav_circle_XY(FLCircle.x, FLCircle.y, FLRadius);	
-	
+		nav_circle_XY(FLCircle.x, FLCircle.y, FLRadius);
+			
 		if(NavCircleCount() > 0.2 && NavQdrCloseTo(DegOfRad(FLQDR)))
 		{
 			CFLStatus = FLLine;
+			LINE_START_FUNCTION;
 			nav_init_stage();
 		}
 		break;	
@@ -1027,11 +1070,14 @@ bool_t FlightLine(uint8_t From_WP, uint8_t To_WP, float radius, float Space_Befo
 
 		NavVerticalAutoThrottleMode(0); /* No pitch */
 		NavVerticalAltitudeMode(waypoints[From_WP].a, 0);
+		
 		nav_route_xy(FLFROMWP.x,FLFROMWP.y,FLTOWP.x,FLTOWP.y);
+		
 
 		if(nav_approaching_xy(FLTOWP.x,FLTOWP.y,FLFROMWP.x,FLFROMWP.y, 0))
 		{
 			CFLStatus = FLFinished;
+			LINE_STOP_FUNCTION;
 			nav_init_stage();
 		}			
 	break;	

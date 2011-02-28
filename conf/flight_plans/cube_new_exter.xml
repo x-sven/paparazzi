@@ -1,0 +1,70 @@
+<!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
+<flight_plan security_height="60" alt="160" ground_alt="240" lat0="52.080223838450" lon0="9.121833861429" max_dist_from_home="1500" name="Optimized Flightplan" qfu="270">
+	<header>#include "OSAMNav.h"</header>
+	<waypoints>
+		<waypoint name="WINDTURBINE" x="0" y="0" ALT="300.0"/>
+		<waypoint name="HOME" x="200" y="200" ALT="300.0"/>
+		<waypoint name="WP1" x="-96.5" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP2" x="-75.4" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP3" x="-50.9" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP4" x="-71.9" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP5" x="-47.3" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP6" x="-26.3" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP7" x="-1.8" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP8" x="-22.8" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP9" x="1.8" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP10" x="22.8" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP11" x="47.3" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP12" x="26.3" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP13" x="50.9" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP14" x="71.9" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP15" x="96.5" y="-250.0" ALT="337.8"/>
+		<waypoint name="WP16" x="75.4" y="-50.0" ALT="337.8"/>
+		<waypoint name="WP17" x="-100.0" y="70.0" ALT="337.8"/>
+		<waypoint name="WP18" x="-100.0" y="170.0" ALT="337.8"/>
+		<waypoint name="WP19" x="-75.4" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP20" x="-96.5" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP21" x="-71.9" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP22" x="-50.9" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP23" x="-26.3" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP24" x="-47.3" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP25" x="-22.8" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP26" x="-1.8" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP27" x="22.8" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP28" x="1.8" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP29" x="26.3" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP30" x="47.3" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP31" x="71.9" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP32" x="50.9" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP33" x="75.4" y="-250.0" ALT="340.6"/>
+		<waypoint name="WP34" x="96.5" y="-50.0" ALT="340.6"/>
+		<waypoint name="WP35" x="-100.0" y="70.0" ALT="340.6"/>
+		<waypoint name="WP36" x="-100.0" y="170.0" ALT="340.6"/>
+	</waypoints>
+	<blocks>
+		<block name="Wait Circle">
+			<circle wp="HOME" radius="75"/>
+		</block>
+		<block name="Measurement">
+			<call fun="FlightLineBlock(WP_WP1,WP_WP2, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP3,WP_WP4, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP5,WP_WP6, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP7,WP_WP8, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP9,WP_WP10, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP11,WP_WP12, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP13,WP_WP14, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP15,WP_WP16, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP17,WP_WP18, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP19,WP_WP20, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP21,WP_WP22, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP23,WP_WP24, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP25,WP_WP26, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP27,WP_WP28, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP29,WP_WP30, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP31,WP_WP32, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP33,WP_WP34, 75,0,0)"/>
+			<call fun="FlightLineBlock(WP_WP35,WP_WP36, 75,0,0)"/>
+			<deroute block="Wait Circle"/>
+		</block>
+	</blocks>
+</flight_plan>

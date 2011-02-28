@@ -1,0 +1,51 @@
+<!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
+  
+<flight_plan ALT="130" GROUND_ALT="68" LAT0="52.26483" LON0="9.99394" MAX_DIST_FROM_HOME="1500" NAME="Gross Lobke, verschiedene Kreise" QFU="270" SECURITY_HEIGHT="60">
+
+  <waypoints>
+    <waypoint name="HOME" x="0.0" y="0"/>
+    <waypoint name="WP1" x="-25" y="30" alt="120"/>
+    <waypoint name="WP2" x="-125" y="30" alt="180"/>
+    <waypoint name="WP3" x="25" y="30" alt="120"/>
+    <waypoint name="WP4" x="-125" y="110" alt="180"/>
+    <waypoint name="WP5" x="125" y="30" alt="180"/>
+    <waypoint name="WP6" x="125" y="110" alt="180"/>
+    <waypoint name="WP7" x="-125" y="190" alt="180"/>
+    <waypoint name="WP8" x="125" y="190" alt="180"/>
+    <waypoint name="CR" x="0" y="100" alt="120"/>
+    </waypoints>
+
+<exceptions>
+  <exception
+     cond="(ground_alt+40 > estimator_z)"
+     deroute="Wait_CR"/>
+</exceptions>
+
+<blocks>
+
+<block name="Wait_CR" strip_button="W_CR">
+  <set var="nav_radius" value="80"/>
+  <circle wp="CR" radius="nav_radius"/>
+</block>
+
+<block name="S1" strip_button="S1">
+  <exception cond="(estimator_z > 180)" deroute="S2"/>
+  <go wp="WP3"/>
+  <go from="WP3" wp="WP1" approaching_time="1" hmode="route"/>
+  <go from="WP1" wp="WP2" hmode="route" vmode="climb" climb="7"/>
+</block>
+
+<block name="S2" strip_button="S2">
+  <circle radius="nav_radius" until="NavCircleCount()>0.4 && NavQdrCloseTo(350)" wp="WP4"/>  
+  <go from="WP7" hmode="route" wp="WP8"/>
+  <circle radius="nav_radius" until="NavCircleCount()>0.4 && NavQdrCloseTo(170)" wp="WP6"/>
+</block>
+
+<block name="S3" strip_button="S3">
+  <exception cond="(120 > estimator_z)" deroute="S1"/>
+  <go from="WP5" wp="WP3" hmode="route" vmode="glide"/> 
+  <deroute block="S1"/>
+</block>
+    
+  </blocks>
+</flight_plan>
