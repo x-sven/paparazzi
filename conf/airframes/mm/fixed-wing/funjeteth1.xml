@@ -261,9 +261,7 @@ include $(PAPARAZZI_SRC)/conf/autopilot/sitl.makefile
 sim.CFLAGS += -DBOARD_CONFIG=\"tiny.h\" -DAGR_CLIMB -DLOITER_TRIM -DALT_KALMAN
 sim.srcs += nav_line.c nav_survey_rectangle.c nav_cube.c
 
-sim.srcs += joystick.c
-sim.CFLAGS += -DUSE_JOYSTICK
-
+sim.srcs += OSAMNav.c
 
   </makefile>
 </airframe>
