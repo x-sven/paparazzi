@@ -532,7 +532,7 @@ static inline void main_init( void ) {
   int_enable();
 
   /* without this call the irq goes crazy calling getclock(), wtf? */
-  xbeel_timestamp = getclock();
+//  xbeel_timestamp = getclock();
 }
 
 static inline void main_periodic_task( void ) {

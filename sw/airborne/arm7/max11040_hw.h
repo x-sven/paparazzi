@@ -26,7 +26,7 @@
 #define SSP_FRF  0x00 << 4  /* frame format      : SPI           */
 #define SSP_CPOL 0x00 << 6  /* clock polarity    : data captured on first clock transition */  
 #define SSP_CPHA 0x01 << 7  /* clock phase       : SCK idles low */
-#define SSP_SCR  0x00 << 8  /* serial clock rate : divide by 16  */
+#define SSP_SCR  0x08 << 8  /* serial clock rate : divide by 16  */
 
 /* SSPCR1 settings */
 #define SSP_LBM  0x00 << 0  /* loopback mode     : disabled                  */
