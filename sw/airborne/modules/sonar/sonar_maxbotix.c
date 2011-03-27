@@ -1,5 +1,4 @@
 /*
- * $Id: demo_module.h 3079 2009-03-11 16:55:42Z gautier $
  *
  * Copyright (C) 2010  Gautier Hattenberger
  *
@@ -22,30 +21,25 @@
  *
  */
 
-/** \file sonar_maxbotix_booz.h
- *
- * simple driver to deal with one maxbotix sensor on booz AP
- */
+#include "modules/sonar/sonar_maxbotix.h"
+#include "mcu_periph/adc.h"
 
-#ifndef SONAR_MAXBOTIX_BOOZ_H
-#define SONAR_MAXBOTIX_BOOZ_H
+uint16_t sonar_meas;
+bool_t sonar_data_available;
 
-#include "std.h"
+static struct adc_buf sonar_adc;
 
-extern uint16_t sonar_meas;
+void maxbotix_init(void) {
+  sonar_meas = 0;
+  sonar_data_available = FALSE;
 
-extern bool_t sonar_data_available;
-
-extern void maxbotix_init(void);
-extern void maxbotix_read(void);
-
-#include "subsystems/ins.h" // needed because ins is not a module
-
-#define SonarEvent(_handler) { \
-  if (sonar_data_available) { \
-    _handler(); \
-    sonar_data_available = FALSE; \
-  } \
+  adc_buf_channel(ADC_CHANNEL_SONAR, &sonar_adc, DEFAULT_AV_NB_SAMPLE);
 }
 
-#endif
+/** Read ADC value to update sonar measurement
+ */
+void maxbotix_read(void) {
+  sonar_meas = sonar_adc.sum / sonar_adc.av_nb_sample;
+  sonar_data_available = TRUE;
+}
+

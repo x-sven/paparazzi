@@ -1,7 +1,6 @@
 /*
- * $Id$
  *
- * Copyright (C) 2008-2009 Antoine Drouin <poinix@gmail.com>
+ * Copyright (C) 2010  Gautier Hattenberger
  *
  * This file is part of paparazzi.
  *
@@ -19,25 +18,33 @@
  * along with paparazzi; see the file COPYING.  If not, write to
  * the Free Software Foundation, 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
+ *
  */
 
-#ifndef BATTERY_H
-#define BATTERY_H
+/** \file sonar_maxbotix.h
+ *
+ * simple driver to deal with one maxbotix sensor
+ */
+
+#ifndef SONAR_MAXBOTIX_BOOZ_H
+#define SONAR_MAXBOTIX_BOOZ_H
 
 #include "std.h"
 
-#include "generated/airframe.h"
+extern uint16_t sonar_meas;
 
-/* decivolts */
-extern uint8_t battery_voltage;
+extern bool_t sonar_data_available;
 
-static inline void BatteryISRHandler(uint16_t _val) {
-  uint32_t cal_v = (uint32_t)(_val) * BATTERY_SENS_NUM / BATTERY_SENS_DEN;
-  uint32_t sum = (uint32_t)battery_voltage + cal_v;
-  battery_voltage = (uint8_t)(sum/2);
+extern void maxbotix_init(void);
+extern void maxbotix_read(void);
+
+//#include "subsystems/ins.h" // needed because ins is not a module
+
+#define SonarEvent(_handler) { \
+  if (sonar_data_available) { \
+    _handler(); \
+    sonar_data_available = FALSE; \
+  } \
 }
 
-
-extern void battery_init(void);
-
-#endif /* BATTERY_H */
+#endif
