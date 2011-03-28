@@ -540,10 +540,10 @@ static inline struct NedCoor_i stateGetPositionNed_i(void) {
 }
 
 /** @brief Get position in local ENU coordinates (int). */
-static inline struct EnuCoor_i stateGetPositionEnu_i(void) {
+static inline struct EnuCoor_i* stateGetPositionEnu_i(void) {
   if (!bit_is_set(state.pos_status, POS_ENU_I))
     stateCalcPositionEnu_i();
-  return state.enu_pos_i;
+  return &state.enu_pos_i;
 }
 
 /** @brief Get position in LLA coordinates (int). */
@@ -662,10 +662,10 @@ static inline struct NedCoor_i stateGetSpeedNed_i(void) {
 }
 
 /** @brief Get ground speed in local ENU coordinates (int). */
-static inline struct EnuCoor_i stateGetSpeedEnu_i(void) {
+static inline struct EnuCoor_i* stateGetSpeedEnu_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_ENU_I))
     stateCalcSpeedEnu_i();
-  return state.enu_speed_i;
+  return &state.enu_speed_i;
 }
 
 /** @brief Get ground speed in ECEF coordinates (int). */
@@ -881,10 +881,10 @@ static inline struct Int32RMat stateGetNedToBodyRMat_i(void) {
 }
 
 /** @brief Get vehicle body attitude euler angles (int). */
-static inline struct Int32Eulers stateGetNedToBodyEulers_i(void) {
+static inline struct Int32Eulers* stateGetNedToBodyEulers_i(void) {
   if (!bit_is_set(state.att_status, ATT_EULER_I))
     stateCalcNedToBodyEulers_i();
-  return state.ned_to_body_eulers_i;
+  return &state.ned_to_body_eulers_i;
 }
 
 /** @brief Get vehicle body attitude quaternion (float). */
