@@ -32,6 +32,16 @@
 
 struct State state;
 
+void stateInit(void) {
+  state.pos_status = 0;
+  state.speed_status = 0;
+  state.accel_status = 0;
+  state.att_status = 0;
+  state.rate_status = 0;
+  state.wind_air_status = 0;
+  state.ned_initialized_i = FALSE;
+  state.ned_initialized_f = FALSE;
+}
 
 
 /*******************************************************************************
@@ -84,7 +94,7 @@ void stateCalcPositionNed_i(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_i) {
+  if (state.ned_initialized_i) {
     if (bit_is_set(state.pos_status, POS_NED_F)) {
       NED_BFP_OF_REAL(state.ned_pos_i, state.ned_pos_f);
     }
@@ -129,7 +139,7 @@ void stateCalcPositionEnu_i(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_i) {
+  if (state.ned_initialized_i) {
     if (bit_is_set(state.pos_status, POS_NED_I)) {
       INT32_VECT3_ENU_OF_NED(state.enu_pos_i, state.ned_pos_i);
     }
@@ -260,7 +270,7 @@ void stateCalcPositionNed_f(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_f) {
+  if (state.ned_initialized_f) {
     if (bit_is_set(state.pos_status, POS_NED_I)) {
       NED_FLOAT_OF_BFP(state.ned_pos_f, state.ned_pos_i);
     }
@@ -305,7 +315,7 @@ void stateCalcPositionEnu_f(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_f) {
+  if (state.ned_initialized_f) {
     if (bit_is_set(state.pos_status, POS_NED_F)) {
       VECT3_ENU_OF_NED(state.enu_pos_f, state.ned_pos_f);
     }
@@ -413,7 +423,7 @@ void stateCalcSpeedNed_i(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_i) {
+  if (state.ned_initialized_i) {
     if (bit_is_set(state.speed_status, SPEED_NED_F)) {
       SPEEDS_BFP_OF_REAL(state.ned_speed_i, state.ned_speed_f);
     }
@@ -447,7 +457,7 @@ void stateCalcSpeedEnu_i(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_i) {
+  if (state.ned_initialized_i) {
     if (bit_is_set(state.speed_status, SPEED_NED_I)) {
       INT32_VECT3_ENU_OF_NED(state.enu_speed_i, state.ned_speed_i);
     }
@@ -571,7 +581,7 @@ void stateCalcSpeedNed_f(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_f) {
+  if (state.ned_initialized_f) {
     if (bit_is_set(state.speed_status, SPEED_NED_I)) {
       SPEEDS_FLOAT_OF_BFP(state.ned_speed_f, state.ned_speed_i);
     }
@@ -605,7 +615,7 @@ void stateCalcSpeedEnu_f(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_f) {
+  if (state.ned_initialized_f) {
     if (bit_is_set(state.speed_status, SPEED_NED_F)) {
       VECT3_ENU_OF_NED(state.enu_speed_f, state.ned_speed_f);
     }
@@ -715,7 +725,7 @@ void stateCalcAccelNed_i(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_i) {
+  if (state.ned_initialized_i) {
     if (bit_is_set(state.accel_status, ACCEL_NED_F)) {
       ACCELS_BFP_OF_REAL(state.ned_accel_i, state.ned_accel_f);
     }
@@ -776,7 +786,7 @@ void stateCalcAccelNed_f(void) {
     return;
 
   int errno = 0;
-  if (state.ned_initialised_f) {
+  if (state.ned_initialized_f) {
     if (bit_is_set(state.accel_status, ACCEL_NED_I)) {
       ACCELS_FLOAT_OF_BFP(state.ned_accel_f, state.ned_accel_i);
     }

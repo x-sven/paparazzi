@@ -146,7 +146,7 @@ struct State {
 
   /**
    * @brief true if local int coordinate frame is initialsed */
-  bool_t ned_initialised_i;
+  bool_t ned_initialized_i;
 
   /**
    * @brief position in North East Down coordinates
@@ -196,7 +196,7 @@ struct State {
 
   /**
    * @brief true if local float coordinate frame is initialsed */
-  bool_t ned_initialised_f;
+  bool_t ned_initialized_f;
 
   /**
    * @brief position in North East Down coordinates
@@ -413,6 +413,30 @@ struct State {
 
 extern struct State state;
 
+extern void stateInit(void);
+
+/** @brief Set the local (flat earth) coordinate frame origin (int). */
+static inline void stateSetLocalOrigin_i(struct LtpDef_i* ltp_def) {
+  LTP_DEF_COPY(state.ned_origin_i, *ltp_def);
+  state.ned_initialized_i = TRUE;
+  ECEF_FLOAT_OF_BFP(state.ned_origin_f.ecef, state.ned_origin_i.ecef);
+  LLA_FLOAT_OF_BFP(state.ned_origin_f.lla, state.ned_origin_i.lla);
+  RMAT_FLOAT_OF_BFP(state.ned_origin_f.ltp_of_ecef, state.ned_origin_i.ltp_of_ecef);
+  state.ned_origin_f.hmsl = M_OF_MM(state.ned_origin_f.hmsl);
+  state.ned_initialized_f = TRUE;
+
+  /* clear bits for all local frame representations */
+  ClearBit(state.pos_status, POS_NED_I);
+  ClearBit(state.pos_status, POS_ENU_I);
+  ClearBit(state.pos_status, POS_NED_F);
+  ClearBit(state.pos_status, POS_ENU_F);
+  ClearBit(state.speed_status, SPEED_NED_I);
+  ClearBit(state.speed_status, SPEED_ENU_I);
+  ClearBit(state.speed_status, SPEED_NED_F);
+  ClearBit(state.speed_status, SPEED_ENU_F);
+  ClearBit(state.accel_status, ACCEL_NED_I);
+  ClearBit(state.accel_status, ACCEL_NED_F);
+}
 
 
 /*******************************************************************************
