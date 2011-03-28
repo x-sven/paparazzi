@@ -43,72 +43,72 @@
  * @defgroup PosGroup position representations
  * @{
  */
-#define POS_ECEF_I 1<<0
-#define POS_NED_I  1<<1
-#define POS_ENU_I  1<<2
-#define POS_LLA_I  1<<3
-#define POS_UTM_I  1<<4
-#define POS_ECEF_F 1<<5
-#define POS_NED_F  1<<5
-#define POS_ENU_F  1<<7
-#define POS_LLA_F  1<<8
-#define POS_UTM_F  1<<9
+#define POS_ECEF_I 0
+#define POS_NED_I  1
+#define POS_ENU_I  2
+#define POS_LLA_I  3
+#define POS_UTM_I  4
+#define POS_ECEF_F 5
+#define POS_NED_F  6
+#define POS_ENU_F  7
+#define POS_LLA_F  8
+#define POS_UTM_F  9
 /**@}*/
 
 /**
  * @defgroup SpeedGroup ground-speed representations
  * @{
  */
-#define SPEED_ECEF_I  1<<0
-#define SPEED_NED_I   1<<1
-#define SPEED_ENU_I   1<<2
-#define SPEED_HNORM_I 1<<3
-#define SPEED_HDIR_I  1<<4
-#define SPEED_ECEF_F  1<<5
-#define SPEED_NED_F   1<<6
-#define SPEED_ENU_F   1<<7
-#define SPEED_HNORM_F 1<<8
-#define SPEED_HDIR_F  1<<9
+#define SPEED_ECEF_I  0
+#define SPEED_NED_I   1
+#define SPEED_ENU_I   2
+#define SPEED_HNORM_I 3
+#define SPEED_HDIR_I  4
+#define SPEED_ECEF_F  5
+#define SPEED_NED_F   6
+#define SPEED_ENU_F   7
+#define SPEED_HNORM_F 8
+#define SPEED_HDIR_F  9
 /**@}*/
 
 /**
  * @defgroup AccelGroup acceleration representations
  * @{
  */
-#define ACCEL_ECEF_I 1<<0
-#define ACCEL_NED_I  1<<1
-#define ACCEL_ECEF_F 1<<3
-#define ACCEL_NED_F  1<<4
+#define ACCEL_ECEF_I 0
+#define ACCEL_NED_I  1
+#define ACCEL_ECEF_F 2
+#define ACCEL_NED_F  3
 /**@}*/
 
 /**
  * @defgroup AttGroup attitude representations
  * @{
  */
-#define ATT_QUAT_I  1<<0
-#define ATT_EULER_I 1<<1
-#define ATT_RMAT_I  1<<2
-#define ATT_QUAT_F  1<<3
-#define ATT_EULER_F 1<<4
-#define ATT_RMAT_F  1<<5
+#define ATT_QUAT_I  0
+#define ATT_EULER_I 1
+#define ATT_RMAT_I  2
+#define ATT_QUAT_F  3
+#define ATT_EULER_F 4
+#define ATT_RMAT_F  5
 /**@}*/
 
 /**
  * @defgroup RateGroup angular rate representations
  * @{
  */
-#define RATE_I 1<<0
-#define RATE_F 1<<1
+#define RATE_I 0
+#define RATE_F 1
 /**@}*/
 
 /**
  * @defgroup WindAirGroup wind- and airspeed representations
  * @{
  */
-#define WINDSPEED_I 1<<0
-#define AIRSPEED_I  1<<1
-#define WINDSPEED_F 1<<2
-#define AIRSPEED_F  1<<3
+#define WINDSPEED_I 0
+#define AIRSPEED_I  1
+#define WINDSPEED_F 2
+#define AIRSPEED_F  3
 /**@}*/
 
 
@@ -492,7 +492,7 @@ static inline void stateSetPositionUtm_f(struct FloatVect3* utm_pos) {
   //TODO utm zone??
   VECT3_COPY(state.utm_pos_f, *utm_pos);
   /* clear bits for all position representations and only set the new one */
-  state.pos_status = (uint8_t)(1 << POS_UTM_F);
+  state.pos_status = (1 << POS_UTM_F);
 }
 
 /** @brief Set position from ECEF coordinates (float). */
