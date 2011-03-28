@@ -45,12 +45,14 @@
  */
 #define POS_ECEF_I 1<<0
 #define POS_NED_I  1<<1
-#define POS_LLA_I  1<<2
-#define POS_UTM_I  1<<3
-#define POS_ECEF_F 1<<4
+#define POS_ENU_I  1<<2
+#define POS_LLA_I  1<<3
+#define POS_UTM_I  1<<4
+#define POS_ECEF_F 1<<5
 #define POS_NED_F  1<<5
-#define POS_LLA_F  1<<6
-#define POS_UTM_F  1<<7
+#define POS_ENU_F  1<<7
+#define POS_LLA_F  1<<8
+#define POS_UTM_F  1<<9
 /**@}*/
 
 /**
@@ -59,12 +61,14 @@
  */
 #define SPEED_ECEF_I  1<<0
 #define SPEED_NED_I   1<<1
-#define SPEED_HNORM_I 1<<2
-#define SPEED_HDIR_I  1<<3
-#define SPEED_ECEF_F  1<<4
-#define SPEED_NED_F   1<<5
-#define SPEED_HNORM_F 1<<6
-#define SPEED_HDIR_F  1<<7
+#define SPEED_ENU_I   1<<2
+#define SPEED_HNORM_I 1<<3
+#define SPEED_HDIR_I  1<<4
+#define SPEED_ECEF_F  1<<5
+#define SPEED_NED_F   1<<6
+#define SPEED_ENU_F   1<<7
+#define SPEED_HNORM_F 1<<8
+#define SPEED_HDIR_F  1<<9
 /**@}*/
 
 /**
@@ -119,7 +123,7 @@ struct State {
    * @brief holds the status bits for all position representations
    * @details When the corresponding bit is one the representation
    * is already computed. */
-  uint8_t pos_status;
+  uint16_t pos_status;
 
   /**
    * @brief position in EarthCenteredEarthFixed coordinates
@@ -149,6 +153,12 @@ struct State {
    * @details @details with respect to ned_origin_i (flat earth)
    * Units: m in BFP with INT32_POS_FRAC */
   struct NedCoor_i ned_pos_i;
+
+  /**
+   * @brief position in East North Up coordinates
+   * @details @details with respect to ned_origin_i (flat earth)
+   * Units: m in BFP with INT32_POS_FRAC */
+  struct EnuCoor_i enu_pos_i;
 
   /**
    * @brief position in UTM coordinates
@@ -193,6 +203,12 @@ struct State {
    * @details @details with respect to ned_origin_i (flat earth)
    * Units: meters */
   struct NedCoor_f ned_pos_f;
+
+  /**
+   * @brief position in East North Up coordinates
+   * @details @details with respect to ned_origin_i (flat earth)
+   * Units: meters  */
+  struct EnuCoor_f enu_pos_f;
   /** @}*/
 
 
@@ -202,7 +218,7 @@ struct State {
    * @brief holds the status bits for all ground speed representations
    * @details When the corresponding bit is one the representation
    * is already computed. */
-  uint8_t speed_status;
+  uint16_t speed_status;
 
   /**
    * @brief speed in EarthCenteredEarthFixed coordinates
@@ -213,6 +229,11 @@ struct State {
    * @brief speed in North East Down coordinates
    * @details Units: m/s in BFP with INT32_SPEED_FRAC */
   struct NedCoor_i ned_speed_i;
+
+  /**
+   * @brief speed in East North Up coordinates
+   * @details Units: m/s in BFP with INT32_SPEED_FRAC */
+  struct EnuCoor_i enu_speed_i;
 
   /**
    * @brief norm of horizontal ground speed
@@ -233,6 +254,11 @@ struct State {
    * @brief speed in North East Down coordinates
    * @details Units: m/s */
   struct NedCoor_f ned_speed_f;
+
+  /**
+   * @brief speed in East North Up coordinates
+   * @details Units: m/s */
+  struct EnuCoor_f enu_speed_f;
 
   /**
    * @brief norm of horizontal ground speed
@@ -391,7 +417,7 @@ extern struct State state;
 
 /*******************************************************************************
  *                                                                             *
- * Set and Get functions for the POSITION representations                   *
+ * Set and Get functions for the POSITION representations                      *
  *                                                                             *
  ******************************************************************************/
 /** @addtogroup PosGroup
@@ -400,9 +426,11 @@ extern struct State state;
 /************* declaration of transformation functions ************/
 extern void stateCalcPositionEcef_i(void);
 extern void stateCalcPositionNed_i(void);
+extern void stateCalcPositionEnu_i(void);
 extern void stateCalcPositionLla_i(void);
 extern void stateCalcPositionEcef_f(void);
 extern void stateCalcPositionNed_f(void);
+extern void stateCalcPositionEnu_f(void);
 extern void stateCalcPositionLla_f(void);
 
 /************************ Set functions ****************************/
@@ -419,6 +447,13 @@ static inline void stateSetPositionNed_i(struct NedCoor_i* ned_pos) {
   INT32_VECT3_COPY(state.ned_pos_i, *ned_pos);
   /* clear bits for all position representations and only set the new one */
   state.pos_status = (1 << POS_NED_I);
+}
+
+/** @brief Set position from local ENU coordinates (int). */
+static inline void stateSetPositionEnu_i(struct EnuCoor_i* enu_pos) {
+  INT32_VECT3_COPY(state.enu_pos_i, *enu_pos);
+  /* clear bits for all position representations and only set the new one */
+  state.pos_status = (1 << POS_ENU_I);
 }
 
 /** @brief Set position from LLA coordinates (int). */
@@ -450,6 +485,13 @@ static inline void stateSetPositionNed_f(struct NedCoor_f* ned_pos) {
   state.pos_status = (1 << POS_NED_F);
 }
 
+/** @brief Set position from local ENU coordinates (float). */
+static inline void stateSetPositionEnu_f(struct EnuCoor_f* enu_pos) {
+  VECT3_COPY(state.enu_pos_f, *enu_pos);
+  /* clear bits for all position representations and only set the new one */
+  state.pos_status = (1 << POS_ENU_F);
+}
+
 /** @brief Set position from LLA coordinates (float). */
 static inline void stateSetPositionLla_f(struct LlaCoor_f* lla_pos) {
   LLA_COPY(state.lla_pos_f, *lla_pos);
@@ -471,6 +513,13 @@ static inline struct NedCoor_i stateGetPositionNed_i(void) {
   if (!bit_is_set(state.pos_status, POS_NED_I))
     stateCalcPositionNed_i();
   return state.ned_pos_i;
+}
+
+/** @brief Get position in local ENU coordinates (int). */
+static inline struct EnuCoor_i stateGetPositionEnu_i(void) {
+  if (!bit_is_set(state.pos_status, POS_ENU_I))
+    stateCalcPositionEnu_i();
+  return state.enu_pos_i;
 }
 
 /** @brief Get position in LLA coordinates (int). */
@@ -497,6 +546,13 @@ static inline struct NedCoor_f stateGetPositionNed_f(void) {
   return state.ned_pos_f;
 }
 
+/** @brief Get position in local ENU coordinates (float). */
+static inline struct EnuCoor_f stateGetPositionEnu_f(void) {
+  if (!bit_is_set(state.pos_status, POS_ENU_F))
+    stateCalcPositionEnu_f();
+  return state.enu_pos_f;
+}
+
 /** @brief Get position in LLA coordinates (float). */
 static inline struct LlaCoor_f stateGetPositionLla_f(void) {
   if (!bit_is_set(state.pos_status, POS_LLA_F))
@@ -518,10 +574,12 @@ static inline struct LlaCoor_f stateGetPositionLla_f(void) {
 
 /************* declaration of transformation functions ************/
 extern void stateCalcSpeedNed_i(void);
+extern void stateCalcSpeedEnu_i(void);
 extern void stateCalcSpeedEcef_i(void);
 extern void stateCalcHorizontalSpeedNorm_i(void);
 extern void stateCalcHorizontalSpeedDir_i(void);
 extern void stateCalcSpeedNed_f(void);
+extern void stateCalcSpeedEnu_f(void);
 extern void stateCalcSpeedEcef_f(void);
 extern void stateCalcHorizontalSpeedNorm_f(void);
 extern void stateCalcHorizontalSpeedDir_f(void);
@@ -533,6 +591,13 @@ static inline void stateSetSpeedNed_i(struct NedCoor_i* ned_speed) {
   INT32_VECT3_COPY(state.ned_speed_i, *ned_speed);
   /* clear bits for all speed representations and only set the new one */
   state.speed_status = (1 << SPEED_NED_I);
+}
+
+/** @brief Set ground speed in local ENU coordinates (int). */
+static inline void stateSetSpeedEnu_i(struct EnuCoor_i* enu_speed) {
+  INT32_VECT3_COPY(state.enu_speed_i, *enu_speed);
+  /* clear bits for all speed representations and only set the new one */
+  state.speed_status = (1 << SPEED_ENU_I);
 }
 
 /** @brief Set ground speed in ECEF coordinates (int). */
@@ -549,6 +614,13 @@ static inline void stateSetSpeedNed_f(struct NedCoor_f* ned_speed) {
   state.speed_status = (1 << SPEED_NED_F);
 }
 
+/** @brief Set ground speed in local ENU coordinates (float). */
+static inline void stateSetSpeedEnu_f(struct EnuCoor_f* enu_speed) {
+  VECT3_COPY(state.enu_speed_f, *enu_speed);
+  /* clear bits for all speed representations and only set the new one */
+  state.speed_status = (1 << SPEED_ENU_F);
+}
+
 /** @brief Set ground speed in ECEF coordinates (float). */
 static inline void stateSetSpeedEcef_f(struct EcefCoor_f* ecef_speed) {
   VECT3_COPY(state.ecef_speed_f, *ecef_speed);
@@ -563,6 +635,13 @@ static inline struct NedCoor_i stateGetSpeedNed_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_NED_I))
     stateCalcSpeedNed_i();
   return state.ned_speed_i;
+}
+
+/** @brief Get ground speed in local ENU coordinates (int). */
+static inline struct EnuCoor_i stateGetSpeedEnu_i(void) {
+  if (!bit_is_set(state.speed_status, SPEED_ENU_I))
+    stateCalcSpeedEnu_i();
+  return state.enu_speed_i;
 }
 
 /** @brief Get ground speed in ECEF coordinates (int). */
@@ -591,6 +670,13 @@ static inline struct NedCoor_f stateGetSpeedNed_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_NED_F))
     stateCalcSpeedNed_f();
   return state.ned_speed_f;
+}
+
+/** @brief Get ground speed in local ENU coordinates (float). */
+static inline struct EnuCoor_f stateGetSpeedEnu_f(void) {
+  if (!bit_is_set(state.speed_status, SPEED_ENU_F))
+    stateCalcSpeedEnu_f();
+  return state.enu_speed_f;
 }
 
 /** @brief Get ground speed in ECEF coordinates (float). */
