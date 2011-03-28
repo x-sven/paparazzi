@@ -102,6 +102,7 @@ void ins_init() {
 
   ltp_def_from_ecef_i(&ins_ltp_def, &nav_init);
   ins_ltp_def.hmsl = NAV_ALT0;
+  stateSetLocalOrigin_i(&ins_ltp_def);
 #else
   ins_ltp_initialised  = FALSE;
 #endif
@@ -216,6 +217,7 @@ void ins_update_gps(void) {
       ins_ltp_def.lla.alt = gps.lla_pos.alt;
       ins_ltp_def.hmsl = gps.hmsl;
       ins_ltp_initialised = TRUE;
+      stateSetLocalOrigin_i(&ins_ltp_def);
     }
     ned_of_ecef_point_i(&ins_gps_pos_cm_ned, &ins_ltp_def, &gps.ecef_pos);
     ned_of_ecef_vect_i(&ins_gps_speed_cm_s_ned, &ins_ltp_def, &gps.ecef_vel);
