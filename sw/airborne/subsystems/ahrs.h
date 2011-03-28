@@ -27,6 +27,7 @@
 #include "std.h"
 #include "math/pprz_algebra_int.h"
 #include "math/pprz_algebra_float.h"
+#include "state.h"
 // FIXME : this should no be needed here
 //#include "subsystems/ahrs/ahrs_aligner.h"
 

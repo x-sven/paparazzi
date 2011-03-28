@@ -26,6 +26,8 @@
 #include "math/pprz_geodetic_int.h"
 #include "math/pprz_algebra_float.h"
 
+#include "state.h"
+
 /* gps transformed to LTP-NED  */
 extern struct LtpDef_i  ins_ltp_def;
 extern          bool_t  ins_ltp_initialised;
@@ -68,6 +70,13 @@ extern void ins_propagate( void );
 extern void ins_update_baro( void );
 extern void ins_update_gps( void );
 extern void ins_update_sonar( void );
+
+/* copy position and speed to state interface */
+#define INS_NED_TO_STATE() {               \
+    stateSetPositionNed_i(&ins_ltp_pos);   \
+    stateSetSpeedNed_i(&ins_ltp_speed);    \
+    stateSetAccelNed_i(&ins_ltp_accel);    \
+  }
 
 
 #endif /* INS_H */

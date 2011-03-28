@@ -28,8 +28,6 @@
 #include "math/pprz_trig_int.h"
 #include "math/pprz_algebra_int.h"
 
-#include "state.h"
-
 #include "generated/airframe.h"
 
 struct AhrsIntCmplEuler ahrs_impl;
@@ -217,6 +215,8 @@ __attribute__ ((always_inline)) static inline void compute_body_orientation(void
   INT32_EULERS_OF_RMAT(ahrs.ltp_to_body_euler, ahrs.ltp_to_body_rmat);
   /* compute body rates */
   INT32_RMAT_TRANSP_RATEMULT(ahrs.body_rate, imu.body_to_imu_rmat, ahrs.imu_rate);
+
+  AHRS_BODY_TO_STATE();
 
 }
 

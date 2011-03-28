@@ -176,6 +176,7 @@ void ins_propagate() {
   INT32_VECT3_ENU_OF_NED(ins_enu_pos, ins_ltp_pos);
   INT32_VECT3_ENU_OF_NED(ins_enu_speed, ins_ltp_speed);
   INT32_VECT3_ENU_OF_NED(ins_enu_accel, ins_ltp_accel);
+  INS_NED_TO_STATE();
 }
 
 void ins_update_baro() {
@@ -262,6 +263,7 @@ void ins_update_gps(void) {
     INT32_VECT3_ENU_OF_NED(ins_enu_pos, ins_ltp_pos);
     INT32_VECT3_ENU_OF_NED(ins_enu_speed, ins_ltp_speed);
     INT32_VECT3_ENU_OF_NED(ins_enu_accel, ins_ltp_accel);
+    INS_NED_TO_STATE();
   }
 #endif /* USE_GPS */
 }
