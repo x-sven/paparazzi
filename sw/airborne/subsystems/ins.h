@@ -49,10 +49,6 @@ extern int32_t ins_sonar_offset;
 extern struct NedCoor_i ins_ltp_pos;
 extern struct NedCoor_i ins_ltp_speed;
 extern struct NedCoor_i ins_ltp_accel;
-/* output LTP ENU               */
-extern struct EnuCoor_i ins_enu_pos;
-extern struct EnuCoor_i ins_enu_speed;
-extern struct EnuCoor_i ins_enu_accel;
 #ifdef USE_HFF
 /* horizontal gps transformed to NED in meters as float */
 extern struct FloatVect2 ins_gps_pos_m_ned;
