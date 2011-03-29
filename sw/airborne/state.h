@@ -526,17 +526,17 @@ static inline void stateSetPositionLla_f(struct LlaCoor_f* lla_pos) {
 /************************ Get functions ****************************/
 
 /** @brief Get position in ECEF coordinates (int). */
-static inline struct EcefCoor_i stateGetPositionEcef_i(void) {
+static inline struct EcefCoor_i* stateGetPositionEcef_i(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_I))
     stateCalcPositionEcef_i();
-  return state.ecef_pos_i;
+  return &state.ecef_pos_i;
 }
 
 /** @brief Get position in local NED coordinates (int). */
-static inline struct NedCoor_i stateGetPositionNed_i(void) {
+static inline struct NedCoor_i* stateGetPositionNed_i(void) {
   if (!bit_is_set(state.pos_status, POS_NED_I))
     stateCalcPositionNed_i();
-  return state.ned_pos_i;
+  return &state.ned_pos_i;
 }
 
 /** @brief Get position in local ENU coordinates (int). */
@@ -547,41 +547,41 @@ static inline struct EnuCoor_i* stateGetPositionEnu_i(void) {
 }
 
 /** @brief Get position in LLA coordinates (int). */
-static inline struct LlaCoor_i stateGetPositionLla_i(void) {
+static inline struct LlaCoor_i* stateGetPositionLla_i(void) {
   if (!bit_is_set(state.pos_status, POS_LLA_I))
     stateCalcPositionLla_i();
-  return state.lla_pos_i;
+  return &state.lla_pos_i;
 }
 
 /** @brief Get position in UTM coordinates (float). */
 //static inline struct FloatVect3 stateGetPositionUtm_f(void);
 
 /** @brief Get position in ECEF coordinates (float). */
-static inline struct EcefCoor_f stateGetPositionEcef_f(void) {
+static inline struct EcefCoor_f* stateGetPositionEcef_f(void) {
   if (!bit_is_set(state.pos_status, POS_ECEF_F))
     stateCalcPositionEcef_f();
-  return state.ecef_pos_f;
+  return &state.ecef_pos_f;
 }
 
 /** @brief Get position in local NED coordinates (float). */
-static inline struct NedCoor_f stateGetPositionNed_f(void) {
+static inline struct NedCoor_f* stateGetPositionNed_f(void) {
   if (!bit_is_set(state.pos_status, POS_NED_F))
     stateCalcPositionNed_f();
-  return state.ned_pos_f;
+  return &state.ned_pos_f;
 }
 
 /** @brief Get position in local ENU coordinates (float). */
-static inline struct EnuCoor_f stateGetPositionEnu_f(void) {
+static inline struct EnuCoor_f* stateGetPositionEnu_f(void) {
   if (!bit_is_set(state.pos_status, POS_ENU_F))
     stateCalcPositionEnu_f();
-  return state.enu_pos_f;
+  return &state.enu_pos_f;
 }
 
 /** @brief Get position in LLA coordinates (float). */
-static inline struct LlaCoor_f stateGetPositionLla_f(void) {
+static inline struct LlaCoor_f* stateGetPositionLla_f(void) {
   if (!bit_is_set(state.pos_status, POS_LLA_F))
     stateCalcPositionLla_f();
-  return state.lla_pos_f;
+  return &state.lla_pos_f;
 }
 
 /** @}*/
@@ -655,10 +655,10 @@ static inline void stateSetSpeedEcef_f(struct EcefCoor_f* ecef_speed) {
 /************************ Get functions ****************************/
 
 /** @brief Get ground speed in local NED coordinates (int). */
-static inline struct NedCoor_i stateGetSpeedNed_i(void) {
+static inline struct NedCoor_i* stateGetSpeedNed_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_NED_I))
     stateCalcSpeedNed_i();
-  return state.ned_speed_i;
+  return &state.ned_speed_i;
 }
 
 /** @brief Get ground speed in local ENU coordinates (int). */
@@ -669,59 +669,59 @@ static inline struct EnuCoor_i* stateGetSpeedEnu_i(void) {
 }
 
 /** @brief Get ground speed in ECEF coordinates (int). */
-static inline struct EcefCoor_i stateGetSpeedEcef_i(void) {
+static inline struct EcefCoor_i* stateGetSpeedEcef_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_ECEF_I))
     stateCalcSpeedEcef_i();
-  return state.ecef_speed_i;
+  return &state.ecef_speed_i;
 }
 
 /** @brief Get norm of horizontal ground speed (int). */
-static inline int32_t stateGetHorizontalSpeedNorm_i(void) {
+static inline int32_t* stateGetHorizontalSpeedNorm_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_HNORM_I))
     stateCalcHorizontalSpeedNorm_i();
-  return state.h_speed_norm_i;
+  return &state.h_speed_norm_i;
 }
 
 /** @brief Get dir of horizontal ground speed (int). */
-static inline int32_t stateGetHorizontalSpeedDir_i(void) {
+static inline int32_t* stateGetHorizontalSpeedDir_i(void) {
   if (!bit_is_set(state.speed_status, SPEED_HDIR_I))
     stateCalcHorizontalSpeedDir_i();
-  return state.h_speed_dir_i;
+  return &state.h_speed_dir_i;
 }
 
 /** @brief Get ground speed in local NED coordinates (float). */
-static inline struct NedCoor_f stateGetSpeedNed_f(void) {
+static inline struct NedCoor_f* stateGetSpeedNed_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_NED_F))
     stateCalcSpeedNed_f();
-  return state.ned_speed_f;
+  return &state.ned_speed_f;
 }
 
 /** @brief Get ground speed in local ENU coordinates (float). */
-static inline struct EnuCoor_f stateGetSpeedEnu_f(void) {
+static inline struct EnuCoor_f* stateGetSpeedEnu_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_ENU_F))
     stateCalcSpeedEnu_f();
-  return state.enu_speed_f;
+  return &state.enu_speed_f;
 }
 
 /** @brief Get ground speed in ECEF coordinates (float). */
-static inline struct EcefCoor_f stateGetSpeedEcef_f(void) {
+static inline struct EcefCoor_f* stateGetSpeedEcef_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_ECEF_F))
     stateCalcSpeedEcef_f();
-  return state.ecef_speed_f;
+  return &state.ecef_speed_f;
 }
 
 /** @brief Get norm of horizontal ground speed (float). */
-static inline float stateGetHorizontalSpeedNorm_f(void) {
+static inline float* stateGetHorizontalSpeedNorm_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_HNORM_F))
     stateCalcHorizontalSpeedNorm_f();
-  return state.h_speed_norm_f;
+  return &state.h_speed_norm_f;
 }
 
 /** @brief Get dir of horizontal ground speed (float). */
-static inline float stateGetHorizontalSpeedDir_f(void) {
+static inline float* stateGetHorizontalSpeedDir_f(void) {
   if (!bit_is_set(state.speed_status, SPEED_HDIR_F))
     stateCalcHorizontalSpeedDir_f();
-  return state.h_speed_dir_f;
+  return &state.h_speed_dir_f;
 }
 /** @}*/
 
@@ -774,31 +774,31 @@ static inline void stateSetAccelEcef_f(struct EcefCoor_f* ecef_accel) {
 /************************ Get functions ****************************/
 
 /** @brief Get acceleration in NED coordinates (int). */
-static inline struct NedCoor_i stateGetAccelNed_i(void) {
+static inline struct NedCoor_i* stateGetAccelNed_i(void) {
   if (!bit_is_set(state.accel_status, ACCEL_NED_I))
     stateCalcAccelNed_i();
-  return state.ned_accel_i;
+  return &state.ned_accel_i;
 }
 
 /** @brief Get acceleration in ECEF coordinates (int). */
-static inline struct EcefCoor_i stateGetAccelEcef_i(void) {
+static inline struct EcefCoor_i* stateGetAccelEcef_i(void) {
   if (!bit_is_set(state.accel_status, ACCEL_ECEF_I))
     stateCalcAccelEcef_i();
-  return state.ecef_accel_i;
+  return &state.ecef_accel_i;
 }
 
 /** @brief Get acceleration in NED coordinates (float). */
-static inline struct NedCoor_f stateGetAccelNed_f(void) {
+static inline struct NedCoor_f* stateGetAccelNed_f(void) {
   if (!bit_is_set(state.accel_status, ACCEL_NED_F))
     stateCalcAccelNed_f();
-  return state.ned_accel_f;
+  return &state.ned_accel_f;
 }
 
 /** @brief Get acceleration in ECEF coordinates (float). */
-static inline struct EcefCoor_f stateGetAccelEcef_f(void) {
+static inline struct EcefCoor_f* stateGetAccelEcef_f(void) {
   if (!bit_is_set(state.accel_status, ACCEL_ECEF_F))
     stateCalcAccelEcef_f();
-  return state.ecef_accel_f;
+  return &state.ecef_accel_f;
 }
 /** @}*/
 
@@ -867,17 +867,17 @@ static inline void stateSetNedToBodyEulers_f(struct FloatEulers* ned_to_body_eul
 /************************ Get functions ****************************/
 
 /** @brief Get vehicle body attitude quaternion (int). */
-static inline struct Int32Quat stateGetNedToBodyQuat_i(void) {
+static inline struct Int32Quat* stateGetNedToBodyQuat_i(void) {
   if (!bit_is_set(state.att_status, ATT_QUAT_I))
     stateCalcNedToBodyQuat_i();
-  return state.ned_to_body_quat_i;
+  return &state.ned_to_body_quat_i;
 }
 
 /** @brief Get vehicle body attitude rotation matrix (int). */
-static inline struct Int32RMat stateGetNedToBodyRMat_i(void) {
+static inline struct Int32RMat* stateGetNedToBodyRMat_i(void) {
   if (!bit_is_set(state.att_status, ATT_RMAT_I))
     stateCalcNedToBodyRMat_i();
-  return state.ned_to_body_rmat_i;
+  return &state.ned_to_body_rmat_i;
 }
 
 /** @brief Get vehicle body attitude euler angles (int). */
@@ -888,24 +888,24 @@ static inline struct Int32Eulers* stateGetNedToBodyEulers_i(void) {
 }
 
 /** @brief Get vehicle body attitude quaternion (float). */
-static inline struct FloatQuat stateGetNedToBodyQuat_f(void) {
+static inline struct FloatQuat* stateGetNedToBodyQuat_f(void) {
   if (!bit_is_set(state.att_status, ATT_QUAT_F))
     stateCalcNedToBodyQuat_f();
-  return state.ned_to_body_quat_f;
+  return &state.ned_to_body_quat_f;
 }
 
 /** @brief Get vehicle body attitude rotation matrix (float). */
-static inline struct FloatRMat stateGetNedToBodyRMat_f(void) {
+static inline struct FloatRMat* stateGetNedToBodyRMat_f(void) {
   if (!bit_is_set(state.att_status, ATT_RMAT_F))
     stateCalcNedToBodyRMat_f();
-  return state.ned_to_body_rmat_f;
+  return &state.ned_to_body_rmat_f;
 }
 
 /** @brief Get vehicle body attitude euler angles (float). */
-static inline struct FloatEulers stateGetNedToBodyEulers_f(void) {
+static inline struct FloatEulers* stateGetNedToBodyEulers_f(void) {
   if (!bit_is_set(state.att_status, ATT_EULER_F))
     stateCalcNedToBodyEulers_f();
-  return state.ned_to_body_eulers_f;
+  return &state.ned_to_body_eulers_f;
 }
 /** @}*/
 
@@ -942,17 +942,17 @@ static inline void stateSetBodyRates_f(struct FloatRates* body_rate) {
 /************************ Get functions ****************************/
 
 /** @brief Get vehicle body angular rate (int). */
-static inline struct Int32Rates stateGetBodyRates_i(void) {
+static inline struct Int32Rates* stateGetBodyRates_i(void) {
   if (!bit_is_set(state.rate_status, RATE_I))
     stateCalcBodyRates_i();
-  return state.body_rates_i;
+  return &state.body_rates_i;
 }
 
 /** @brief Get vehicle body angular rate (float). */
-static inline struct FloatRates stateGetBodyRates_f(void) {
+static inline struct FloatRates* stateGetBodyRates_f(void) {
   if (!bit_is_set(state.rate_status, RATE_F))
     stateCalcBodyRates_f();
-  return state.body_rates_f;
+  return &state.body_rates_f;
 }
 
 /** @}*/
@@ -1010,31 +1010,31 @@ static inline void stateSetAirspeed_f(float* airspeed) {
 /************************ Get functions ****************************/
 
 /** @brief Get horizontal windspeed (int). */
-static inline struct Int32Vect2 stateGetHorizontalWindspeed_i(void) {
+static inline struct Int32Vect2* stateGetHorizontalWindspeed_i(void) {
   if (!bit_is_set(state.wind_air_status, WINDSPEED_I))
     stateCalcHorizontalWindspeed_i();
-  return state.h_windspeed_i;
+  return &state.h_windspeed_i;
 }
 
 /** @brief Get airspeed (int). */
-static inline int32_t stateGetAirspeed_i(void) {
+static inline int32_t* stateGetAirspeed_i(void) {
   if (!bit_is_set(state.wind_air_status, AIRSPEED_I))
     stateCalcAirspeed_i();
-  return state.airspeed_i;
+  return &state.airspeed_i;
 }
 
 /** @brief Get horizontal windspeed (float). */
-static inline struct FloatVect2 stateGetHorizontalWindspeed_f(void) {
+static inline struct FloatVect2* stateGetHorizontalWindspeed_f(void) {
   if (!bit_is_set(state.wind_air_status, WINDSPEED_F))
     stateCalcHorizontalWindspeed_f();
-  return state.h_windspeed_f;
+  return &state.h_windspeed_f;
 }
 
 /** @brief Get airspeed (float). */
-static inline float stateGetAirspeed_f(void) {
+static inline float* stateGetAirspeed_f(void) {
   if (!bit_is_set(state.wind_air_status, AIRSPEED_F))
     stateCalcAirspeed_f();
-  return state.airspeed_f;
+  return &state.airspeed_f;
 }
 
 /** @}*/
