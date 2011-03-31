@@ -224,12 +224,12 @@ void guidance_h_run(bool_t  in_flight) {
 __attribute__ ((always_inline)) static inline void  guidance_h_hover_run(void) {
 
   /* compute position error    */
-  VECT2_DIFF(guidance_h_pos_err, ins_ltp_pos, guidance_h_pos_sp);
+  VECT2_DIFF(guidance_h_pos_err, *stateGetPositionNed_i(), guidance_h_pos_sp);
   /* saturate it               */
   VECT2_STRIM(guidance_h_pos_err, -MAX_POS_ERR, MAX_POS_ERR);
 
   /* compute speed error    */
-  VECT2_COPY(guidance_h_speed_err, ins_ltp_speed);
+  VECT2_COPY(guidance_h_speed_err, *stateGetSpeedNed_i());
   /* saturate it               */
   VECT2_STRIM(guidance_h_speed_err, -MAX_SPEED_ERR, MAX_SPEED_ERR);
 
@@ -293,13 +293,13 @@ __attribute__ ((always_inline)) static inline void  guidance_h_nav_run(bool_t in
 #endif
 
   /* compute position error    */
-  VECT2_DIFF(guidance_h_pos_err, ins_ltp_pos, guidance_h_pos_ref);
+  VECT2_DIFF(guidance_h_pos_err, *stateGetPositionNed_i(), guidance_h_pos_ref);
   /* saturate it               */
   VECT2_STRIM(guidance_h_pos_err, -MAX_POS_ERR, MAX_POS_ERR);
 
   /* compute speed error    */
-  //VECT2_COPY(guidance_h_speed_err, ins_ltp_speed);
-  VECT2_DIFF(guidance_h_speed_err, ins_ltp_speed, guidance_h_speed_ref);
+  //VECT2_COPY(guidance_h_speed_err, *stateGetSpeedNed_i());
+  VECT2_DIFF(guidance_h_speed_err, *stateGetSpeedNed_i(), guidance_h_speed_ref);
   /* saturate it               */
   VECT2_STRIM(guidance_h_speed_err, -MAX_SPEED_ERR, MAX_SPEED_ERR);
 
@@ -313,16 +313,16 @@ __attribute__ ((always_inline)) static inline void  guidance_h_nav_run(bool_t in
   }
   else { // Tracking algorithm, no integral
     int32_t vect_prod = 0;
-    int32_t scal_prod = ins_ltp_speed.x * guidance_h_pos_err.x + ins_ltp_speed.y * guidance_h_pos_err.y;
+    int32_t scal_prod = stateGetSpeedNed_i()->x * guidance_h_pos_err.x + stateGetSpeedNed_i()->y * guidance_h_pos_err.y;
     // compute vectorial product only if angle < pi/2 (scalar product > 0)
     if (scal_prod >= 0) {
-      vect_prod = ((ins_ltp_speed.x * guidance_h_pos_err.y) >> (INT32_POS_FRAC + INT32_SPEED_FRAC - 10))
-                - ((ins_ltp_speed.y * guidance_h_pos_err.x) >> (INT32_POS_FRAC + INT32_SPEED_FRAC - 10));
+      vect_prod = ((stateGetSpeedNed_i()->x * guidance_h_pos_err.y) >> (INT32_POS_FRAC + INT32_SPEED_FRAC - 10))
+        - ((stateGetSpeedNed_i()->y * guidance_h_pos_err.x) >> (INT32_POS_FRAC + INT32_SPEED_FRAC - 10));
     }
     // multiply by vector orthogonal to speed
     VECT2_ASSIGN(guidance_h_nav_err,
-        vect_prod * (-ins_ltp_speed.y),
-        vect_prod * ins_ltp_speed.x);
+                 vect_prod * (-stateGetSpeedNed_i()->y),
+                 vect_prod * stateGetSpeedNed_i()->x);
     // divide by 2 times dist ( >> 16 )
     VECT2_SDIV(guidance_h_nav_err, guidance_h_nav_err, dist*dist);
     // *2 ??
@@ -370,7 +370,7 @@ __attribute__ ((always_inline)) static inline void  guidance_h_nav_run(bool_t in
 
 __attribute__ ((always_inline)) static inline void guidance_h_hover_enter(void) {
 
-  VECT2_COPY(guidance_h_pos_sp, ins_ltp_pos);
+  VECT2_COPY(guidance_h_pos_sp, *stateGetPositionNed_i());
 
   STABILIZATION_ATTITUDE_RESET_PSI_REF( guidance_h_rc_sp );
 
@@ -383,8 +383,8 @@ __attribute__ ((always_inline)) static inline void guidance_h_nav_enter(void) {
   INT32_VECT2_NED_OF_ENU(guidance_h_pos_sp, navigation_carrot);
   struct Int32Vect2 pos,speed,zero;
   INT_VECT2_ZERO(zero);
-  VECT2_COPY(pos, ins_ltp_pos);
-  VECT2_COPY(speed, ins_ltp_speed);
+  VECT2_COPY(pos, *stateGetPositionNed_i());
+  VECT2_COPY(speed, *stateGetSpeedNed_i());
   GuidanceHSetRef(pos, speed, zero);
 
   struct Int32Eulers tmp_sp;
