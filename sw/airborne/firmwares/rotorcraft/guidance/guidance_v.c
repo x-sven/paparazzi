@@ -32,7 +32,8 @@
 // #include "booz_fms.h" FIXME
 #include "firmwares/rotorcraft/navigation.h"
 
-#include "subsystems/ins.h"
+#include "state.h"
+
 #include "math/pprz_algebra_int.h"
 
 #include "generated/airframe.h"
@@ -138,7 +139,7 @@ void guidance_v_mode_changed(uint8_t new_mode) {
   case GUIDANCE_V_MODE_HOVER:
   case GUIDANCE_V_MODE_NAV:
     guidance_v_z_sum_err = 0;
-    GuidanceVSetRef(ins_ltp_pos.z, ins_ltp_speed.z, 0);
+    GuidanceVSetRef(stateGetPositionNed_i()->z, stateGetSpeedNed_i()->z, 0);
     break;
   default:
     break;
@@ -162,8 +163,8 @@ void guidance_v_run(bool_t in_flight) {
   if (in_flight) {
     // we should use something after the supervision!!! fuck!!!
     int32_t cmd_hack = Chop(stabilization_cmd[COMMAND_THRUST], SUPERVISION_MIN_MOTOR, SUPERVISION_MAX_MOTOR);
-    gv_adapt_run(ins_ltp_accel.z, cmd_hack);
-    //gv_adapt_run(ins_ltp_accel.z, cmd_hack, guidance_v_zd_ref);
+    gv_adapt_run(stateGetAccelNed_i()->z, cmd_hack);
+    //gv_adapt_run(stateGetAccelNed_i()->z, cmd_hack, guidance_v_zd_ref);
   }
   else {
     // reset vertical filter until takeoff
@@ -173,8 +174,8 @@ void guidance_v_run(bool_t in_flight) {
   switch (guidance_v_mode) {
 
   case GUIDANCE_V_MODE_RC_DIRECT:
-    guidance_v_z_sp = ins_ltp_pos.z;  // not sure why we do that
-    GuidanceVSetRef(ins_ltp_pos.z, 0, 0); // or that - mode enter should take care of it ?
+    guidance_v_z_sp = stateGetPositionNed_i()->z;  // not sure why we do that
+    GuidanceVSetRef(stateGetPositionNed_i()->z, 0, 0); // or that - mode enter should take care of it ?
     stabilization_cmd[COMMAND_THRUST] = guidance_v_rc_delta_t;
     break;
 
@@ -249,9 +250,9 @@ __attribute__ ((always_inline)) static inline void run_hover_loop(bool_t in_flig
   guidance_v_zd_ref = gv_zd_ref<<(INT32_SPEED_FRAC - GV_ZD_REF_FRAC);
   guidance_v_zdd_ref = gv_zdd_ref<<(INT32_ACCEL_FRAC - GV_ZDD_REF_FRAC);
   /* compute the error to our reference */
-  int32_t err_z  =  ins_ltp_pos.z - guidance_v_z_ref;
+  int32_t err_z  =  stateGetPositionNed_i()->z - guidance_v_z_ref;
   Bound(err_z, GUIDANCE_V_MIN_ERR_Z, GUIDANCE_V_MAX_ERR_Z);
-  int32_t err_zd =  ins_ltp_speed.z - guidance_v_zd_ref;
+  int32_t err_zd =  stateGetSpeedNed_i()->z - guidance_v_zd_ref;
   Bound(err_zd, GUIDANCE_V_MIN_ERR_ZD, GUIDANCE_V_MAX_ERR_ZD);
 
   if (in_flight) {

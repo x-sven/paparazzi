@@ -259,6 +259,7 @@ unit_t nav_reset_alt( void ) {
 #ifdef USE_GPS
   ins_ltp_def.lla.alt = gps.lla_pos.alt;
   ins_ltp_def.hmsl = gps.hmsl;
+  stateSetLocalOrigin_i(&ins_ltp_def);
 #endif
 
   return 0;

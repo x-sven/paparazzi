@@ -112,8 +112,7 @@ extern uint16_t autopilot_flight_time;
 #endif
 static inline void DetectGroundEvent(void) {
   if (autopilot_mode == AP_MODE_FAILSAFE || autopilot_detect_ground_once) {
-    if (ins_ltp_accel.z < -TRESHOLD_GROUND_DETECT ||
-        ins_ltp_accel.z > TRESHOLD_GROUND_DETECT) {
+    if ( abs(stateGetAccelNed_i()->z) > TRESHOLD_GROUND_DETECT ) {
       autopilot_detect_ground = TRUE;
       autopilot_detect_ground_once = FALSE;
     }
