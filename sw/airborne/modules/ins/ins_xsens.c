@@ -38,6 +38,7 @@
 #ifdef USE_GPS_XSENS
 #include "subsystems/gps.h"
 #include "math/pprz_geodetic_float.h"
+#include "subsystems/navigation/common_nav.h" /* needed for nav_utm_zone0 */
 #endif
 
 INS_FORMAT ins_x;
@@ -63,6 +64,14 @@ INS_FORMAT ins_az;
 INS_FORMAT ins_mx;
 INS_FORMAT ins_my;
 INS_FORMAT ins_mz;
+
+float ins_pitch_neutral;
+float ins_roll_neutral;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+//	XSens Specific
+//
 
 volatile uint8_t ins_msg_received;
 
@@ -168,6 +177,8 @@ int8_t xsens_day;
 float xsens_lat;
 float xsens_lon;
 
+int8_t xsens_gps_nr_channels = 16;
+
 
 static uint8_t xsens_id;
 static uint8_t xsens_status;
@@ -182,6 +193,9 @@ struct UtmCoor_f utm_f;
 void ins_init( void ) {
 
   xsens_status = UNINIT;
+
+  ins_pitch_neutral = INS_PITCH_NEUTRAL_DEFAULT;
+  ins_roll_neutral = INS_ROLL_NEUTRAL_DEFAULT;
 
   xsens_msg_status = 0;
   xsens_time_stamp = 0;
@@ -210,10 +224,10 @@ void handle_ins_msg( void) {
   gps.ned_vel.z = (int16_t)(ins_vz * 100);
   gps.gspeed = (uint16_t)(sqrt(ins_vx*ins_vx + ins_vy*ins_vy) * 100);
 
-  EstimatorSetAtt(ins_phi, ((float)gps.course) / 1e7, ins_theta);
+  EstimatorSetAtt(ins_phi, ((float)gps.course / 1e7), ins_theta);
   // EstimatorSetAlt(ins_z);
   estimator_update_state_gps();
-  reset_gps_watchdog();
+  // reset_gps_watchdog();
 }
 
 void parse_ins_msg( void ) {
@@ -229,12 +243,12 @@ void parse_ins_msg( void ) {
   }
 #ifdef USE_GPS_XSENS
   else if (xsens_id == XSENS_GPSStatus_ID) {
-    gps_nb_channels = XSENS_GPSStatus_nch(xsens_msg_buf);
-    gps.num_sv = gps_nb_channels;
+    xsens_gps_nr_channels = XSENS_GPSStatus_nch(xsens_msg_buf);
+    gps.num_sv = xsens_gps_nr_channels;
     uint8_t i;
-    for(i = 0; i < Min(gps_nb_channels, GPS_NB_CHANNELS); i++) {
+    for(i = 0; i < Min(xsens_gps_nr_channels, xsens_gps_nr_channels); i++) {
       uint8_t ch = XSENS_GPSStatus_chn(xsens_msg_buf,i);
-      if (ch > GPS_NB_CHANNELS) continue;
+      if (ch > xsens_gps_nr_channels) continue;
       gps.svinfos[ch].svid = XSENS_GPSStatus_svid(xsens_msg_buf, i);
       gps.svinfos[ch].flags = XSENS_GPSStatus_bitmask(xsens_msg_buf, i);
       gps.svinfos[ch].qi = XSENS_GPSStatus_qi(xsens_msg_buf, i);
