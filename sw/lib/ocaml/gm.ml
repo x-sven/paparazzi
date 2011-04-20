@@ -200,7 +200,7 @@ let ms_key = fun key ->
   done;
   ms_key
     
-let google_version = 51
+let google_version = 76
 
 let url_of_tile_key = fun maps_source s -> 
   let (x, y, z) = xyz_of_qsrt s in
