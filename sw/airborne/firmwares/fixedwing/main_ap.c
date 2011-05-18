@@ -74,8 +74,8 @@
 #ifdef USE_AHRS
 #include "subsystems/ahrs.h"
 #include "subsystems/ahrs/ahrs_aligner.h"
-#include "subsystems/ahrs/ahrs_float_dcm.h"
-static inline void on_gyro_accel_event( void );
+#include AHRS_TYPE_H
+static inline void on_gyro_event( void );
 static inline void on_accel_event( void );
 static inline void on_mag_event( void );
 #endif
@@ -269,7 +269,7 @@ static inline void telecommand_task( void ) {
 
 
 #ifdef FAILSAFE_DELAY_WITHOUT_GPS
-#define GpsTimeoutError (cpu_time_sec - gps.last_msg_time > FAILSAFE_DELAY_WITHOUT_GPS)
+#define GpsTimeoutError (cpu_time_sec - gps.last_fix_time > FAILSAFE_DELAY_WITHOUT_GPS)
 #endif
 
 /** \fn void navigation_task( void )
@@ -398,7 +398,7 @@ static inline void attitude_loop( void ) {
       v_ctl_throttle_slew();
       ap_state->commands[COMMAND_THROTTLE] = v_ctl_throttle_slewed;
       ap_state->commands[COMMAND_ROLL] = h_ctl_aileron_setpoint;
-      
+
       ap_state->commands[COMMAND_PITCH] = h_ctl_elevator_setpoint;
 
 #if defined MCU_SPI_LINK
@@ -409,6 +409,12 @@ static inline void attitude_loop( void ) {
 #endif
 
 }
+
+#ifdef USE_AHRS
+#ifdef AHRS_TRIGGERED_ATTITUDE_LOOP
+volatile uint8_t new_ins_attitude = 0;
+#endif
+#endif
 
 void periodic_task_ap( void ) {
 
@@ -608,7 +614,7 @@ void event_task_ap( void ) {
 #endif
 
 #ifdef USE_AHRS
-  ImuEvent(on_gyro_accel_event, on_accel_event, on_mag_event);
+  ImuEvent(on_gyro_event, on_accel_event, on_mag_event);
 #endif // USE_AHRS
 
 #ifdef USE_GPS
@@ -630,7 +636,7 @@ void event_task_ap( void ) {
   }
 
   modules_event_task();
-  
+
 #ifdef AHRS_TRIGGERED_ATTITUDE_LOOP
   if (new_ins_attitude > 0)
   {
@@ -639,7 +645,7 @@ void event_task_ap( void ) {
     new_ins_attitude = 0;
   }
 #endif
-  
+
 } /* event_task_ap() */
 
 
@@ -656,7 +662,7 @@ static inline void on_gps_solution( void ) {
 static inline void on_accel_event( void ) {
 }
 
-static inline void on_gyro_accel_event( void ) {
+static inline void on_gyro_event( void ) {
 
 #ifdef AHRS_CPU_LED
     LED_ON(AHRS_CPU_LED);
@@ -721,15 +727,21 @@ static inline void on_gyro_accel_event( void ) {
     LED_OFF(AHRS_CPU_LED);
 #endif
 
+#ifdef AHRS_TRIGGERED_ATTITUDE_LOOP
+  new_ins_attitude = 1;
+#endif
+
 }
 
-static inline void on_mag_event(void) {
-  /*
+static inline void on_mag_event(void)
+{
+#ifdef IMU_MAG_X_SIGN
   ImuScaleMag(imu);
   if (ahrs.status == AHRS_RUNNING) {
     ahrs_update_mag();
-    ahrs_update_fw_estimator();
+//    ahrs_update_fw_estimator();
   }
-  */
+#endif
 }
 #endif // USE_AHRS
+

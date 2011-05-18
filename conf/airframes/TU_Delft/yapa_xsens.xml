@@ -1,6 +1,6 @@
 <!DOCTYPE airframe SYSTEM "../airframe.dtd">
 
-<!-- 
+<!--
 	YAPA + XSens + XBee
 -->
 
@@ -51,7 +51,7 @@
     <!-- Brake Rate Limiter -->
     <let var="brake_value" value="Chop(-@BRAKE, 0, MAX_PPRZ)"/>
     <!--<let var="brake_value" value="RATELIMIT(  $brake_value , MAX_BRAKE_RATE )"/>
-    
+
     <let var="test; \
   	      static int16_t _var_brake_value = 0; \
               _var_brake_value += LIMIT(_var_brake_value_nofilt - _var_brake_value,-MAX_BRAKE_RATE,MAX_BRAKE_RATE); \
@@ -187,9 +187,11 @@
       <define name="STROBE_LIGHT_MODE_DEFAULT" value="6"/>
       <define name="NAV_LIGHT_MODE_DEFAULT" value="4"/>
     </load>
+
 <!--    <load name="digital_cam_i2c.xml"/>  -->
+  <!--    <load name="ins_ppzuavimu.xml"/>  -->
     <load name="digital_cam.xml" >
-      <define name="DC_SHUTTER_LED" value="3"/>
+      <define name="DC_SHUTTER_LED" value="2"/>
     </load>
 
   </modules>
@@ -215,11 +217,11 @@
     <!-- Actuators -->
     <subsystem name="control"/>
     <!-- Sensors -->
-    <subsystem name="navigation" type="extra"/>
+    <subsystem name="navigation"/>
     <subsystem name="gps" type="xsens"/>
 
-    <!--<subsystem name="i2c"/>-->
+    <subsystem name="i2c"/>
 
-  </firmware>
+</firmware>
 
 </airframe>

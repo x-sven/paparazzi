@@ -31,9 +31,6 @@
 
 #include "std.h"
 
-extern float ins_pitch_neutral;
-extern float ins_roll_neutral;
-
 extern int8_t xsens_hour;
 extern int8_t xsens_min;
 extern int8_t xsens_sec;
@@ -41,11 +38,8 @@ extern int32_t xsens_nanosec;
 extern int16_t xsens_year;
 extern int8_t xsens_month;
 extern int8_t xsens_day;
-extern float xsens_lat;
-extern float xsens_lon;
 extern uint8_t xsens_msg_status;
 extern uint16_t xsens_time_stamp;
-
 
 
 #endif

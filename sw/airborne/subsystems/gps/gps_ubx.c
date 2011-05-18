@@ -102,7 +102,7 @@ void gps_ubx_read_message(void) {
     if (gps_ubx.msg_id == UBX_NAV_SOL_ID) {
 #ifdef GPS_TIMESTAMP
       /* get hardware clock ticks */
-      gps.t0 = T0TC;
+      SysTimeTimerStart(gps.t0);
       gps.t0_tow        = UBX_NAV_SOL_ITOW(gps_ubx.msg_buf);
       gps.t0_tow_frac   = UBX_NAV_SOL_Frac(gps_ubx.msg_buf);
 #endif
@@ -135,8 +135,8 @@ void gps_ubx_read_message(void) {
 #ifdef GPS_USE_LATLONG
       /* Computes from (lat, long) in the referenced UTM zone */
       struct LlaCoor_f lla_f;
-      lla_f.lat = (float) gps.lla_pos.lat * 1e7;
-      lla_f.lon = (float) gps.lla_pos.lat * 1e7;
+      lla_f.lat = ((float) gps.lla_pos.lat) / 1e7;
+      lla_f.lon = ((float) gps.lla_pos.lon) / 1e7;
       struct UtmCoor_f utm_f;
       utm_f.zone = nav_utm_zone0;
       /* convert to utm */
@@ -155,6 +155,8 @@ void gps_ubx_read_message(void) {
       if (hem == UTM_HEM_SOUTH)
         gps.utm_pos.north -= 1000000000; /* Subtract false northing: -10000km */
       gps.utm_pos.alt = UBX_NAV_POSUTM_ALT(gps_ubx.msg_buf)*10;
+      gps.hmsl = gps.utm_pos.alt;
+      gps.lla_pos.alt = gps.utm_pos.alt; // FIXME: with UTM only you do not receive ellipsoid altitude
       gps.utm_pos.zone = UBX_NAV_POSUTM_ZONE(gps_ubx.msg_buf);
 #endif
     }
@@ -164,7 +166,11 @@ void gps_ubx_read_message(void) {
       gps.ned_vel.x = UBX_NAV_VELNED_VEL_N(gps_ubx.msg_buf);
       gps.ned_vel.y = UBX_NAV_VELNED_VEL_E(gps_ubx.msg_buf);
       gps.ned_vel.z = UBX_NAV_VELNED_VEL_D(gps_ubx.msg_buf);
-      gps.course = RadOfDeg(UBX_NAV_VELNED_Heading(gps_ubx.msg_buf)*100);
+      // Ublox gives I4 heading in 1e-5 degrees, apparenty from 0 to 360 degrees (not -180 to 180)
+      // I4 max = 2^31 = 214 * 1e5 * 100 < 360 * 1e7: overflow on angles over 214 deg -> casted to -214 deg 
+      // solution: First to radians, and then scale to 1e-7 radians
+      // First x 10 for loosing less resolution, then to radians, then multiply x 10 again
+      gps.course = (RadOfDeg(UBX_NAV_VELNED_Heading(gps_ubx.msg_buf)*10)) * 10; 
       gps.tow = UBX_NAV_VELNED_ITOW(gps_ubx.msg_buf);
     }
     else if (gps_ubx.msg_id == UBX_NAV_SVINFO_ID) {
@@ -178,6 +184,11 @@ void gps_ubx_read_message(void) {
         gps.svinfos[i].elev = UBX_NAV_SVINFO_Elev(gps_ubx.msg_buf, i);
         gps.svinfos[i].azim = UBX_NAV_SVINFO_Azim(gps_ubx.msg_buf, i);
       }
+    }
+    else if (gps_ubx.msg_id == UBX_NAV_STATUS_ID) {
+      gps.fix = UBX_NAV_STATUS_GPSfix(gps_ubx.msg_buf);
+      gps_ubx.status_flags = UBX_NAV_STATUS_Flags(gps_ubx.msg_buf);
+      gps_ubx.sol_flags = UBX_NAV_SOL_Flags(gps_ubx.msg_buf);
     }
   }
 }
@@ -288,11 +299,9 @@ void gps_ubx_parse( uint8_t c ) {
 #define GPS_PORT_ID GPS_PORT_UART1
 #endif
 
-#if GPS_LINK == UART0
-#define UBX_GPS_BAUD UART0_BAUD
-#elif GPS_LINK == UART1
-#define UBX_GPS_BAUD UART1_BAUD
-#endif
+#define __UBX_GPS_BAUD(_u) _u##_BAUD
+#define _UBX_GPS_BAUD(_u) __UBX_GPS_BAUD(_u)
+#define UBX_GPS_BAUD _UBX_GPS_BAUD(GPS_LINK)
 
 /* Configure the GPS baud rate using the current uart baud rate. Busy
    wait for the end of the transmit. Then, BEFORE waiting for the ACK,
