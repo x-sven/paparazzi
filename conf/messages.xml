@@ -130,8 +130,8 @@
    </message>
 
    <message name="CAM" id="20">
-     <field name="phi" type="int8" unit="deg"/>
-     <field name="theta" type="int8" unit="deg"/>
+     <field name="phi" type="int16" unit="deg"/>
+     <field name="theta" type="int16" unit="deg"/>
      <field name="target_x" type="int16" unit="m"/>
      <field name="target_y" type="int16" unit="m"/>
    </message>
@@ -489,8 +489,29 @@
     <field name="gnd2"   type="float"/>
   </message>
 
- <!-- 63 is free -->
- <!-- 64 is free -->
+  <message name="CAM_POINT" id="63">
+      <field name="cam_point_distance_from_home" type="uint16" unit="m"/>
+      <field name="cam_point_lat" type="float" unit="deg"/>
+      <field name="cam_point_lon" type="float" unit="deg"/>
+  </message>
+
+  <message name="DC_INFO" id="64">
+    <field name="mode" type="int16" unit=""/>
+    <field name="utm_east" type="float" unit="m"/>
+    <field name="utm_north" type="float" unit="m"/>
+    <field name="course" type="float" unit="deg"/>
+    <field name="buffer" type="int8"/>
+    <field name="dist" type="float" unit="m"/>
+    <field name="next_dist" type="float" unit="m"/>
+    <field name="start_x" type="float" unit="m"/>
+    <field name="start_y" type="float" unit="m"/>
+    <field name="start_angle" type="float" unit="deg"/>
+    <field name="angle" type="float" unit="deg"/>
+    <field name="last_block" type="float"/>
+    <field name="count" type="int16" unit=""/>
+    <field name="shutter" type="uint8" unit="s"/>
+  </message>
+
  <!-- 65 is free -->
  <!-- 66 is free -->
  <!-- 67 is free -->
@@ -520,11 +541,19 @@
     <field name="cte_int" type="float"/>
   </message>
 
-  <message name="ESTIMATOR_COMP_FILTER" id="81">
-    <field name="gyro_hp_last_out" type="float"/>
-    <field name="gyro_int" type="float"/>
-    <field name="gps_lp_last_out" type="float"/>
-    <field name="ir_lp_last_out" type="float"/>
+  <message name="GENERIC_COM" id="81">
+    <field name="lat" type="int32" unit="1e7deg"/>
+    <field name="lon" type="int32" unit="1e7deg"/>
+    <field name="alt" type="int16" unit="m"/>
+    <field name="gspeed" type="uint16" unit="cm/s" alt_unit="m/s"/>
+    <field name="course" type="int16" unit="decideg" alt_unit="deg"/>
+    <field name="airspeed" type="uint16" unit="cm/s" alt_unit="m/s"/>
+    <field name="vsupply" type="uint8" unit="decivolt"/>
+    <field name="energy" type="uint8" unit="deciAh"/>
+    <field name="throttle" type="uint8" unit="%"/>
+    <field name="ap_mode" type="uint8"/>
+    <field name="nav_block" type="uint8"/>
+    <field name="flight_time" type="uint16" unit="s"/>
   </message>
 
   <message name="FORMATION_SLOT_TM" id="82">
@@ -723,16 +752,16 @@
   </message>
 
   <message name="DC_SHOT" id="110">
-    <field name="photo_nr" type="int16"></field>
-    <field name="utm_east"  type="int32" unit="cm"></field>
-    <field name="utm_north" type="int32" unit="cm"></field>
+    <field name="photo_nr" type="int16"/>
+    <field name="utm_east"  type="int32" unit="cm"/>
+    <field name="utm_north" type="int32" unit="cm"/>
     <field name="z" type="float" unit="m"/>
-    <field name="utm_zone"  type="uint8"></field>
-    <field name="phi" type="int16" unit="decideg"></field>
-    <field name="theta" type="int16" unit="decideg"></field>
-    <field name="course" type="int16" unit="decideg"></field>
-    <field name="speed"  type="uint16" unit="cm/s"></field>
-    <field name="itow"  type="uint32" unit="ms"></field>
+    <field name="utm_zone"  type="uint8"/>
+    <field name="phi" type="int16" unit="decideg"/>
+    <field name="theta" type="int16" unit="decideg"/>
+    <field name="course" type="int16" unit="decideg"/>
+    <field name="speed"  type="uint16" unit="cm/s"/>
+    <field name="itow"  type="uint32" unit="ms"/>
   </message>
 
   <message name="TEST_BOARD_RESULTS" ID="111">
@@ -745,17 +774,53 @@
     <field name="one" type="float"/>
   </message>
 
- <!--113 is free -->
+  <message name="MLX_SERIAL" id="113">
+    <field name="serial0" type="uint32"/>
+    <field name="serial1" type="uint32"/>
+  </message>
 
   <message name="PAYLOAD" id="114">
     <field name="values" type="uint8[]" unit="none"/>
   </message>
 
+  <message name="HTM_STATUS" id="115">
+    <field name="ihumid" type="uint16"/>
+    <field name="itemp"  type="uint16"/>
+    <field name="humid"  type="float" unit="rel_hum" format="%.2f"/>
+    <field name="temp"   type="float" unit="deg_celsius" format="%.2f"/>
+  </message>
 
- <!--115 is free -->
- <!--116 is free -->
- <!--117 is free -->
- <!--118 is free -->
+  <message name="BARO_MS5611" id="116">
+    <field name="d1"       type="uint32"/>
+    <field name="d2"       type="uint32"/>
+    <field name="pressure" type="float" unit="hPa" format="%.2f"/>
+    <field name="temp"     type="float" unit="deg_celsius" format="%.2f"/>
+  </message>
+
+  <message name="MS5611_COEFF" id="117">
+    <field name="c0" type="uint16"/>
+    <field name="c1" type="uint16"/>
+    <field name="c2" type="uint16"/>
+    <field name="c3" type="uint16"/>
+    <field name="c4" type="uint16"/>
+    <field name="c5" type="uint16"/>
+    <field name="c6" type="uint16"/>
+    <field name="c7" type="uint16"/>
+  </message>
+
+  <message name="ATMOSPHERE_CHARGE" id="118">
+    <field name="t0" type="uint16"/>
+    <field name="t1" type="uint16"/>
+    <field name="t2" type="uint16"/>
+    <field name="t3" type="uint16"/>
+    <field name="t4" type="uint16"/>
+    <field name="t5" type="uint16"/>
+    <field name="t6" type="uint16"/>
+    <field name="t7" type="uint16"/>
+    <field name="t8" type="uint16"/>
+    <field name="t9" type="uint16"/>
+  </message>
+
  <!--119 is free -->
 
   <message name="TCAS_TA" ID="120">
@@ -1245,15 +1310,15 @@
     <field name="pan" type="int16" unit="2^12rad" alt_unit="degres" alt_unit_coef="0.0139882"/>
   </message>
 
-  <message name="BOOZ2_AHRS_REF_QUAT" id="169">
-    <field name="ref_qi"  type="float"/>
-    <field name="ref_qx"  type="float"/>
-    <field name="ref_qy"  type="float"/>
-    <field name="ref_qz"  type="float"/>
-    <field name="body_qi" type="float"/>
-    <field name="body_qx" type="float"/>
-    <field name="body_qy" type="float"/>
-    <field name="body_qz" type="float"/>
+  <message name="AHRS_REF_QUAT" id="169">
+    <field name="ref_qi"  type="int32"/>
+    <field name="ref_qx"  type="int32"/>
+    <field name="ref_qy"  type="int32"/>
+    <field name="ref_qz"  type="int32"/>
+    <field name="body_qi" type="int32"/>
+    <field name="body_qx" type="int32"/>
+    <field name="body_qy" type="int32"/>
+    <field name="body_qz" type="int32"/>
   </message>
 
   <message name="EKF7_XHAT" id="170">
@@ -1652,7 +1717,11 @@
     <field name="cpu_time"     type="uint16" unit="s"></field>
   </message>
 
- <!--232 is free -->
+   <message name="STATE_FILTER_STATUS" id="232">
+     <field name="state_filter_mode" type="uint8" values="UNKNOWN|INIT|ALIGN|OK|GPS_LOST|IMU_LOST|COV_ERR|IR_CONTRAST|ERROR"/>
+     <field name="value" type="uint16" />
+   </message>
+
  <!--233 is free -->
 
   <message name="OPTICFLOW" id="234">
@@ -2096,6 +2165,7 @@
     <field name="gps_mode" type="string" values="NOFIX|DRO|2D|3D|GPSDRO"/>
     <field name="kill_mode" type="string" values="OFF|ON"/>
     <field name="flight_time" type="uint32" />
+    <field name="state_filter_mode" type="string" values="UNKNOWN|INIT|ALIGN|OK|GPS_LOST|IMU_LOST|COV_ERR|IR_CONTRAST|ERROR"/>
   </message>
 
   <message name="NAV_STATUS" id="13">

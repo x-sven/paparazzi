@@ -421,6 +421,19 @@ extern uint8_t telemetry_mode_Main_DefaultChannel;
 #define PERIODIC_SEND_AHRS_LKF_ACC_DBG(_chan) {}
 #endif
 
+
+#define PERIODIC_SEND_AHRS_REF_QUAT(_chan) {				\
+    DOWNLINK_SEND_AHRS_REF_QUAT(_chan,				\
+				  &stab_att_ref_quat.qi,	\
+				  &stab_att_ref_quat.qx,	\
+				  &stab_att_ref_quat.qy,	\
+				  &stab_att_ref_quat.qz,	\
+				  &ahrs.ltp_to_body_quat.qi,	\
+				  &ahrs.ltp_to_body_quat.qx,	\
+				  &ahrs.ltp_to_body_quat.qy,	\
+				  &ahrs.ltp_to_body_quat.qz);	\
+  }
+
 #define PERIODIC_SEND_BOOZ2_AHRS_QUAT(_chan) {				\
     DOWNLINK_SEND_BOOZ2_AHRS_QUAT(_chan,				\
 				  &ahrs.ltp_to_imu_quat.qi,	\

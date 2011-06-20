@@ -26,8 +26,6 @@
 CFG_SHARED=$(PAPARAZZI_SRC)/conf/autopilot/subsystems/shared
 CFG_ROTORCRAFT=$(PAPARAZZI_SRC)/conf/autopilot/subsystems/rotorcraft
 
-SRC_BOOZ=booz
-SRC_BOOZ_ARCH=$(SRC_BOOZ)/arch/$(ARCH)
 SRC_BOOZ_TEST=$(SRC_BOOZ)/test
 SRC_BOOZ_PRIV=booz_priv
 
@@ -39,7 +37,7 @@ SRC_ARCH=arch/$(ARCH)
 
 CFG_BOOZ=$(PAPARAZZI_SRC)/conf/autopilot/
 
-ROTORCRAFT_INC = -I$(SRC_FIRMWARE) -I$(SRC_BOOZ) -I$(SRC_BOOZ_ARCH) -I$(SRC_BOARD)
+ROTORCRAFT_INC = -I$(SRC_FIRMWARE) -I$(SRC_BOARD)
 
 
 ap.ARCHDIR = $(ARCH)
@@ -50,6 +48,11 @@ ap.CFLAGS += -DBOARD_CONFIG=$(BOARD_CFG) -DPERIPHERALS_AUTO_INIT
 ap.srcs    = $(SRC_FIRMWARE)/main.c
 ap.srcs   += mcu.c
 ap.srcs   += $(SRC_ARCH)/mcu_arch.c
+
+#
+# Math functions
+#
+$(TARGET).srcs += math/pprz_geodetic_int.c math/pprz_geodetic_float.c math/pprz_geodetic_double.c math/pprz_trig_int.c
 
 ifeq ($(ARCH), stm32)
 ap.srcs += lisa/plug_sys.c
@@ -95,6 +98,8 @@ endif
 #
 ap.srcs += subsystems/settings.c
 ap.srcs += $(SRC_ARCH)/subsystems/settings_arch.c
+
+ap.srcs += mcu_periph/uart.c
 ap.srcs += $(SRC_ARCH)/mcu_periph/uart_arch.c
 
 # I2C is needed for speed controllers and barometers on lisa
@@ -187,23 +192,14 @@ ap.srcs += $(SRC_FIRMWARE)/autopilot.c
 
 ap.srcs += state.c
 
-ap.srcs += math/pprz_trig_int.c
 ap.srcs += $(SRC_FIRMWARE)/stabilization.c
 ap.srcs += $(SRC_FIRMWARE)/stabilization/stabilization_rate.c
-
-
-ap.CFLAGS += -DSTABILISATION_ATTITUDE_TYPE_INT
-ap.CFLAGS += -DSTABILISATION_ATTITUDE_H=\"stabilization/stabilization_attitude_int.h\"
-ap.CFLAGS += -DSTABILISATION_ATTITUDE_REF_H=\"stabilization/stabilization_attitude_ref_euler_int.h\"
-ap.srcs += $(SRC_FIRMWARE)/stabilization/stabilization_attitude_ref_euler_int.c
-ap.srcs += $(SRC_FIRMWARE)/stabilization/stabilization_attitude_euler_int.c
 
 ap.CFLAGS += -DUSE_NAVIGATION
 ap.srcs += $(SRC_FIRMWARE)/guidance/guidance_h.c
 ap.srcs += $(SRC_FIRMWARE)/guidance/guidance_v.c
 
 ap.srcs += $(SRC_SUBSYSTEMS)/ins.c
-ap.srcs += math/pprz_geodetic_int.c math/pprz_geodetic_float.c math/pprz_geodetic_double.c
 
 #
 # INS choice

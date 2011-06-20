@@ -84,7 +84,7 @@ $(TARGET).srcs 		+= $(SRC_FIXEDWING)/inter_mcu.c
 #
 # Math functions
 #
-$(TARGET).srcs += math/pprz_geodetic_int.c math/pprz_geodetic_float.c math/pprz_geodetic_double.c
+$(TARGET).srcs += math/pprz_geodetic_int.c math/pprz_geodetic_float.c math/pprz_geodetic_double.c math/pprz_trig_int.c
 
 ######################################################################
 ##
@@ -137,6 +137,7 @@ ns_srcs 		+= $(SRC_ARCH)/sys_time_hw.c
 # UARTS
 #
 
+ns_srcs 		+= mcu_periph/uart.c
 ns_srcs 		+= $(SRC_ARCH)/mcu_periph/uart_arch.c
 ns_srcs 		+= subsystems/settings.c
 ns_srcs 		+= $(SRC_ARCH)/subsystems/settings_arch.c
@@ -216,7 +217,7 @@ jsbsim.CFLAGS 		+= -I$(SIMDIR) -I/usr/include -I$(JSBSIM_INC) -I$(OCAMLLIBDIR) `
 jsbsim.LDFLAGS		+= `pkg-config glib-2.0 --libs` -lm -lpcre -lglibivy -L/usr/lib -lJSBSim
 
 jsbsim.CFLAGS 		+= -DDOWNLINK -DDOWNLINK_TRANSPORT=IvyTransport
-jsbsim.srcs 		+= downlink.c $(SRC_FIRMWARE)/datalink.c $(SRC_ARCH)/jsbsim_hw.c $(SRC_ARCH)/jsbsim_gps.c $(SRC_ARCH)/ivy_transport.c $(SRC_ARCH)/jsbsim_transport.c
+jsbsim.srcs 		+= downlink.c $(SRC_FIRMWARE)/datalink.c $(SRC_ARCH)/jsbsim_hw.c $(SRC_ARCH)/jsbsim_ir.c $(SRC_ARCH)/jsbsim_gps.c $(SRC_ARCH)/ivy_transport.c $(SRC_ARCH)/jsbsim_transport.c
 
 jsbsim.srcs 		+= subsystems/settings.c
 jsbsim.srcs 		+= $(SRC_ARCH)/subsystems/settings_arch.c
