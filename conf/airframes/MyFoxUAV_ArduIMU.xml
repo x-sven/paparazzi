@@ -222,7 +222,7 @@
 
     <!-- Sensors -->
     <!--subsystem name="attitude" 		type="infrared"/-->
-    <subsystem name="gps" 		    type="ublox_lea5h"/>
+    <subsystem name="gps" 		    type="ublox"/>
     <subsystem name="navigation"/>
     
     <!-- Interfaces -->
