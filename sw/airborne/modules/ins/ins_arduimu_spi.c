@@ -34,7 +34,7 @@
 #include "ins_arduimu_spi.h"
 #include "messages.h"
 
-#include "gps.h"
+#include "subsystems/gps.h"
 
 #ifndef INS_YAW_NEUTRAL_DEFAULT
 #define INS_YAW_NEUTRAL_DEFAULT 0.
@@ -132,10 +132,10 @@ void ArduIMU_SPI_periodicGPS( void ) {
 	  GPS_Message_transmit.iRespID = 0xff;
 	  GPS_Message_transmit.crc16 = 0;
 
-	  if(gps_mode==3 && gps_gspeed>= 500) { //got a 3d fix and ground speed is more than 0.5 m/s)
-	 	  GPS_Message_transmit.speed_3d 		= gps_speed_3d/100.; //m/s
-	 	  GPS_Message_transmit.ground_speed 	= gps_gspeed/1000.;	 //m/s
-	 	  GPS_Message_transmit.ground_course 	= gps_course/10.;	 //deg
+	  if(gps.fix==3 && gps.gspeed>= 500) { //got a 3d fix and ground speed is more than 0.5 m/s)
+	 	  GPS_Message_transmit.speed_3d 		= gps.speed_3d/100.; //m/s
+	 	  GPS_Message_transmit.ground_speed 	= gps.gspeed/1000.;	 //m/s
+	 	  GPS_Message_transmit.ground_course 	= gps.course/10.;	 //deg
 	   }//if [elements are zero otherwise]
 	   GPS_Message_transmit.crc16 = crc16((const char*)&GPS_Message_transmit, sizeof(GPS_Message_transmit));
 

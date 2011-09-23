@@ -208,9 +208,10 @@
         <define name="AGR_CLIMB" />
         <define name="LOITER_TRIM" />
         <define name="ALT_KALMAN" />    
-        <define name="USE_I2C0"/>
+<!--        <define name="USE_I2C0"/> -->
+	
 
-
+    <subsystem name="spi"/>
     <subsystem name="radio_control" type="ppm"/> 
 
     <!-- Communication -->
@@ -226,8 +227,6 @@
     <subsystem name="navigation"/>
     
     <!-- Interfaces -->
-    <subsystem name="i2c"/>
-
     <subsystem name="current_sensor">
         <configure name="ADC_CURRENT_SENSOR" value="ADC_4"/>
     </subsystem>	    
@@ -237,10 +236,10 @@
     <target name="usb_tunnel_1"     board="twog_1.0" />
     <target name="setup_actuators"  board="twog_1.0" />
   </firmware>
-  <!-- modules -->
 
+  <!-- modules -->
   <modules>
-    <load name="ins_arduimu.xml">
+    <load name="ins_arduimu_spi.xml">
     </load>
   </modules>
   

@@ -1,0 +1,20 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="ins_ArduIMU" dir="ins">
+  <header>
+    <file name="ins_arduimu_spi.h"/>
+  </header>
+  <init fun="ArduIMU_SPI_init()"/>
+  <periodic fun="ArduIMU_SPI_periodic()" freq="15" autorun="TRUE"/>		<!-- 15 ist soll -->
+  <periodic fun="ArduIMU_SPI_periodicGPS()" freq="8" autorun="TRUE"/>       <!--  8 ist soll -->
+  <makefile target="ap">
+    <file name="ins_arduimu_spi.c"/>
+    <define name="USE_SPI" />
+    <define name="SPI_MASTER"/>
+    <define name="USE_SPI_SLAVE0"/>
+  </makefile>
+  <makefile target="sim">
+    <file_arch name="ins_arduimu_spi.c"/>
+  </makefile>
+</module>
+
