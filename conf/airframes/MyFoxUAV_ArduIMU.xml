@@ -22,6 +22,10 @@
 # UBX-NAV (not UBX-CFG-NAV): on POSUTM (bzw. POSLLH), SOL, STATUS, SVINFO, VELNED
 -->
 
+<!--
+# PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/qnx641/host/linux/x86/usr/bin:/etc/qnx/bin
+-->
+
 <airframe name="MyFoxUAV with ARDUIMU">
 
   <servos>

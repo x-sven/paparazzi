@@ -53,7 +53,8 @@
 
 
 #define GpsUartSend1(c) GpsLink(Transmit(c))
-#define GpsUartInitParam(_a,_b,_c) GpsLink(InitParam(_a,_b,_c))
+//#define GpsUartInitParam(_a,_b,_c) GpsLink(InitParam(_a,_b,_c))
+#define GpsUartSetBaudrate(_a) GpsLink(SetBaudrate(_a))
 #define GpsUartRunning GpsLink(TxRunning)
 #define GpsUartSendMessage GpsLink(SendMessage)
 
@@ -298,7 +299,7 @@ void gps_ubx_parse( uint8_t c ) {
 #define GPS_PORT_SPI   0x04
 
 #ifndef GPS_PORT_ID
-#define GPS_PORT_ID GPS_PORT_UART1
+	#define GPS_PORT_ID GPS_PORT_UART1
 #endif
 
 #define __UBX_GPS_BAUD(_u) _u##_BAUD
@@ -326,7 +327,9 @@ void gps_configure_uart(void) {
   while (GpsUartRunning); /* FIXME */
 #endif
 
-  GpsUartInitParam(UBX_GPS_BAUD,  UART_8N1, UART_FIFO_8);
+  //GpsUartInitParam(UBX_GPS_BAUD,  UART_8N1, UART_FIFO_8);
+  GpsUartSetBaudrate(UBX_GPS_BAUD);
+
 }
 #endif
 

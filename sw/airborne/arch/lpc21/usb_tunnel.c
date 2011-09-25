@@ -67,7 +67,7 @@ int main( void ) {
       inc = Uart0Getch();
       VCOM_putchar(inc);
     }
-    if (VCOM_check_available() && uart0_check_free_space(1)) {
+    if (VCOM_check_available() && VCOM_check_free_space(1)) {
       LED_ON(2);
       tx_time = T0TC;
       inc = VCOM_getchar();
