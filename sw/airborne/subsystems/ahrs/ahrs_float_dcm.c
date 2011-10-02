@@ -124,12 +124,17 @@ void ahrs_update_fw_estimator( void )
   compute_body_orientation_and_rates();
 
   // export results to estimator
-  estimator_phi   = ahrs_float.ltp_to_body_euler.phi - ins_roll_neutral;
-  estimator_theta = ahrs_float.ltp_to_body_euler.theta - ins_pitch_neutral;
-  estimator_psi   = ahrs_float.ltp_to_body_euler.psi;
 
-  estimator_p = ahrs_float.body_rate.p;
-  estimator_q = ahrs_float.body_rate.q;
+  //commented to log only in flight
+//  estimator_phi   = ahrs_float.ltp_to_body_euler.phi - ins_roll_neutral;
+//  estimator_theta = ahrs_float.ltp_to_body_euler.theta - ins_pitch_neutral;
+//  estimator_psi   = ahrs_float.ltp_to_body_euler.psi;
+//
+//  estimator_p = ahrs_float.body_rate.p;
+//  estimator_q = ahrs_float.body_rate.q;
+  //Häh? What's with body_rate.r here???
+  //Should be:  estimator_r = ahrs_float.body_rate.r;
+
 /*
   RunOnceEvery(6,DOWNLINK_SEND_RMAT_DEBUG(DefaultChannel,
     &(DCM_Matrix[0][0]),
