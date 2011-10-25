@@ -1,0 +1,19 @@
+Steps to sync with paparazzi/master:
+====================================
+
+git commit -a
+
+git fetch upstream
+
+git merge upstream/master
+-oder-
+git co upstream/master
+
+git status
+git log
+
+git add .
+git commit -a
+git push 
+
+
