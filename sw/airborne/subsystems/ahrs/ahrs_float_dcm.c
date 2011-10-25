@@ -486,7 +486,8 @@ void Drift_correction(void)
 #elif defined USE_GPS // Use GPS Ground course to correct yaw gyro drift
 
   if(gps.fix == GPS_FIX_3D && gps.gspeed>= 500) { //got a 3d fix and ground speed is more than 0.5 m/s
-    float ground_course = ((float)gps.course)/1.e7 - M_PI; //This is the runaway direction of you "plane" in rad
+	#warning ToDo: I have removed -M_PI in the following equation, correct?!
+    float ground_course = ((float)gps.course)/1.e7; //This is the runaway direction of you "plane" in rad
     float COGX = cosf(ground_course); //Course overground X axis
     float COGY = sinf(ground_course); //Course overground Y axis
 

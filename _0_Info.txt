@@ -3,6 +3,8 @@ Steps to sync with paparazzi/master:
 
 git commit -a
 
+git fetch origin/master
+
 git fetch upstream
 
 git merge upstream/master
