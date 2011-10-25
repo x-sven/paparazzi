@@ -68,4 +68,9 @@ extern int renorm_blowup_count;
 extern float imu_health;
 #endif
 
+#define PERIODIC_SEND_AHRS_EULER(_chan) DOWNLINK_SEND_AHRS_EULER(_chan, \
+		&ahrs_float.ltp_to_imu_euler.phi, \
+		&ahrs_float.ltp_to_imu_euler.theta, \
+		&ahrs_float.ltp_to_imu_euler.psi)
+
 #endif // AHRS_FLOAT_DCM_H

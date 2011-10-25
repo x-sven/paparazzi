@@ -54,7 +54,7 @@ struct i2c_transaction ppzuavimu_adxl345;
 
 // Standalone option: run module only
 #ifndef IMU_TYPE_H
-struct Imu imu;
+	struct Imu imu;
 #endif
 
 #ifndef PERIODIC_FREQUENCY
@@ -207,33 +207,38 @@ void ppzuavimu_module_downlink_raw( void )
 
 void ppzuavimu_module_event( void )
 {
-  int32_t x, y, z;
+//  int32_t x, y, z; // Why is this int32_t when the x,y,z cast is/was done to int16_t ???
+  int32_t val[3] = {0, 0, 0};
 
   // If the itg3200 I2C transaction has succeeded: convert the data
   if (ppzuavimu_itg3200.status == I2CTransSuccess)
   {
 #define ITG_STA_DAT_OFFSET 3
-    x = (int16_t) ((ppzuavimu_itg3200.buf[0+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[1+ITG_STA_DAT_OFFSET]);
-    y = (int16_t) ((ppzuavimu_itg3200.buf[2+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[3+ITG_STA_DAT_OFFSET]);
-    z = (int16_t) ((ppzuavimu_itg3200.buf[4+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[5+ITG_STA_DAT_OFFSET]);
-
+		val[0] = (int16_t) ((ppzuavimu_itg3200.buf[0+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[1+ITG_STA_DAT_OFFSET]);
+		val[1] = (int16_t) ((ppzuavimu_itg3200.buf[2+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[3+ITG_STA_DAT_OFFSET]);
+		val[2] = (int16_t) ((ppzuavimu_itg3200.buf[4+ITG_STA_DAT_OFFSET] << 8) | ppzuavimu_itg3200.buf[5+ITG_STA_DAT_OFFSET]);
     // Is this is new data
     if (ppzuavimu_itg3200.buf[0] & 0x01)
     {
-      //LED_ON(3);
-      gyr_valid = TRUE;
-      //LED_OFF(3);
-    }
-    else
-    {
+    	gyr_valid = TRUE;
     }
 
-    // Signs depend on the way sensors are soldered on the board: so they are hardcoded
-#ifdef ASPIRIN_IMU
-    RATES_ASSIGN(imu.gyro_unscaled, x, -y, -z);
-#else // PPZIMU
-    RATES_ASSIGN(imu.gyro_unscaled, -x, y, -z);
+//    // Signs depend on the way sensors are soldered on the board: so they are hardcoded
+//#ifdef ASPIRIN_IMU
+//    RATES_ASSIGN(imu.gyro_unscaled, x, -y, -z);
+//#else // PPZIMU
+//    RATES_ASSIGN(imu.gyro_unscaled, -x, y, -z);
+//#endif
+#warning ToDo: Check definitions for correct values (here?)!
+#if !defined(IMU_GYRO_P_CHAN) || !defined(IMU_GYRO_Q_CHAN) || !defined(IMU_GYRO_R_CHAN)
+   #define IMU_GYRO_P_CHAN 1
+   #define IMU_GYRO_Q_CHAN 2
+   #define IMU_GYRO_R_CHAN 3
+   #warning Some PPZ-IMU Axis definitions defaults are used. (May be ok for you!)
 #endif
+    RATES_ASSIGN(imu.gyro_unscaled, val[IMU_GYRO_P_CHAN-1],
+									val[IMU_GYRO_Q_CHAN-1],
+									val[IMU_GYRO_R_CHAN-1]);
 
     ppzuavimu_itg3200.status = I2CTransDone;  // remove the I2CTransSuccess status, otherwise data ready will be triggered again without new data
   }
@@ -241,15 +246,25 @@ void ppzuavimu_module_event( void )
   // If the adxl345 I2C transaction has succeeded: convert the data
   if (ppzuavimu_adxl345.status == I2CTransSuccess)
   {
-    x = (int16_t) ((ppzuavimu_adxl345.buf[1] << 8) | ppzuavimu_adxl345.buf[0]);
-    y = (int16_t) ((ppzuavimu_adxl345.buf[3] << 8) | ppzuavimu_adxl345.buf[2]);
-    z = (int16_t) ((ppzuavimu_adxl345.buf[5] << 8) | ppzuavimu_adxl345.buf[4]);
+	val[0] = (int16_t) ((ppzuavimu_adxl345.buf[1] << 8) | ppzuavimu_adxl345.buf[0]);
+	val[1] = (int16_t) ((ppzuavimu_adxl345.buf[3] << 8) | ppzuavimu_adxl345.buf[2]);
+	val[2] = (int16_t)  ((ppzuavimu_adxl345.buf[5] << 8) | ppzuavimu_adxl345.buf[4]);
 
-#ifdef ASPIRIN_IMU
-    VECT3_ASSIGN(imu.accel_unscaled, x, -y, -z);
-#else // PPZIMU
-    VECT3_ASSIGN(imu.accel_unscaled, -x, y, -z);
+//#ifdef ASPIRIN_IMU
+//    VECT3_ASSIGN(imu.accel_unscaled, x, -y, -z);
+//#else // PPZIMU
+//    VECT3_ASSIGN(imu.accel_unscaled, -x, y, -z);
+//#endif
+#if !defined(IMU_ACCEL_X_CHAN) || !defined(IMU_ACCEL_Y_CHAN) || !defined(IMU_ACCEL_Z_CHAN)
+   #define IMU_ACCEL_X_CHAN 1
+   #define IMU_ACCEL_Y_CHAN 2
+   #define IMU_ACCEL_Z_CHAN 3
+   #warning Some PPZ-IMU Axis definitions defaults are used. (May be ok for you!)
 #endif
+	VECT3_ASSIGN(imu.accel_unscaled, val[IMU_ACCEL_X_CHAN-1],
+									 val[IMU_ACCEL_Y_CHAN-1],
+									 val[IMU_ACCEL_Z_CHAN-1]);
+
 
     acc_valid = TRUE;
     ppzuavimu_adxl345.status = I2CTransDone;
@@ -258,15 +273,25 @@ void ppzuavimu_module_event( void )
   // If the hmc5843 I2C transaction has succeeded: convert the data
   if (ppzuavimu_hmc5843.status == I2CTransSuccess)
   {
-    x = (int16_t) ((ppzuavimu_hmc5843.buf[0] << 8) | ppzuavimu_hmc5843.buf[1]);
-    y = (int16_t) ((ppzuavimu_hmc5843.buf[2] << 8) | ppzuavimu_hmc5843.buf[3]);
-    z = (int16_t) ((ppzuavimu_hmc5843.buf[4] << 8) | ppzuavimu_hmc5843.buf[5]);
+	val[0]  = (int16_t) ((ppzuavimu_hmc5843.buf[0] << 8) | ppzuavimu_hmc5843.buf[1]);
+	val[1]  = (int16_t) ((ppzuavimu_hmc5843.buf[2] << 8) | ppzuavimu_hmc5843.buf[3]);
+    val[2]  = (int16_t) ((ppzuavimu_hmc5843.buf[4] << 8) | ppzuavimu_hmc5843.buf[5]);
 
-#ifdef ASPIRIN_IMU
-    VECT3_ASSIGN(imu.mag_unscaled, x, -y, -z);
-#else // PPZIMU
-    VECT3_ASSIGN(imu.mag_unscaled, -y, -x, -z);
+//#ifdef ASPIRIN_IMU
+//    VECT3_ASSIGN(imu.mag_unscaled, x, -y, -z);
+//#else // PPZIMU
+//    VECT3_ASSIGN(imu.mag_unscaled, -y, -x, -z);
+//#endif
+
+#if !defined(IMU_MAG_X_CHAN) || !defined(IMU_MAG_Y_CHAN) || !defined(IMU_MAG_Z_CHAN)
+   #define IMU_MAG_X_CHAN 1
+   #define IMU_MAG_Y_CHAN 2
+   #define IMU_MAG_Z_CHAN 3
+   #warning Some PPZ-IMU Axis definitions defaults are used. (May be ok for you!)
 #endif
+	VECT3_ASSIGN(imu.accel_unscaled, val[IMU_MAG_X_CHAN-1],
+									 val[IMU_MAG_Y_CHAN-1],
+									 val[IMU_MAG_Z_CHAN-1]);
 
     mag_valid = TRUE;
     ppzuavimu_hmc5843.status = I2CTransDone;
