@@ -89,6 +89,7 @@ inline static void v_ctl_climb_auto_pitch_loop( void );
 #endif
 
 #ifdef USE_AIRSPEED
+#error USE_AIRSPEED is defined!
 float v_ctl_auto_airspeed_setpoint;
 float v_ctl_auto_airspeed_controlled;
 float v_ctl_auto_airspeed_pgain;

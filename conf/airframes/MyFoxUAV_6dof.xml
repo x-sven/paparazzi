@@ -222,7 +222,7 @@
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
     <define name="COURSE_PGAIN" value="-0.75"/>		<!-- war -1.11 -->
 
-    <define name="ROLL_MAX_SETPOINT" 	value="0.6" unit="radians"/> 	<!-- etwa  34° -->
+    <define name="ROLL_MAX_SETPOINT" 	value="1.0" unit="radians"/> 	<!-- etwa  57° -->
     <define name="ROLL_SLEW" value="0.1"/>
     <define name="ROLL_ATTITUDE_GAIN" value="-7500"/>
     <define name="ROLL_RATE_GAIN" value="0"/>  		<!-- war -1500 / not used!? -->
@@ -306,7 +306,7 @@
       <configure name="ADC_CHANNEL_GENERIC1" value="ADC_3"/>
     </load>
     <load name="gps_ubx_ucenter.xml"/>
-    <load name="sys_mon.xml"/>  <!-- 03.10.2011: %  -->
+    <load name="sys_mon.xml"/>  <!-- 03.10.2011: 44 percent load  -->
   </modules>
 
 

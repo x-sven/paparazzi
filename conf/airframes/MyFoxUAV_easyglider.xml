@@ -131,9 +131,9 @@
     <define name="ALTITUDE_MAX_CLIMB" value="2."/>
 
     <!-- auto throttle inner loop -->
-    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.5"/>
-    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.25"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.85"/>
+    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.7"/>
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.2"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.9"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
@@ -195,6 +195,9 @@
     <define name="AGR_CLIMB" />
     <define name="LOITER_TRIM" />
     <define name="ALT_KALMAN" />
+    <define name="WIND_INFO"/>
+    <define name="WIND_INFO_RET"/>
+      <!--define name="USE_AIRSPEED"/-->
 
     <subsystem name="radio_control" type="ppm"/>
 
