@@ -45,14 +45,11 @@
     <!-- Control and Sensor Fusion -->
     <subsystem name="control"		type="new"/>		<!-- "old" control or type="new" + new para./> -->	
     <subsystem name="navigation"/>
-    <subsystem name="ahrs"      	type="float_dcm">
-	<define name="AHRS_ALIGNER_LED" value="3"/>  		<!-- yellow led -->
-    </subsystem>
 
     <!-- Sensors -->
     <subsystem name="attitude" 		type="infrared"/>
     <subsystem name="gps" 		type="ublox"/>
-    <subsystem name="imu"       	type="ppzuav"/>
+
     <subsystem name="current_sensor">
         <configure name="ADC_CURRENT_SENSOR" value="ADC_4"/>
     </subsystem>
@@ -155,82 +152,6 @@
     <define name="CORRECTION_RIGHT" 		value="1."/>
   </section>
 
-
-<!-- ******************* IMU PARAMETER **************************** -->
-  <section name="IMU" prefix="IMU_">
-
-    <!-- IMU Orientation -->
-    <define name="BODY_TO_IMU_PSI" 	value="RadOfDeg(0.)"/>
-    <define name="BODY_TO_IMU_THETA" 	value="RadOfDeg(0.)"/>
-    <define name="BODY_TO_IMU_PHI" 	value="RadOfDeg(0.)"/>
-
-    <!-- Calibration Neutral -->
-    <define name="GYRO_P_NEUTRAL" value="0"/>
-    <define name="GYRO_Q_NEUTRAL" value="0"/>
-    <define name="GYRO_R_NEUTRAL" value="0"/>
-
-    <!-- SENS = 14.375 LSB/(deg/sec) * 57.6 deg/rad = 828 LSB/rad/sec / 12bit FRAC: 4096 / 828 -->
-    <define name="GYRO_P_SENS" value="4.947" integer="16"/>
-    <define name="GYRO_Q_SENS" value="4.947" integer="16"/>
-    <define name="GYRO_R_SENS" value="4.947" integer="16"/>
-
-    <define name="GYRO_P_Q" value="0."/>
-    <define name="GYRO_P_R" value="0"/>
-    <define name="GYRO_Q_P" value="0."/>
-    <define name="GYRO_Q_R" value="0."/>
-    <define name="GYRO_R_P" value="0."/>
-    <define name="GYRO_R_Q" value="0."/>
-
-    <define name="GYRO_P_CHAN" value="2"/>
-    <define name="GYRO_Q_CHAN" value="1"/>
-    <define name="GYRO_R_CHAN" value="3"/>
-
-    <define name="GYRO_P_SIGN" value="-1"/>
-    <define name="GYRO_Q_SIGN" value="-1"/>
-    <define name="GYRO_R_SIGN" value="-1"/>
-
-    <define name="ACCEL_X_NEUTRAL" value="0"/>
-    <define name="ACCEL_Y_NEUTRAL" value="0"/>
-    <define name="ACCEL_Z_NEUTRAL" value="0"/>
-
-    <!-- SENS = 256 LSB/g @ 2.5V [X&Y: 265 LSB/g @ 3.3V] / 9.81 ms2/g = 26.095 LSB/ms2 / 10bit FRAC: 1024 / 26.095 for z and 1024 / 27.01 for X&Y -->
-    <define name="ACCEL_X_SENS" value="37.9" integer="16"/>
-    <define name="ACCEL_Y_SENS" value="37.9" integer="16"/>
-    <define name="ACCEL_Z_SENS" value="39.24" integer="16"/>
-
-    <define name="ACCEL_X_CHAN" value="2"/>
-    <define name="ACCEL_Y_CHAN" value="1"/>
-    <define name="ACCEL_Z_CHAN" value="3"/>
-
-    <define name="ACCEL_X_SIGN" value="-1"/>
-    <define name="ACCEL_Y_SIGN" value="-1"/>
-    <define name="ACCEL_Z_SIGN" value="-1"/>
-
-
-<!-- ******************* MAG PARAMETER **************************** -->
-    <!-- MAG seems to be not optional!? -->
-    <define name="MAG_X_NEUTRAL" value="0"/>
-    <define name="MAG_Y_NEUTRAL" value="0"/>
-    <define name="MAG_Z_NEUTRAL" value="0"/>
-
-    <define name="MAG_X_SENS" value="1" integer="16"/>
-    <define name="MAG_Y_SENS" value="1" integer="16"/>
-    <define name="MAG_Z_SENS" value="1" integer="16"/>
-
-    <define name="MAG_X_CHAN" value="1"/>
-    <define name="MAG_Y_CHAN" value="2"/>
-    <define name="MAG_Z_CHAN" value="3"/>
-
-    <define name="MAG_X_SIGN" value="1"/>
-    <define name="MAG_Y_SIGN" value="1"/>
-    <define name="MAG_Z_SIGN" value="1"/>
-  </section>
-
-<!-- ******************* INS NEUTRALS **************************** -->
-  <section name="INS" prefix="INS_">
-    <define name="ROLL_NEUTRAL_DEFAULT" 	value="0" unit="deg"/>
-    <define name="PITCH_NEUTRAL_DEFAULT" 	value="0" unit="deg"/>
-  </section>
 
 <!-- ******************* BATTERY SETTINGS ************************* -->
   <section name="BAT">

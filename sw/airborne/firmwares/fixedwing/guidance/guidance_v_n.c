@@ -89,7 +89,6 @@ pprz_t v_ctl_throttle_slewed;
 uint8_t v_ctl_speed_mode;
 
 #ifdef USE_AIRSPEED
-#error (2) USE_AIRSPEED
 float v_ctl_auto_airspeed_setpoint;
 float v_ctl_auto_airspeed_controlled;
 float v_ctl_auto_airspeed_throttle_pgain;
