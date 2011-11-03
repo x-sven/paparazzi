@@ -247,11 +247,11 @@ static inline void gps_ubx_ucenter_config_nav(void)
     //New ublox firmware v5 or higher uses CFG_NAV5 message, CFG_NAV is no longer available
     if (gps_ubx_ucenter.sw_ver_h < 5)
     {
-      UbxSend_CFG_NAV(NAV_DYN_AIRBORNE_2G, 3, 16, 24, 20, 5, 0, 0x3C, 0x3C, 0x14, 0x03E8 ,0x0000, 0x0, 0x17, 0x00FA, 0x00FA, 0x0064, 0x012C, 0x000F, 0x00, 0x00);
+      UbxSend_CFG_NAV(NAV_DYN_AIRBORNE_4G, 3, 16, 24, 20, 5, 0, 0x3C, 0x3C, 0x14, 0x03E8 ,0x0000, 0x0, 0x17, 0x00FA, 0x00FA, 0x0064, 0x012C, 0x000F, 0x00, 0x00);
     }
     else
     {
-      UbxSend_CFG_NAV5(0x05, NAV5_DYN_AIRBORNE_2G, NAV5_3D_ONLY, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, RESERVED, RESERVED, RESERVED, RESERVED);
+      UbxSend_CFG_NAV5(0x05, NAV5_DYN_AIRBORNE_4G, NAV5_3D_ONLY, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, IGNORED, RESERVED, RESERVED, RESERVED, RESERVED);
     }
 }
 
